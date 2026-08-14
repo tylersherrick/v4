@@ -1,0 +1,272 @@
+function getDateKey(date, timeZone = "America/Chicago") {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date);
+
+  const year = parts.find((part) => part.type === "year").value;
+  const month = parts.find((part) => part.type === "month").value;
+  const day = parts.find((part) => part.type === "day").value;
+
+  return `${year}${month}${day}`;
+}
+
+function getStatObject(labels, stats) {
+  if (!labels?.length || !stats?.length) {
+    return {};
+  }
+
+  return Object.fromEntries(
+    labels.map((label, index) => [
+      label,
+      stats[index] ?? null,
+    ])
+  );
+}
+
+function getTeamPitchers(teamData) {
+  const pitching = teamData.statistics?.find(
+    (stat) => stat.type === "pitching"
+  );
+
+  if (!pitching?.athletes?.length) {
+    return [];
+  }
+
+  return pitching.athletes.map((pitcher) => ({
+    id: pitcher.athlete.id,
+    name: pitcher.athlete.displayName,
+    starter: pitcher.starter === true,
+    role: pitcher.starter ? "STARTER" : "RELIEF",
+    position: pitcher.position?.abbreviation || "P",
+    stats: getStatObject(
+      pitching.labels,
+      pitcher.stats
+    ),
+  }));
+}
+
+function getTeamLineup(teamData) {
+  const batting = teamData.statistics?.find(
+    (stat) => stat.type === "batting"
+  );
+
+  if (!batting?.athletes?.length) {
+    return [];
+  }
+
+  return batting.athletes
+    .filter(
+      (player) =>
+        player.starter === true &&
+        player.batOrder != null &&
+        player.batOrder > 0
+    )
+    .sort((a, b) => a.batOrder - b.batOrder)
+    .map((player) => ({
+      id: player.athlete.id,
+      name: player.athlete.displayName,
+      battingOrder: player.batOrder,
+      position: player.position?.abbreviation || null,
+      stats: getStatObject(
+        batting.labels,
+        player.stats
+      ),
+    }));
+}
+
+function getProbablePitcher(competitor) {
+  const probable =
+    competitor.probables?.find(
+      (player) =>
+        player.name === "probableStartingPitcher"
+    ) || competitor.probables?.[0];
+
+  if (!probable?.athlete) {
+    return null;
+  }
+
+  return {
+    id: probable.athlete.id,
+    name: probable.athlete.displayName,
+    position:
+      probable.athlete.position?.abbreviation ||
+      probable.athlete.position ||
+      "SP",
+    record: probable.record || null,
+  };
+}
+
+function getTeamInjuries(data, teamId) {
+  const teamData = data.injuries?.find(
+    (team) => String(team.team.id) === String(teamId)
+  );
+
+  if (!teamData?.injuries?.length) {
+    return [];
+  }
+
+  return teamData.injuries.map((injury) => ({
+    id: injury.athlete?.id,
+    name: injury.athlete?.displayName,
+    status: injury.status || null,
+    injury:
+      injury.details?.type ||
+      injury.type?.description ||
+      injury.type ||
+      null,
+    date: injury.date || null,
+  }));
+}
+
+export async function getGameById(gameId) {
+  const url =
+    `https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/summary` +
+    `?event=${gameId}`;
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`ESPN request failed: ${response.status}`);
+  }
+
+  const data = await response.json();
+
+  const competition =
+    data.header?.competitions?.[0];
+
+  if (!competition) {
+    throw new Error("Game data not found.");
+  }
+
+  const gameDate = new Date(competition.date);
+  const today = new Date();
+
+  const isPastGame =
+    getDateKey(gameDate) < getDateKey(today);
+
+  const awayCompetitor =
+    competition.competitors?.find(
+      (team) => team.homeAway === "away"
+    );
+
+  const homeCompetitor =
+    competition.competitors?.find(
+      (team) => team.homeAway === "home"
+    );
+
+  const awayBoxscore =
+    data.boxscore?.players?.find(
+      (team) =>
+        String(team.team.id) ===
+        String(awayCompetitor?.team?.id)
+    );
+
+  const homeBoxscore =
+    data.boxscore?.players?.find(
+      (team) =>
+        String(team.team.id) ===
+        String(homeCompetitor?.team?.id)
+    );
+
+  return {
+    id: data.header?.id || gameId,
+    date: competition.date,
+    isPastGame,
+
+    status: {
+      state: competition.status?.type?.state,
+      detail: competition.status?.type?.detail,
+      completed:
+        competition.status?.type?.completed,
+    },
+
+    venue: {
+      name: competition.venue?.fullName || null,
+      city:
+        competition.venue?.address?.city || null,
+      state:
+        competition.venue?.address?.state || null,
+    },
+
+    awayTeam: {
+      id: awayCompetitor?.team?.id,
+      name: awayCompetitor?.team?.displayName,
+      abbreviation:
+        awayCompetitor?.team?.abbreviation,
+      logo: awayCompetitor?.team?.logo,
+      score: awayCompetitor?.score,
+
+      linescores:
+        awayCompetitor?.linescores?.map(
+          (inning, index) => ({
+            inning: index + 1,
+            runs:
+              inning.displayValue ??
+              inning.value ??
+              null,
+          })
+        ) || [],
+
+      probablePitcher: isPastGame
+        ? null
+        : getProbablePitcher(awayCompetitor),
+
+      pitchers: isPastGame
+        ? getTeamPitchers(awayBoxscore || {})
+        : [],
+
+      lineup: getTeamLineup(
+        awayBoxscore || {}
+      ),
+
+      injuries: isPastGame
+        ? []
+        : getTeamInjuries(
+            data,
+            awayCompetitor?.team?.id
+          ),
+    },
+
+    homeTeam: {
+      id: homeCompetitor?.team?.id,
+      name: homeCompetitor?.team?.displayName,
+      abbreviation:
+        homeCompetitor?.team?.abbreviation,
+      logo: homeCompetitor?.team?.logo,
+      score: homeCompetitor?.score,
+
+      linescores:
+        homeCompetitor?.linescores?.map(
+          (inning, index) => ({
+            inning: index + 1,
+            runs:
+              inning.displayValue ??
+              inning.value ??
+              null,
+          })
+        ) || [],
+
+      probablePitcher: isPastGame
+        ? null
+        : getProbablePitcher(homeCompetitor),
+
+      pitchers: isPastGame
+        ? getTeamPitchers(homeBoxscore || {})
+        : [],
+
+      lineup: getTeamLineup(
+        homeBoxscore || {}
+      ),
+
+      injuries: isPastGame
+        ? []
+        : getTeamInjuries(
+            data,
+            homeCompetitor?.team?.id
+          ),
+    },
+  };
+}

@@ -1,4 +1,4 @@
-const GAME_ID = "401816132";
+const GAME_ID = process.argv[2] || "401816132";
 
 function getDateKey(date, timeZone = "America/Chicago") {
   const parts = new Intl.DateTimeFormat("en-US", {
@@ -82,59 +82,62 @@ async function getGameData() {
     const teams = competition.competitors || [];
 
     const awayTeam = teams.find(
-    (team) => team.homeAway === "away"
+      (team) => team.homeAway === "away"
     );
 
     const homeTeam = teams.find(
-    (team) => team.homeAway === "home"
+      (team) => team.homeAway === "home"
     );
 
     const awayLinescores = awayTeam?.linescores || [];
     const homeLinescores = homeTeam?.linescores || [];
 
     const inningCount = Math.max(
-    awayLinescores.length,
-    homeLinescores.length
+      awayLinescores.length,
+      homeLinescores.length
     );
 
     if (!inningCount) {
-    console.log("No inning-by-inning scoring available.");
+      console.log("No inning-by-inning scoring available.");
     } else {
-    const innings = [];
+      const innings = [];
 
-    for (let i = 0; i < inningCount; i++) {
+      for (let i = 0; i < inningCount; i++) {
         innings.push(i + 1);
-    }
+      }
 
-    console.log(
+      console.log(
         `TEAM | ${innings.join(" | ")} | R`
-    );
+      );
+      console.log(
+        `----   ${innings.map(() => "-").join("   ")}   -`
+      );
 
-    console.log(
-        `${awayTeam.team.abbreviation}${" "} | ` +
-        innings
+      console.log(
+        `${awayTeam.team.abbreviation.padEnd(3, " ")}${" "} | ` +
+          innings
             .map(
-            (_, index) =>
+              (_, index) =>
                 awayLinescores[index]?.displayValue ??
                 awayLinescores[index]?.value ??
                 "-"
             )
             .join(" | ") +
-        ` | ${awayTeam.score ?? "-"}`
-    );
+          ` | ${awayTeam.score ?? "-"}`
+      );
 
-    console.log(
-        `${homeTeam.team.abbreviation}${" "} | ` +
-        innings
+      console.log(
+        `${homeTeam.team.abbreviation.padEnd(3, " ")}${" "} | ` +
+          innings
             .map(
-            (_, index) =>
+              (_, index) =>
                 homeLinescores[index]?.displayValue ??
                 homeLinescores[index]?.value ??
                 "-"
             )
             .join(" | ") +
-        ` | ${homeTeam.score ?? "-"}`
-    );
+          ` | ${homeTeam.score ?? "-"}`
+      );
     }
 
     if (isPastGame) {
