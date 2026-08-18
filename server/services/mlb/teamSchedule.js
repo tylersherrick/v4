@@ -58,7 +58,7 @@ function normalizeGame(game, teamId) {
       id: opponent?.team?.id,
       name: opponent?.team?.displayName,
       abbreviation: opponent?.team?.abbreviation,
-      logo: opponent?.team?.logo,
+      logo: opponent?.team?.logos?.[0]?.href,
     },
   };
 }
