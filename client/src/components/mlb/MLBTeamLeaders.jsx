@@ -41,40 +41,59 @@ export default function MLBTeamLeaders({ leaders }) {
     }
 
     return (
-      <div key={label}>
-        <strong>{label}</strong>{" "}
+      <div
+        key={label}
+        className="mlb-team-leader"
+      >
+        <span className="mlb-team-leader-stat">
+          {label}
+        </span>
 
-        {leader.espnPlayerId ? (
-          <Link
-            to={`/mlb/player/${leader.espnPlayerId}`}
-            state={{
-              playerName: leader.name,
-            }}
-          >
-            {leader.name}
-          </Link>
-        ) : (
-          <span>{leader.name}</span>
-        )}
+        <div className="mlb-team-leader-player">
+          {leader.espnPlayerId ? (
+            <Link
+              to={`/mlb/player/${leader.espnPlayerId}`}
+              state={{
+                playerName: leader.name,
+              }}
+            >
+              {leader.name}
+            </Link>
+          ) : (
+            <span>{leader.name}</span>
+          )}
 
-        <span> {leader.value}</span>
+          <span className="mlb-team-leader-value">
+            {leader.value}
+          </span>
+        </div>
       </div>
     );
   }
 
   return (
-    <section>
+    <section className="mlb-team-leaders-section">
       <h2>Team Leaders</h2>
 
-      <h3>Batting</h3>
-      {batting.map(({ label, leader }) =>
-        renderLeader(label, leader)
-      )}
+      <div className="mlb-team-leaders-group">
+        <h3>Batting</h3>
 
-      <h3>Pitching</h3>
-      {pitching.map(({ label, leader }) =>
-        renderLeader(label, leader)
-      )}
+        <div className="mlb-team-leaders-list">
+          {batting.map(({ label, leader }) =>
+            renderLeader(label, leader)
+          )}
+        </div>
+      </div>
+
+      <div className="mlb-team-leaders-group">
+        <h3>Pitching</h3>
+
+        <div className="mlb-team-leaders-list">
+          {pitching.map(({ label, leader }) =>
+            renderLeader(label, leader)
+          )}
+        </div>
+      </div>
     </section>
   );
 }

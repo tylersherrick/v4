@@ -1,0 +1,276 @@
+.mlb-player-page {
+  max-width: 1200px;
+}
+
+.mlb-player-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  font-size: 0.9rem;
+}
+
+.mlb-player-nav a {
+  color: #555;
+  text-decoration: none;
+}
+
+.mlb-player-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px;
+  margin-bottom: 16px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.mlb-player-headshot {
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.mlb-player-header-info h1 {
+  margin: 0 0 8px;
+  font-size: 1.7rem;
+}
+
+.mlb-player-header-info p {
+  margin: 0 0 4px;
+  color: #666;
+}
+
+.mlb-player-view-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #ddd;
+}
+
+.mlb-player-view-tabs button {
+  padding: 10px 16px;
+  color: #666;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mlb-player-view-tabs button:hover {
+  color: #111;
+  background: #f5f5f5;
+}
+
+.mlb-player-view-tabs button.active {
+  color: #111;
+  border-bottom-color: #111;
+}
+
+.mlb-player-stat-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #ddd;
+}
+
+.mlb-player-stat-tabs button {
+  padding: 8px 14px;
+  color: #777;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mlb-player-stat-tabs button:hover {
+  color: #111;
+  background: #f5f5f5;
+}
+
+.mlb-player-stat-tabs button.active {
+  color: #111;
+  border-bottom-color: #111;
+}
+
+.mlb-player-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mlb-player-stats-card {
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.mlb-player-stats-card h2 {
+  margin: 0 0 16px;
+}
+
+.mlb-player-season {
+  padding: 12px 0;
+  border-top: 1px solid #eee;
+}
+
+.mlb-player-season:first-of-type {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.mlb-player-season h3 {
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+}
+
+.mlb-player-primary-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  margin-bottom: 12px;
+}
+
+.mlb-player-primary-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mlb-player-primary-stat span {
+  color: #777;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.mlb-player-primary-stat strong {
+  color: #111;
+  font-size: 1.15rem;
+}
+
+.mlb-player-secondary-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 16px;
+}
+
+.mlb-player-secondary-stat {
+  display: flex;
+  gap: 4px;
+  color: #555;
+  font-size: 0.8rem;
+}
+
+.mlb-player-secondary-stat span {
+  color: #777;
+}
+
+.mlb-player-secondary-stat strong {
+  color: #111;
+}
+
+.mlb-player-career-card {
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.mlb-player-career-card h2 {
+  margin: 0 0 16px;
+}
+
+.mlb-player-fielding-position {
+  padding: 12px 0;
+  border-top: 1px solid #eee;
+}
+
+.mlb-player-fielding-position:first-of-type {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.mlb-player-fielding-position h3 {
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+}
+
+.mlb-player-news-section {
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.mlb-player-news-section h2 {
+  margin: 0 0 16px;
+}
+
+.mlb-player-news-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.mlb-player-news-card {
+  display: flex;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.mlb-player-news-card:last-child {
+  border-bottom: 0;
+}
+
+.mlb-player-news-image {
+  width: 150px;
+  height: 90px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border-radius: 5px;
+}
+
+.mlb-player-news-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mlb-player-news-headline {
+  color: #111;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.mlb-player-news-headline:hover {
+  text-decoration: underline;
+}
+
+.mlb-player-news-content p {
+  margin: 0;
+  color: #666;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+@media (min-width: 700px) {
+  .mlb-player-header {
+    padding: 24px;
+  }
+
+  .mlb-player-headshot {
+    width: 130px;
+    height: 130px;
+  }
+
+  .mlb-player-header-info h1 {
+    font-size: 2rem;
+  }
+}

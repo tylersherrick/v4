@@ -10,13 +10,23 @@ export default function MLBGameCard({ game }) {
       ? "final"
       : "pregame";
 
+  const showScore = gameState !== "pre";
+
+  const gameTime =
+    gameState === "pre"
+      ? new Date(game.date).toLocaleTimeString([], {
+          hour: "numeric",
+          minute: "2-digit",
+        })
+      : game.status?.detail;
+
   return (
     <Link
       to={`/mlb/game/${game.id}`}
       className="mlb-game-card"
     >
       <div className={`mlb-game-card-status ${statusClass}`}>
-        {game.status?.detail}
+        {gameTime}
       </div>
 
       <div className="mlb-game-card-team">
@@ -39,7 +49,9 @@ export default function MLBGameCard({ game }) {
           </div>
         </div>
 
-        <strong>{game.awayTeam.score ?? "-"}</strong>
+        {showScore && (
+          <strong>{game.awayTeam.score ?? "-"}</strong>
+        )}
       </div>
 
       <div className="mlb-game-card-team">
@@ -62,7 +74,9 @@ export default function MLBGameCard({ game }) {
           </div>
         </div>
 
-        <strong>{game.homeTeam.score ?? "-"}</strong>
+        {showScore && (
+          <strong>{game.homeTeam.score ?? "-"}</strong>
+        )}
       </div>
     </Link>
   );

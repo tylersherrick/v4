@@ -1,0 +1,242 @@
+/* MLB Games Page */
+.mlb-games-section {
+  margin-bottom: 0;
+}
+
+/* MLB Games Grid - Mobile */
+.mlb-games-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+/* MLB Game Card */
+.mlb-game-card {
+  display: block;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  color: #111;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* MLB Game Card Hover */
+.mlb-game-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* MLB Game Card Status */
+.mlb-game-card-status {
+  margin-bottom: 8px;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+/* MLB Game Card Team Row */
+.mlb-game-card-team {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 36px;
+  font-size: 1rem;
+}
+
+/* MLB Game Card Score */
+.mlb-game-card-team strong {
+  min-width: 24px;
+  text-align: right;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+/* MLB Game Card Team Info */
+.mlb-game-card-team-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* MLB Game Card Team Logo */
+.mlb-game-card-team-info img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+/* MLB Game Card Team Name Container */
+.mlb-game-card-team-name {
+  display: flex;
+  align-items: center;
+}
+
+/* MLB Game Card Team Abbreviation - Mobile */
+.mlb-game-card-team-abbreviation {
+  font-weight: 600;
+}
+
+/* MLB Game Card Full Team Name - Hidden on Mobile */
+.mlb-game-card-team-full {
+  display: none;
+  font-weight: 600;
+}
+
+/* MLB Game Card Live Status */
+.mlb-game-card-status.live {
+  color: #c62828;
+  font-weight: 700;
+}
+
+/* MLB Game Card Final Status */
+.mlb-game-card-status.final {
+  color: #666;
+  font-weight: 600;
+}
+
+/* MLB Game Card Pregame Status */
+.mlb-game-card-status.pregame {
+  color: #444;
+  font-weight: 600;
+}
+
+/* MLB Player Search */
+.mlb-player-search {
+  margin-bottom: 28px;
+}
+
+/* MLB Player Search Form */
+.mlb-player-search-form {
+  display: flex;
+  gap: 8px;
+}
+
+/* MLB Player Search Input */
+.mlb-player-search-input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  color: #111;
+}
+
+/* MLB Player Search Button */
+.mlb-player-search-button {
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  color: #111;
+}
+
+/* MLB Player Search Error */
+.mlb-player-search-error {
+  margin-top: 10px;
+}
+
+/* MLB Player Search Results */
+.mlb-player-search-results {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* MLB Player Search Result */
+.mlb-player-search-result {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+/* MLB Player Search Result Image */
+.mlb-player-search-result img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+/* MLB Player Search Result Team */
+.mlb-player-search-result span {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* MLB Games Date Navigation */
+.mlb-games-date-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+/* MLB Games Date Navigation Buttons */
+.mlb-games-date-nav button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  color: #111;
+  font-size: 1.2rem;
+}
+
+/* MLB Games Date Picker */
+.mlb-games-date-nav input {
+  flex: 1;
+  min-width: 0;
+  height: 42px;
+  padding: 0 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  color: #111;
+}
+
+/* MLB Games Date Navigation Hover */
+.mlb-games-date-nav button:hover {
+  background: #f0f0f0;
+}
+
+/* Tablet Layout */
+@media (min-width: 700px) {
+  main {
+    width: min(1200px, calc(100% - 32px));
+    padding: 24px 0 48px;
+  }
+
+  .mlb-games-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  /* MLB Game Card Team Names - Tablet and Up */
+  .mlb-game-card-team-abbreviation {
+    display: none;
+  }
+
+  .mlb-game-card-team-full {
+    display: inline;
+  }
+}
+
+/* Desktop Layout */
+@media (min-width: 1050px) {
+  .mlb-games-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+}

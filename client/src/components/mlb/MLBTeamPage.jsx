@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import MLBRoster from "./MLBRoster.jsx";
 import MLBTeamSchedule from "./MLBTeamSchedule.jsx";
 import MLBTeamStanding from "./MLBTeamStanding.jsx";
@@ -10,6 +15,7 @@ const API_URL = "https://v4-vqu0.onrender.com";
 export default function MLBTeamPage() {
   const { teamId } = useParams();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [team, setTeam] = useState(null);
   const [roster, setRoster] = useState([]);
@@ -18,6 +24,18 @@ export default function MLBTeamPage() {
   const [leaders, setLeaders] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const activeTab = searchParams.get("tab") || "overview";
+
+  function setActiveTab(tab) {
+    const params = new URLSearchParams();
+
+    if (tab !== "overview") {
+      params.set("tab", tab);
+    }
+
+    setSearchParams(params);
+  }
 
   useEffect(() => {
     async function loadTeam() {
@@ -90,82 +108,134 @@ export default function MLBTeamPage() {
     return <p>{error}</p>;
   }
 
-  const liveGame = schedule.find(
-    (game) => game.status?.state === "in"
-  );
-
   return (
-    <main>
-      <a
-        href="#"
-        onClick={(event) => {
-          event.preventDefault();
-          navigate(-1);
-        }}
-      >
-        ← Back
-      </a>
+    <main className="mlb-team-page">
+      <div className="mlb-team-nav">
+        <a
+          href="#"
+          onClick={(event) => {
+            event.preventDefault();
+            navigate(-1);
+          }}
+        >
+          ← Back
+        </a>
 
-      <br />
+        <Link to="/">← Back to Games</Link>
+      </div>
 
-      <Link to="/">← Back to Games</Link>
-
-      <h1>{team.displayName}</h1>
-
-      <nav>
-        <a href="#overview">Overview</a>{" "}
-        <Link to={`/mlb/team/${teamId}/schedule`}>
-          Schedule
-        </Link>{" "}
-        <a href="#roster">Roster</a>
-      </nav>
-
-      <section id="overview">
+      <section className="mlb-team-header">
         {team.logo && (
           <img
+            className="mlb-team-logo"
             src={team.logo}
             alt={team.displayName}
-            width="100"
           />
         )}
 
-        <p>{team.abbreviation}</p>
+        <div className="mlb-team-header-info">
+          <h1>{team.displayName}</h1>
 
-        {team.record?.overall && (
-          <p>Record: {team.record.overall}</p>
-        )}
+          <p>{team.abbreviation}</p>
 
-        {liveGame && (
-          <div>
-            <strong>Live Now</strong>
-            <br />
-
-            <Link to={`/mlb/game/${liveGame.id}`}>
-              Tune In →{" "}
-              {liveGame.homeAway === "home" ? "vs" : "at"}{" "}
-              {liveGame.opponent.abbreviation}
-            </Link>
-
-            <p>{liveGame.status.detail}</p>
-          </div>
-        )}
-
-        <MLBTeamStanding
-          standings={standings}
-          teamId={teamId}
-        />
-
-        <MLBTeamLeaders leaders={leaders} />
+          {team.record?.overall && (
+            <p>Record: {team.record.overall}</p>
+          )}
+        </div>
       </section>
 
-      <MLBTeamSchedule
-        games={schedule}
-        teamId={teamId}
-      />
+      <nav className="mlb-team-tabs">
+        <a
+          href="#overview"
+          className={
+            activeTab === "overview" ? "active" : ""
+          }
+          onClick={(event) => {
+            event.preventDefault();
+            setActiveTab("overview");
+          }}
+        >
+          Overview
+        </a>
 
-      <div id="roster">
-        <MLBRoster players={roster} />
-      </div>
+        <a
+          href="#schedule"
+          className={
+            activeTab === "schedule" ? "active" : ""
+          }
+          onClick={(event) => {
+            event.preventDefault();
+            setActiveTab("schedule");
+          }}
+        >
+          Schedule
+        </a>
+
+        <a
+          href="#roster"
+          className={
+            activeTab === "roster" ? "active" : ""
+          }
+          onClick={(event) => {
+            event.preventDefault();
+            setActiveTab("roster");
+          }}
+        >
+          Roster
+        </a>
+
+        <a
+          href="#leaders"
+          className={
+            activeTab === "leaders" ? "active" : ""
+          }
+          onClick={(event) => {
+            event.preventDefault();
+            setActiveTab("leaders");
+          }}
+        >
+          Leaders
+        </a>
+      </nav>
+
+      {activeTab === "overview" && (
+        <section
+          id="overview"
+          className="mlb-team-overview"
+        >
+          <MLBTeamStanding
+            standings={standings}
+            teamId={teamId}
+          />
+        </section>
+      )}
+
+      {activeTab === "schedule" && (
+        <section
+          id="schedule"
+          className="mlb-team-schedule"
+        >
+          <MLBTeamSchedule
+            games={schedule}
+            teamId={teamId}
+          />
+        </section>
+      )}
+
+      {activeTab === "roster" && (
+        <section id="roster">
+          <MLBRoster players={roster} />
+        </section>
+      )}
+
+      {activeTab === "leaders" && (
+        <section
+          id="leaders"
+          className="mlb-team-leaders"
+        >
+          <MLBTeamLeaders leaders={leaders} />
+        </section>
+      )}
     </main>
   );
 }

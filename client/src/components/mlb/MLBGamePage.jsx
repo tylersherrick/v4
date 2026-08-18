@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import MLBLinescore from "./MLBLinescore.jsx";
-import MLBLineups from "./MLBLineups.jsx";
 import MLBInjuries from "./MLBInjuries.jsx";
 import MLBGameBatting from "./MLBGameBatting.jsx";
 
@@ -54,6 +53,13 @@ export default function MLBGamePage() {
   }
 
   const isPregame = game.status.state === "pre";
+
+  const gameStatus = isPregame
+    ? new Date(game.date).toLocaleTimeString([], {
+        hour: "numeric",
+        minute: "2-digit",
+      })
+    : game.status.detail;
 
   const occupiedBases = game.liveCount
     ? [
@@ -121,7 +127,7 @@ export default function MLBGamePage() {
         </div>
 
         <p className="mlb-game-status">
-          {game.status.detail}
+          {gameStatus}
         </p>
 
         {game.liveCount && (
@@ -161,17 +167,10 @@ export default function MLBGamePage() {
       </section>
 
       {isPregame ? (
-        <>
-          <MLBLineups
-            awayTeam={game.awayTeam}
-            homeTeam={game.homeTeam}
-          />
-
-          <MLBInjuries
-            awayTeam={game.awayTeam}
-            homeTeam={game.homeTeam}
-          />
-        </>
+        <MLBInjuries
+          awayTeam={game.awayTeam}
+          homeTeam={game.homeTeam}
+        />
       ) : (
         <MLBGameBatting
           awayTeam={game.awayTeam}

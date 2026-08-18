@@ -37,7 +37,7 @@ export default function MLBTeamStanding({ standings, teamId }) {
   }
 
   return (
-    <section>
+    <section className="mlb-team-standing">
       <h2>Standings</h2>
 
       <p>
@@ -64,7 +64,14 @@ export default function MLBTeamStanding({ standings, teamId }) {
       <h3>{teamStanding.division} Standings</h3>
 
       {divisionTeams.map((team, index) => (
-        <div key={team.id}>
+        <div
+          key={team.id}
+          className={`mlb-team-standing-team ${
+            String(team.id) === String(teamId)
+              ? "current"
+              : ""
+          }`}
+        >
           <span>{index + 1}. </span>
 
           <Link to={`/mlb/team/${team.id}`}>

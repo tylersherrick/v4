@@ -1,0 +1,362 @@
+/* MLB Game Page Navigation */
+.mlb-game-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  font-size: 0.9rem;
+}
+
+.mlb-game-nav a {
+  color: #555;
+  text-decoration: none;
+}
+
+/* MLB Game Header */
+.mlb-game-header {
+  padding: 18px 16px;
+  margin-bottom: 16px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+/* MLB Game Matchup */
+.mlb-game-header h1 {
+  margin-bottom: 16px;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* MLB Game Matchup */
+.mlb-game-matchup {
+  margin-bottom: 18px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* MLB Game Scoreboard */
+.mlb-game-scoreboard {
+  display: grid;
+  gap: 8px;
+}
+
+.mlb-game-team {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 54px;
+  padding: 4px 12px;
+}
+
+.mlb-game-team-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+/* MLB Game Team Logo */
+.mlb-game-team-info img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* MLB Game Team Link */
+.mlb-game-team-info a {
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.mlb-game-team strong {
+  min-width: 42px;
+  margin-left: 16px;
+  margin-right: 4px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+.mlb-game-status {
+  margin: 16px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+  color: #444;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* MLB Game Live Status */
+.mlb-game-status.live {
+  color: #c62828;
+}
+
+/* MLB Game Final Status */
+.mlb-game-status.final {
+  color: #666;
+}
+
+/* MLB Game Pregame Status */
+.mlb-game-status.pregame {
+  color: #444;
+}
+
+/* MLB Game Live Information */
+.mlb-game-live-info {
+  margin-top: 14px;
+  padding: 12px;
+  background: #f5f5f5;
+  border-radius: 7px;
+}
+
+/* MLB Game Live Summary */
+.mlb-game-live-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* MLB Game Live Summary Items */
+.mlb-game-live-summary span {
+  white-space: nowrap;
+}
+
+/* MLB Game Last Play */
+.mlb-game-last-play {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  color: #444;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+/* MLB Linescore */
+.mlb-linescore {
+  width: fit-content;
+  min-width: max-content;
+  margin: 0 auto 24px;
+  padding: 12px 14px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+/* MLB Linescore Row */
+.mlb-linescore-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 30px;
+  font-size: 0.85rem;
+}
+
+/* MLB Linescore Team Column */
+.mlb-linescore-row > :first-child {
+  flex: 0 0 38px;
+  width: 38px;
+  text-align: left;
+}
+
+/* MLB Linescore Inning and Total Columns */
+.mlb-linescore-row > :not(:first-child) {
+  flex: 0 0 20px;
+  width: 20px;
+  text-align: center;
+}
+
+/* MLB Linescore Header */
+.mlb-linescore-header {
+  margin-bottom: 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #eee;
+  color: #666;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* MLB Linescore Team */
+.mlb-linescore-team {
+  font-weight: 700;
+}
+
+/* MLB Linescore Total */
+.mlb-linescore-total {
+  font-weight: 700;
+}
+
+.mlb-game-info {
+  margin-bottom: 24px;
+}
+
+.mlb-game-info-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #ddd;
+}
+
+.mlb-game-info-tabs button {
+  padding: 10px 16px;
+  color: #666;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mlb-game-info-tabs button:hover {
+  color: #111;
+  background: #f5f5f5;
+}
+
+.mlb-game-info-tabs button.active {
+  color: #111;
+  border-bottom-color: #111;
+}
+
+.mlb-lineups,
+.mlb-injuries {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mlb-lineups-team,
+.mlb-injuries-team {
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.mlb-lineups-team h3,
+.mlb-injuries-team h3 {
+  margin: 0 0 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+  font-size: 0.95rem;
+}
+
+.mlb-lineup-list,
+.mlb-injury-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.mlb-lineup-player {
+  display: grid;
+  grid-template-columns: 30px 1fr 40px;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 0.85rem;
+}
+
+.mlb-lineup-player:last-child {
+  border-bottom: 0;
+}
+
+.mlb-lineup-order {
+  color: #888;
+  text-align: right;
+}
+
+.mlb-lineup-name,
+.mlb-injury-player-name {
+  color: #111;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.mlb-lineup-name:hover,
+.mlb-injury-player-name:hover {
+  text-decoration: underline;
+}
+
+.mlb-lineup-position {
+  color: #666;
+  text-align: right;
+}
+
+.mlb-lineup-empty,
+.mlb-injury-empty {
+  margin: 0;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.mlb-injury-player {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 0.85rem;
+}
+
+.mlb-injury-player:last-child {
+  border-bottom: 0;
+}
+
+.mlb-injury-details {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  color: #666;
+  text-align: right;
+}
+
+.mlb-starting-pitcher {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 9px 10px;
+  background: #f5f5f5;
+  border-radius: 6px;
+  color: #111;
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+
+.mlb-starting-pitcher:hover {
+  background: #eee;
+}
+
+.mlb-starting-pitcher-label {
+  color: #666;
+  font-weight: 600;
+}
+
+.mlb-starting-pitcher-name {
+  font-weight: 700;
+}
+
+.mlb-starting-pitcher-record {
+  color: #777;
+}
+
+.mlb-starting-pitcher-empty {
+  margin: 0 0 12px;
+  padding: 9px 10px;
+  background: #f5f5f5;
+  border-radius: 6px;
+  color: #666;
+  font-size: 0.85rem;
+}
