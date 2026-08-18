@@ -15,9 +15,9 @@ function getStatsObject(labels, stats) {
   );
 }
 
-function normalizeSeasonStats(data, categoryName) {
+function normalizeSeasonStats(data, categoryNames) {
   const category = data.categories?.find(
-    (item) => item.name === categoryName
+    (item) => categoryNames.includes(item.name)
   );
 
   if (!category) {
@@ -34,7 +34,6 @@ function normalizeSeasonStats(data, categoryName) {
 
       return {
         year: season.season?.year ?? null,
-
         team: {
           id: season.teamId || null,
           name: team?.displayName || null,
@@ -44,9 +43,7 @@ function normalizeSeasonStats(data, categoryName) {
               logo.rel?.includes("default")
             )?.href || null,
         },
-
         position: season.position || null,
-
         stats: getStatsObject(
           category.labels,
           season.stats
@@ -71,7 +68,6 @@ function normalizeCareerPositions(data) {
         position.abbreviation ||
         position.displayName ||
         null,
-
       stats: getStatsObject(
         category.labels,
         position.stats
@@ -80,7 +76,14 @@ function normalizeCareerPositions(data) {
   );
 }
 
-function getCareerBattingTotals(data) {
+function getOverviewCareerTotals(data, type) {
+  const displayName =
+    data.statistics?.displayName?.toLowerCase() || "";
+
+  if (!displayName.includes(type)) {
+    return {};
+  }
+
   const labels = data.statistics?.labels || [];
 
   const career = data.statistics?.splits?.find(
@@ -97,6 +100,25 @@ function getCareerBattingTotals(data) {
   );
 }
 
+async function fetchOptionalStats(url) {
+  const response = await fetch(url);
+
+  if (response.status === 404) {
+    return {
+      categories: [],
+      teams: {},
+    };
+  }
+
+  if (!response.ok) {
+    throw new Error(
+      `ESPN request failed: ${response.status}`
+    );
+  }
+
+  return response.json();
+}
+
 export async function getPlayerStats(playerId) {
   const statsUrl =
     `https://site.web.api.espn.com/apis/common/v3/sports/baseball/mlb/athletes/` +
@@ -107,26 +129,22 @@ export async function getPlayerStats(playerId) {
     `${playerId}/overview`;
 
   const [
-    battingResponse,
-    fieldingResponse,
+    battingData,
+    pitchingData,
+    fieldingData,
     overviewResponse,
   ] = await Promise.all([
-    fetch(`${statsUrl}?category=batting`),
-    fetch(`${statsUrl}?category=fielding`),
+    fetchOptionalStats(
+      `${statsUrl}?category=batting`
+    ),
+    fetchOptionalStats(
+      `${statsUrl}?category=pitching`
+    ),
+    fetchOptionalStats(
+      `${statsUrl}?category=fielding`
+    ),
     fetch(overviewUrl),
   ]);
-
-  if (!battingResponse.ok) {
-    throw new Error(
-      `ESPN batting request failed: ${battingResponse.status}`
-    );
-  }
-
-  if (!fieldingResponse.ok) {
-    throw new Error(
-      `ESPN fielding request failed: ${fieldingResponse.status}`
-    );
-  }
 
   if (!overviewResponse.ok) {
     throw new Error(
@@ -134,27 +152,23 @@ export async function getPlayerStats(playerId) {
     );
   }
 
-  const [
+  const overviewData =
+    await overviewResponse.json();
+
+  const battingSeasons = normalizeSeasonStats(
     battingData,
+    ["career-batting", "batting"]
+  );
+
+  const pitchingSeasons = normalizeSeasonStats(
+    pitchingData,
+    ["career-pitching", "pitching"]
+  );
+
+  const fieldingSeasons = normalizeSeasonStats(
     fieldingData,
-    overviewData,
-  ] = await Promise.all([
-    battingResponse.json(),
-    fieldingResponse.json(),
-    overviewResponse.json(),
-  ]);
-
-  const battingSeasons =
-    normalizeSeasonStats(
-      battingData,
-      "career-batting"
-    );
-
-  const fieldingSeasons =
-    normalizeSeasonStats(
-      fieldingData,
-      "fielding"
-    );
+    ["fielding"]
+  );
 
   const currentYear = new Date().getFullYear();
 
@@ -165,20 +179,31 @@ export async function getPlayerStats(playerId) {
       currentSeason: battingSeasons.filter(
         (season) => season.year === currentYear
       ),
-
       careerTotals:
-        getCareerBattingTotals(overviewData),
-
+        getOverviewCareerTotals(
+          overviewData,
+          "batting"
+        ),
       career: battingSeasons,
+    },
+
+    pitching: {
+      currentSeason: pitchingSeasons.filter(
+        (season) => season.year === currentYear
+      ),
+      careerTotals:
+        getOverviewCareerTotals(
+          overviewData,
+          "pitching"
+        ),
+      career: pitchingSeasons,
     },
 
     fielding: {
       currentSeason: fieldingSeasons.filter(
         (season) => season.year === currentYear
       ),
-
       career: fieldingSeasons,
-
       careerByPosition:
         normalizeCareerPositions(fieldingData),
     },

@@ -1,11 +1,15 @@
-export async function getTodayGames() {
+function getTodayDate() {
   const now = new Date();
 
   const year = now.getFullYear();
   const month = String(now.getMonth() + 1).padStart(2, "0");
   const day = String(now.getDate()).padStart(2, "0");
 
-  const date = `${year}${month}${day}`;
+  return `${year}${month}${day}`;
+}
+
+export async function getTodayGames(selectedDate) {
+  const date = selectedDate || getTodayDate();
 
   const url =
     `https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard` +

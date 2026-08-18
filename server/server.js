@@ -8,6 +8,8 @@ import mlbRosterRouter from "./routes/mlb/roster.js";
 import mlbPlayerRouter from "./routes/mlb/player.js";
 import mlbPlayerStatsRouter from "./routes/mlb/playerStats.js";
 import mlbPlayerSearchRouter from "./routes/mlb/playerSearch.js";
+import mlbStandingsRouter from "./routes/mlb/standings.js";
+import mlbTeamLeadersRouter from "./routes/mlb/teamLeaders.js";
 
 const app = express();
 
@@ -30,6 +32,8 @@ app.use("/api/mlb/team", mlbRosterRouter);
 app.use("/api/mlb/player", mlbPlayerRouter);
 app.use("/api/mlb/player", mlbPlayerStatsRouter);
 app.use("/api/mlb/players", mlbPlayerSearchRouter);
+app.use("/api/mlb/standings", mlbStandingsRouter);
+app.use("/api/mlb/team", mlbTeamLeadersRouter);
 
 app.listen(PORT, () => {
   console.log(`V4 API running on port ${PORT}`);

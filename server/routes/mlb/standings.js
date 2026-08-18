@@ -1,18 +1,17 @@
 import express from "express";
-import { getTodayGames } from "../../services/mlb/games.js";
+import { getMLBStandings } from "../../services/mlb/standings.js";
 
 const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const games = await getTodayGames(req.query.date);
-
-    res.json(games);
+    const standings = await getMLBStandings();
+    res.json(standings);
   } catch (error) {
     console.error(error);
 
     res.status(500).json({
-      error: "Unable to load MLB games",
+      error: "Unable to load MLB standings",
     });
   }
 });

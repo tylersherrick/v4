@@ -26,6 +26,15 @@ function getStatObject(labels, stats) {
   );
 }
 
+function getTeamLogo(competitor) {
+  return (
+    competitor?.team?.logo ||
+    competitor?.team?.logos?.[0]?.href ||
+    competitor?.team?.logos?.[0]?.url ||
+    null
+  );
+}
+
 function getTeamPitchers(teamData) {
   const pitching = teamData.statistics?.find(
     (stat) => stat.type === "pitching"
@@ -44,6 +53,28 @@ function getTeamPitchers(teamData) {
     stats: getStatObject(
       pitching.labels,
       pitcher.stats
+    ),
+  }));
+}
+
+function getTeamBatters(teamData) {
+  const batting = teamData.statistics?.find(
+    (stat) => stat.type === "batting"
+  );
+
+  if (!batting?.athletes?.length) {
+    return [];
+  }
+
+  return batting.athletes.map((player) => ({
+    id: player.athlete.id,
+    name: player.athlete.displayName,
+    starter: player.starter === true,
+    battingOrder: player.batOrder ?? null,
+    position: player.position?.abbreviation || null,
+    stats: getStatObject(
+      batting.labels,
+      player.stats
     ),
   }));
 }
@@ -121,6 +152,53 @@ function getTeamInjuries(data, teamId) {
   }));
 }
 
+function getLiveCount(data, competition) {
+  if (competition.status?.type?.state !== "in") {
+    return null;
+  }
+
+  const plays = data.plays || [];
+
+  const currentPlay = [...plays]
+    .reverse()
+    .find(
+      (play) =>
+        play.resultCount &&
+        play.type?.type !== "start-inning" &&
+        play.type?.type !== "end-inning"
+    );
+
+  if (!currentPlay) {
+    return null;
+  }
+
+  return {
+    balls: currentPlay.resultCount?.balls ?? 0,
+    strikes: currentPlay.resultCount?.strikes ?? 0,
+    outs: currentPlay.outs ?? 0,
+    inning: currentPlay.period?.number ?? null,
+    half: currentPlay.period?.type ?? null,
+    play: currentPlay.text || null,
+    bases: {
+      first: Boolean(currentPlay.onFirst),
+      second: Boolean(currentPlay.onSecond),
+      third: Boolean(currentPlay.onThird),
+    },
+  };
+}
+
+function getLinescores(competitor) {
+  return (
+    competitor?.linescores?.map((inning) => ({
+      inning: inning.period,
+      runs:
+        inning.displayValue ??
+        inning.value ??
+        "-",
+    })) || []
+  );
+}
+
 export async function getGameById(gameId) {
   const url =
     `https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/summary` +
@@ -183,6 +261,11 @@ export async function getGameById(gameId) {
         competition.status?.type?.completed,
     },
 
+    liveCount: getLiveCount(
+      data,
+      competition
+    ),
+
     venue: {
       name: competition.venue?.fullName || null,
       city:
@@ -196,27 +279,24 @@ export async function getGameById(gameId) {
       name: awayCompetitor?.team?.displayName,
       abbreviation:
         awayCompetitor?.team?.abbreviation,
-      logo: awayCompetitor?.team?.logo,
+      logo: getTeamLogo(awayCompetitor),
       score: awayCompetitor?.score,
 
-      linescores:
-        awayCompetitor?.linescores?.map(
-          (inning, index) => ({
-            inning: index + 1,
-            runs:
-              inning.displayValue ??
-              inning.value ??
-              null,
-          })
-        ) || [],
+      linescores: getLinescores(
+        awayCompetitor
+      ),
 
       probablePitcher: isPastGame
         ? null
         : getProbablePitcher(awayCompetitor),
 
-      pitchers: isPastGame
-        ? getTeamPitchers(awayBoxscore || {})
-        : [],
+      pitchers: getTeamPitchers(
+        awayBoxscore || {}
+      ),
+
+      batters: getTeamBatters(
+        awayBoxscore || {}
+      ),
 
       lineup: getTeamLineup(
         awayBoxscore || {}
@@ -235,27 +315,24 @@ export async function getGameById(gameId) {
       name: homeCompetitor?.team?.displayName,
       abbreviation:
         homeCompetitor?.team?.abbreviation,
-      logo: homeCompetitor?.team?.logo,
+      logo: getTeamLogo(homeCompetitor),
       score: homeCompetitor?.score,
 
-      linescores:
-        homeCompetitor?.linescores?.map(
-          (inning, index) => ({
-            inning: index + 1,
-            runs:
-              inning.displayValue ??
-              inning.value ??
-              null,
-          })
-        ) || [],
+      linescores: getLinescores(
+        homeCompetitor
+      ),
 
       probablePitcher: isPastGame
         ? null
         : getProbablePitcher(homeCompetitor),
 
-      pitchers: isPastGame
-        ? getTeamPitchers(homeBoxscore || {})
-        : [],
+      pitchers: getTeamPitchers(
+        homeBoxscore || {}
+      ),
+
+      batters: getTeamBatters(
+        homeBoxscore || {}
+      ),
 
       lineup: getTeamLineup(
         homeBoxscore || {}
