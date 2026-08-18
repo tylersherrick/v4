@@ -72,7 +72,9 @@ export default function MLBFullSchedule() {
           {game.result && (
             <span>
               {" "}
-              {game.result} {game.score}-{game.opponentScore}
+              {game.result}{" "}
+              {game.score?.displayValue}-
+              {game.opponentScore?.displayValue}
             </span>
           )}
 
