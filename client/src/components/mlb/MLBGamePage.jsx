@@ -5,6 +5,8 @@ import MLBLineups from "./MLBLineups.jsx";
 import MLBInjuries from "./MLBInjuries.jsx";
 import MLBGameBatting from "./MLBGameBatting.jsx";
 
+const API_URL = "https://v4-vqu0.onrender.com";
+
 export default function MLBGamePage() {
   const { gameId } = useParams();
   const navigate = useNavigate();
@@ -16,7 +18,7 @@ export default function MLBGamePage() {
     async function loadGame() {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/mlb/game/${gameId}`
+          `${API_URL}/api/mlb/game/${gameId}`
         );
 
         if (!response.ok) {

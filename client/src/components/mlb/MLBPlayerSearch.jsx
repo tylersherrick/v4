@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
+const API_URL = "https://v4-vqu0.onrender.com";
+
 export default function MLBPlayerSearch() {
   const [name, setName] = useState("");
   const [players, setPlayers] = useState([]);
@@ -17,7 +19,7 @@ export default function MLBPlayerSearch() {
       setError("");
 
       const response = await fetch(
-        `http://localhost:3000/api/mlb/players/search?name=${encodeURIComponent(name)}`
+        `${API_URL}/api/mlb/players/search?name=${encodeURIComponent(name)}`
       );
 
       if (!response.ok) {

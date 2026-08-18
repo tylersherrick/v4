@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
+const API_URL = "https://v4-vqu0.onrender.com";
+
 export default function MLBFullSchedule() {
   const { teamId } = useParams();
   const navigate = useNavigate();
@@ -12,7 +14,7 @@ export default function MLBFullSchedule() {
     async function loadSchedule() {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/mlb/teams/${teamId}/schedule`
+          `${API_URL}/api/mlb/teams/${teamId}/schedule`
         );
 
         if (!response.ok) {
@@ -34,6 +36,7 @@ export default function MLBFullSchedule() {
   if (loading) {
     return <p>Loading schedule...</p>;
   }
+
   if (error) {
     return <p>{error}</p>;
   }

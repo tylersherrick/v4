@@ -5,6 +5,8 @@ import MLBTeamSchedule from "./MLBTeamSchedule.jsx";
 import MLBTeamStanding from "./MLBTeamStanding.jsx";
 import MLBTeamLeaders from "./MLBTeamLeaders.jsx";
 
+const API_URL = "https://v4-vqu0.onrender.com";
+
 export default function MLBTeamPage() {
   const { teamId } = useParams();
   const navigate = useNavigate();
@@ -34,11 +36,11 @@ export default function MLBTeamPage() {
           standingsResponse,
           leadersResponse,
         ] = await Promise.all([
-          fetch(`http://localhost:3000/api/mlb/team/${teamId}`),
-          fetch(`http://localhost:3000/api/mlb/team/${teamId}/roster`),
-          fetch(`http://localhost:3000/api/mlb/teams/${teamId}/schedule`),
-          fetch("http://localhost:3000/api/mlb/standings"),
-          fetch(`http://localhost:3000/api/mlb/team/${teamId}/leaders`),
+          fetch(`${API_URL}/api/mlb/team/${teamId}`),
+          fetch(`${API_URL}/api/mlb/team/${teamId}/roster`),
+          fetch(`${API_URL}/api/mlb/teams/${teamId}/schedule`),
+          fetch(`${API_URL}/api/mlb/standings`),
+          fetch(`${API_URL}/api/mlb/team/${teamId}/leaders`),
         ]);
 
         if (

@@ -5,6 +5,8 @@ import MLBCareerTotals from "./MLBCareerTotals.jsx";
 import MLBCareerFielding from "./MLBCareerFielding.jsx";
 import MLBPlayerNews from "./MLBPlayerNews.jsx";
 
+const API_URL = "https://v4-vqu0.onrender.com";
+
 export default function MLBPlayerPage() {
   const { playerId } = useParams();
   const location = useLocation();
@@ -28,10 +30,10 @@ export default function MLBPlayerPage() {
       try {
         const [statsResponse, playerResponse] = await Promise.all([
           fetch(
-            `http://localhost:3000/api/mlb/player/${playerId}/stats`
+            `${API_URL}/api/mlb/player/${playerId}/stats`
           ),
           fetch(
-            `http://localhost:3000/api/mlb/player/${playerId}`
+            `${API_URL}/api/mlb/player/${playerId}`
           ),
         ]);
 
@@ -76,6 +78,7 @@ export default function MLBPlayerPage() {
   if (loading) {
     return <p>Loading player...</p>;
   }
+
   if (error) {
     return <p>{error}</p>;
   }
