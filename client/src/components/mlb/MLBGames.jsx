@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import MLBGameCard from "./MLBGameCard.jsx";
 import MLBPlayerSearch from "./MLBPlayerSearch.jsx";
 
+const API_URL = "https://v4-vqu0.onrender.com";
+
 function getToday() {
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone: "America/Chicago",
@@ -42,7 +44,7 @@ export default function MLBGames() {
     async function loadGames() {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/mlb/games?date=${formatApiDate(date)}`
+          `${API_URL}/api/mlb/games?date=${formatApiDate(date)}`
         );
 
         if (!response.ok) {
