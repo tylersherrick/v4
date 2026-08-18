@@ -1,48 +1,9 @@
-const YEAR = 2026;
-const CHUNK_DAYS = 5;
-const BATCH_SIZE = 10;
-
 const scheduleCache = new Map();
 const CACHE_TIME = 5 * 60 * 1000;
 
-function formatESPNDate(date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-
-  return `${year}${month}${day}`;
-}
-
-function buildDateChunks() {
-  const chunks = [];
-
-  let start = new Date(YEAR, 0, 1);
-  const endOfYear = new Date(YEAR, 11, 31);
-
-  while (start <= endOfYear) {
-    const end = new Date(start);
-    end.setDate(end.getDate() + CHUNK_DAYS - 1);
-
-    if (end > endOfYear) {
-      end.setTime(endOfYear.getTime());
-    }
-
-    chunks.push({
-      startDate: formatESPNDate(start),
-      endDate: formatESPNDate(end),
-    });
-
-    start = new Date(end);
-    start.setDate(start.getDate() + 1);
-  }
-
-  return chunks;
-}
-
-async function fetchChunk(chunk, teamId) {
+async function fetchTeamSchedule(teamId) {
   const url =
-    `https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard` +
-    `?dates=${chunk.startDate}-${chunk.endDate}`;
+    `https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams/${teamId}/schedule`;
 
   const response = await fetch(url);
 
@@ -52,14 +13,7 @@ async function fetchChunk(chunk, teamId) {
     );
   }
 
-  const data = await response.json();
-
-  return data.events.filter((game) =>
-    game.competitions?.[0]?.competitors?.some(
-      (competitor) =>
-        String(competitor.team.id) === String(teamId)
-    )
-  );
+  return response.json();
 }
 
 function normalizeGame(game, teamId) {
@@ -110,7 +64,9 @@ function normalizeGame(game, teamId) {
 }
 
 export async function getTeamSchedule(teamId) {
-  const cached = scheduleCache.get(String(teamId));
+  const key = String(teamId);
+
+  const cached = scheduleCache.get(key);
 
   if (
     cached &&
@@ -122,38 +78,16 @@ export async function getTeamSchedule(teamId) {
 
   console.log(`Fetching fresh schedule for team ${teamId}`);
 
-  const chunks = buildDateChunks();
-  const allGames = [];
+  const data = await fetchTeamSchedule(teamId);
 
-  for (let i = 0; i < chunks.length; i += BATCH_SIZE) {
-    const batch = chunks.slice(i, i + BATCH_SIZE);
-
-    const results = await Promise.all(
-      batch.map((chunk) =>
-        fetchChunk(chunk, teamId)
-      )
+  const schedule = (data.events || [])
+    .map((game) => normalizeGame(game, teamId))
+    .sort(
+      (a, b) =>
+        new Date(a.date) - new Date(b.date)
     );
 
-    results.forEach((games) => {
-      allGames.push(...games);
-    });
-  }
-
-  const games = [
-    ...new Map(
-      allGames.map((game) => [game.id, game])
-    ).values(),
-  ];
-
-  games.sort(
-    (a, b) => new Date(a.date) - new Date(b.date)
-  );
-
-  const schedule = games.map((game) =>
-    normalizeGame(game, teamId)
-  );
-
-  scheduleCache.set(String(teamId), {
+  scheduleCache.set(key, {
     createdAt: Date.now(),
     data: schedule,
   });
