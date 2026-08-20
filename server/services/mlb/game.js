@@ -188,15 +188,18 @@ function getLiveCount(data, competition) {
 }
 
 function getLinescores(competitor) {
-  return (
-    competitor?.linescores?.map((inning) => ({
-      inning: inning.period,
-      runs:
-        inning.displayValue ??
-        inning.value ??
-        "-",
-    })) || []
-  );
+  return {
+    innings:
+      competitor?.linescores?.map((inning) => ({
+        inning: inning.period,
+        runs:
+          inning.displayValue ??
+          inning.value ??
+          "-",
+      })) || [],
+    hits: competitor?.hits ?? "-",
+    errors: competitor?.errors ?? "-",
+  };
 }
 
 export async function getGameById(gameId) {
