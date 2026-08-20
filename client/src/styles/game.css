@@ -142,15 +142,15 @@
   line-height: 1.4;
 }
 
-/* MLB Linescore */
 .mlb-linescore {
   width: fit-content;
-  min-width: max-content;
+  max-width: 100%;
   margin: 0 auto 24px;
   padding: 12px 14px;
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 8px;
+  overflow-x: auto;
 }
 
 /* MLB Linescore Row */

@@ -1,11 +1,12 @@
 export default function MLBLinescore({ awayTeam, homeTeam }) {
   const innings = Math.max(
-    awayTeam.linescores.length,
-    homeTeam.linescores.length
+    9,
+    awayTeam.linescores.innings.length,
+    homeTeam.linescores.innings.length
   );
 
   function getRuns(team, index) {
-    return team.linescores?.[index]?.runs ?? "-";
+    return team.linescores.innings?.[index]?.runs ?? "-";
   }
 
   if (innings === 0) {
@@ -24,6 +25,8 @@ export default function MLBLinescore({ awayTeam, homeTeam }) {
         ))}
 
         <span className="mlb-linescore-total">R</span>
+        <span className="mlb-linescore-total">H</span>
+        <span className="mlb-linescore-total">E</span>
       </div>
 
       <div className="mlb-linescore-row">
@@ -40,6 +43,14 @@ export default function MLBLinescore({ awayTeam, homeTeam }) {
         <strong className="mlb-linescore-total">
           {awayTeam.score}
         </strong>
+
+        <strong className="mlb-linescore-total">
+          {awayTeam.linescores.hits}
+        </strong>
+
+        <strong className="mlb-linescore-total">
+          {awayTeam.linescores.errors}
+        </strong>
       </div>
 
       <div className="mlb-linescore-row">
@@ -55,6 +66,14 @@ export default function MLBLinescore({ awayTeam, homeTeam }) {
 
         <strong className="mlb-linescore-total">
           {homeTeam.score}
+        </strong>
+
+        <strong className="mlb-linescore-total">
+          {homeTeam.linescores.hits}
+        </strong>
+
+        <strong className="mlb-linescore-total">
+          {homeTeam.linescores.errors}
         </strong>
       </div>
     </div>
