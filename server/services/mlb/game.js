@@ -206,6 +206,143 @@ function getLiveCount(data, competition) {
   };
 }
 
+function getCurrentMatchup(
+  data,
+  competition,
+  awayBoxscore,
+  homeBoxscore
+) {
+  const state = competition.status?.type?.state;
+
+  if (state !== "in" && state !== "post") {
+    return null;
+  }
+
+  const plays = data.plays || [];
+
+  const currentAtBat = [...plays]
+    .reverse()
+    .find(
+      (play) =>
+        play.type?.type === "start-batterpitcher" &&
+        play.participants?.some(
+          (participant) =>
+            participant.type === "pitcher"
+        ) &&
+        play.participants?.some(
+          (participant) =>
+            participant.type === "batter"
+        )
+    );
+
+  if (!currentAtBat) {
+    return null;
+  }
+
+  const pitcherParticipant =
+    currentAtBat.participants.find(
+      (participant) =>
+        participant.type === "pitcher"
+    );
+
+  const batterParticipant =
+    currentAtBat.participants.find(
+      (participant) =>
+        participant.type === "batter"
+    );
+
+  const pitcherId = pitcherParticipant?.athlete?.id;
+  const batterId = batterParticipant?.athlete?.id;
+
+  if (!pitcherId || !batterId) {
+    return null;
+  }
+
+  const awayPitchers = getTeamPitchers(
+    awayBoxscore || {}
+  );
+
+  const homePitchers = getTeamPitchers(
+    homeBoxscore || {}
+  );
+
+  const awayBatters = getTeamBatters(
+    awayBoxscore || {}
+  );
+
+  const homeBatters = getTeamBatters(
+    homeBoxscore || {}
+  );
+
+  const pitcher =
+    [...awayPitchers, ...homePitchers].find(
+      (player) =>
+        String(player.id) === String(pitcherId)
+    );
+
+  const batter =
+    [...awayBatters, ...homeBatters].find(
+      (player) =>
+        String(player.id) === String(batterId)
+    );
+
+  if (!pitcher || !batter) {
+    return null;
+  }
+
+  const battingTeamId =
+    currentAtBat.team?.id;
+
+  const awayTeam =
+    competition.competitors?.find(
+      (team) => team.homeAway === "away"
+    );
+
+  const homeTeam =
+    competition.competitors?.find(
+      (team) => team.homeAway === "home"
+    );
+
+  const batterTeam =
+    String(battingTeamId) ===
+    String(awayTeam?.team?.id)
+      ? awayTeam
+      : homeTeam;
+
+  const pitcherTeam =
+    String(battingTeamId) ===
+    String(awayTeam?.team?.id)
+      ? homeTeam
+      : awayTeam;
+
+  return {
+    inning: currentAtBat.period?.number ?? null,
+    half: currentAtBat.period?.type ?? null,
+
+    pitcher: {
+      ...pitcher,
+      team: {
+        id: pitcherTeam?.team?.id,
+        name: pitcherTeam?.team?.displayName,
+        abbreviation:
+          pitcherTeam?.team?.abbreviation,
+        logo: getTeamLogo(pitcherTeam),
+      },
+    },
+
+    batter: {
+      ...batter,
+      team: {
+        id: batterTeam?.team?.id,
+        name: batterTeam?.team?.displayName,
+        abbreviation:
+          batterTeam?.team?.abbreviation,
+        logo: getTeamLogo(batterTeam),
+      },
+    },
+  };
+}
+
 function getLinescores(competitor) {
   return {
     innings:
@@ -271,6 +408,13 @@ export async function getGameById(gameId) {
         String(homeCompetitor?.team?.id)
     );
 
+  const currentMatchup = getCurrentMatchup(
+    data,
+    competition,
+    awayBoxscore,
+    homeBoxscore
+  );
+
   return {
     id: data.header?.id || gameId,
     date: competition.date,
@@ -287,6 +431,12 @@ export async function getGameById(gameId) {
       data,
       competition
     ),
+
+    currentPitcher:
+      currentMatchup?.pitcher || null,
+
+    currentBatter:
+      currentMatchup?.batter || null,
 
     venue: {
       name: competition.venue?.fullName || null,
