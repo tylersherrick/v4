@@ -74,6 +74,7 @@ export default function MLBGamePage() {
   }
 
   const isPregame = game.status.state === "pre";
+  const isLive = game.status.state === "in";
 
   const gameStatus = isPregame
     ? new Date(game.date).toLocaleTimeString([], {
@@ -164,7 +165,8 @@ export default function MLBGamePage() {
         </div>
 
         <p className="mlb-game-status">
-          {gameStatus} · {gameDate}
+          {gameStatus}
+          {!isLive && ` · ${gameDate}`}
         </p>
 
         {game.liveCount && (
@@ -177,9 +179,7 @@ export default function MLBGamePage() {
                 </span>
 
                 <span>
-                  {game.liveCount.half}{" "}
-                  {game.liveCount.inning}
-                  {getInningSuffix(game.liveCount.inning)}
+                
                 </span>
 
                 <span>
