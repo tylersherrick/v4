@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      const path = window.location.pathname;
+      const base = "/v4/";
+
+      if (path.startsWith(base)) {
+        const route = path.slice(base.length);
+
+        sessionStorage.setItem(
+          "redirect",
+          JSON.stringify({
+            route,
+            query: window.location.search,
+            hash: window.location.hash,
+          })
+        );
+
+        window.location.replace(base);
+      }
+    </script>
+  </head>
+  <body></body>
+</html>
