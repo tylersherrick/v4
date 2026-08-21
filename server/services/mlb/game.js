@@ -47,6 +47,7 @@ function getTeamPitchers(teamData) {
   return pitching.athletes.map((pitcher) => ({
     id: pitcher.athlete.id,
     name: pitcher.athlete.displayName,
+    headshot: pitcher.athlete.headshot?.href || null,
     starter: pitcher.starter === true,
     role: pitcher.starter ? "STARTER" : "RELIEF",
     position: pitcher.position?.abbreviation || "P",
@@ -69,6 +70,7 @@ function getTeamBatters(teamData) {
   return batting.athletes.map((player) => ({
     id: player.athlete.id,
     name: player.athlete.displayName,
+    headshot: player.athlete.headshot?.href || null,
     starter: player.starter === true,
     battingOrder: player.batOrder ?? null,
     position: player.position?.abbreviation || null,
@@ -99,6 +101,7 @@ function getTeamLineup(teamData) {
     .map((player) => ({
       id: player.athlete.id,
       name: player.athlete.displayName,
+      headshot: player.athlete.headshot?.href || null,
       battingOrder: player.batOrder,
       position: player.position?.abbreviation || null,
       stats: getStatObject(
@@ -119,6 +122,10 @@ function getProbablePitcher(competitor) {
     return null;
   }
 
+  const pitchingStats = probable.statistics?.find(
+    (stat) => stat.type === "pitching"
+  );
+
   return {
     id: probable.athlete.id,
     name: probable.athlete.displayName,
@@ -127,6 +134,7 @@ function getProbablePitcher(competitor) {
       probable.athlete.position ||
       "SP",
     record: probable.record || null,
+    era: pitchingStats?.era || null,
   };
 }
 
