@@ -4,6 +4,12 @@ export default function MLBInjuries({ awayTeam, homeTeam }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const activeTab = searchParams.get("gameInfo") || "lineups";
+  const selectedTeam = searchParams.get("lineupTeam") || "away";
+
+  const team =
+    selectedTeam === "away"
+      ? awayTeam
+      : homeTeam;
 
   function setTab(tab) {
     const params = new URLSearchParams(searchParams);
@@ -14,6 +20,12 @@ export default function MLBInjuries({ awayTeam, homeTeam }) {
       params.set("gameInfo", tab);
     }
 
+    setSearchParams(params);
+  }
+
+  function setTeam(team) {
+    const params = new URLSearchParams(searchParams);
+    params.set("lineupTeam", team);
     setSearchParams(params);
   }
 
@@ -34,6 +46,8 @@ export default function MLBInjuries({ awayTeam, homeTeam }) {
         state={{
           playerName: pitcher.name,
           position: pitcher.position || "SP",
+          jersey: pitcher.jersey,
+          headshot: pitcher.headshot,
         }}
         className="mlb-starting-pitcher"
       >
@@ -48,6 +62,12 @@ export default function MLBInjuries({ awayTeam, homeTeam }) {
         {pitcher.record && (
           <span className="mlb-starting-pitcher-record">
             {pitcher.record}
+          </span>
+        )}
+
+        {pitcher.era && (
+          <span className="mlb-starting-pitcher-era">
+            ERA: {pitcher.era}
           </span>
         )}
       </Link>
@@ -94,6 +114,7 @@ export default function MLBInjuries({ awayTeam, homeTeam }) {
               state={{
                 playerName: player.name,
                 position: player.position,
+                headshot: player.headshot,
               }}
               className="mlb-lineup-name"
             >
@@ -176,23 +197,37 @@ export default function MLBInjuries({ awayTeam, homeTeam }) {
       </div>
 
       {activeTab === "lineups" ? (
-        <div className="mlb-lineups">
-          <div className="mlb-lineups-team">
-            <h3>{awayTeam.name}</h3>
+        <>
+          <div className="mlb-lineup-team-tabs">
+            <button
+              className={
+                selectedTeam === "away" ? "active" : ""
+              }
+              onClick={() => setTeam("away")}
+            >
+              {awayTeam.name}
+            </button>
 
-            {renderPitcher(awayTeam)}
-
-            {renderLineup(awayTeam)}
+            <button
+              className={
+                selectedTeam === "home" ? "active" : ""
+              }
+              onClick={() => setTeam("home")}
+            >
+              {homeTeam.name}
+            </button>
           </div>
 
-          <div className="mlb-lineups-team">
-            <h3>{homeTeam.name}</h3>
+          <div className="mlb-lineups">
+            <div className="mlb-lineups-team">
+              <h3>{team.name}</h3>
 
-            {renderPitcher(homeTeam)}
+              {renderPitcher(team)}
 
-            {renderLineup(homeTeam)}
+              {renderLineup(team)}
+            </div>
           </div>
-        </div>
+        </>
       ) : (
         <div className="mlb-injuries">
           <div className="mlb-injuries-team">

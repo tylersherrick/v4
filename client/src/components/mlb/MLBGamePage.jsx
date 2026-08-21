@@ -62,6 +62,11 @@ export default function MLBGamePage() {
       })
     : game.status.detail;
 
+  const gameDate = new Date(game.date).toLocaleDateString([], {
+    month: "long",
+    day: "numeric",
+  });
+
   const bases = game.liveCount?.bases || {};
 
   return (
@@ -126,20 +131,17 @@ export default function MLBGamePage() {
         </div>
 
         <p className="mlb-game-status">
-          {gameStatus}
+          {gameStatus} · {gameDate}
         </p>
 
         {game.liveCount && (
           <div className="mlb-game-live-info">
             <div className="mlb-game-live-summary">
               <span>
-                Count: {game.liveCount.balls}-
-                {game.liveCount.strikes}
+                Count: {game.liveCount.balls}-{game.liveCount.strikes}
               </span>
 
-              <span>
-                Outs: {game.liveCount.outs}
-              </span>
+              <span>Outs: {game.liveCount.outs}</span>
             </div>
 
             {game.liveCount.play && (
@@ -174,10 +176,8 @@ export default function MLBGamePage() {
 
       <p className="mlb-game-venue">
         {game.venue.name}
-        {game.venue.city &&
-          ` - ${game.venue.city}`}
-        {game.venue.state &&
-          `, ${game.venue.state}`}
+        {game.venue.city && ` - ${game.venue.city}`}
+        {game.venue.state && `, ${game.venue.state}`}
       </p>
     </main>
   );

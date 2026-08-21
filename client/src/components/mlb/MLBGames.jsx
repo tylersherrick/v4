@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import MLBGameCard from "./MLBGameCard.jsx";
 import MLBPlayerSearch from "./MLBPlayerSearch.jsx";
 
@@ -35,10 +36,21 @@ function changeDate(date, amount) {
 }
 
 export default function MLBGames() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [games, setGames] = useState([]);
-  const [date, setDate] = useState(getToday());
+  const [date, setDate] = useState(
+    searchParams.get("date") || getToday()
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const urlDate = searchParams.get("date");
+
+    if (urlDate && urlDate !== date) {
+      setDate(urlDate);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     async function loadGames() {
@@ -88,6 +100,14 @@ export default function MLBGames() {
     return () => clearInterval(interval);
   }, [date]);
 
+  function updateDate(newDate) {
+    setDate(newDate);
+
+    const params = new URLSearchParams(searchParams);
+    params.set("date", newDate);
+    setSearchParams(params);
+  }
+
   if (loading) {
     return <p>Loading MLB games...</p>;
   }
@@ -108,9 +128,7 @@ export default function MLBGames() {
         <div className="mlb-games-date-nav">
           <button
             onClick={() =>
-              setDate((current) =>
-                changeDate(current, -1)
-              )
+              updateDate(changeDate(date, -1))
             }
           >
             ←
@@ -120,15 +138,13 @@ export default function MLBGames() {
             type="date"
             value={date}
             onChange={(event) =>
-              setDate(event.target.value)
+              updateDate(event.target.value)
             }
           />
 
           <button
             onClick={() =>
-              setDate((current) =>
-                changeDate(current, 1)
-              )
+              updateDate(changeDate(date, 1))
             }
           >
             →

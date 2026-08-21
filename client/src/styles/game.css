@@ -377,6 +377,7 @@
   color: #111;
   text-decoration: none;
   font-size: 0.85rem;
+  white-space: nowrap;
 }
 
 .mlb-starting-pitcher:hover {
@@ -403,4 +404,40 @@
   border-radius: 6px;
   color: #666;
   font-size: 0.85rem;
+}
+
+.mlb-lineup-team-tabs {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 16px;
+}
+
+.mlb-lineup-team-tabs button {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 12px 8px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #777;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.mlb-lineup-team-tabs button.active {
+  color: #111;
+  border-bottom-color: #111;
+}
+
+.mlb-lineup-team-tabs button:hover {
+  color: #111;
+}
+
+.mlb-lineups {
+  width: 100%;
+}
+
+.mlb-lineups-team h3 {
+  margin-top: 0;
 }

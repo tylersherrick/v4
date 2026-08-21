@@ -23,7 +23,7 @@ export default function MLBPlayerPage() {
   const team = location.state?.team;
   const position = location.state?.position;
   const jersey = location.state?.jersey;
-  const headshot = location.state?.headshot;
+  const routeHeadshot = location.state?.headshot;
 
   const [stats, setStats] = useState(null);
   const [player, setPlayer] = useState(null);
@@ -77,6 +77,17 @@ export default function MLBPlayerPage() {
         setPlayer(playerData);
         setHasCurrentSeason(isCurrent);
 
+        if (!searchParams.get("stat")) {
+          if (
+            statsData.pitching?.currentSeason?.length > 0 &&
+            !statsData.batting?.currentSeason?.length
+          ) {
+            setStatType("pitching");
+          } else {
+            setStatType("batting");
+          }
+        }
+
         if (!searchParams.get("view")) {
           setView(isCurrent ? "current" : "career");
         }
@@ -97,6 +108,12 @@ export default function MLBPlayerPage() {
   if (error) {
     return <p>{error}</p>;
   }
+
+  const headshot =
+    routeHeadshot ||
+    player?.headshot ||
+    player?.headshotUrl ||
+    player?.photo;
 
   const hasBatting =
     stats.batting?.currentSeason?.length > 0;

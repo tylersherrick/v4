@@ -40,6 +40,7 @@ export default function MLBGameBatting({
                 state={{
                   playerName: player.name,
                   position: player.position,
+                  headshot: player.headshot,
                 }}
               >
                 {player.name}
@@ -87,6 +88,7 @@ export default function MLBGameBatting({
                 state={{
                   playerName: pitcher.name,
                   position: pitcher.position,
+                  headshot: pitcher.headshot,
                 }}
               >
                 {pitcher.name}
