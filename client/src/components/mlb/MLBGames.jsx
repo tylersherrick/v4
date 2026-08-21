@@ -116,6 +116,8 @@ export default function MLBGames() {
     return <p>{error}</p>;
   }
 
+  const today = getToday();
+
   return (
     <main className="mlb-games-page">
       <h1>MLB</h1>
@@ -141,6 +143,13 @@ export default function MLBGames() {
               updateDate(event.target.value)
             }
           />
+
+          <button
+            onClick={() => updateDate(today)}
+            disabled={date === today}
+          >
+            Today
+          </button>
 
           <button
             onClick={() =>

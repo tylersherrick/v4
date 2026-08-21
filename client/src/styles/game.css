@@ -167,6 +167,59 @@
   border-radius: 7px;
 }
 
+.mlb-game-live-matchup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mlb-game-live-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.mlb-game-live-summary span {
+  white-space: nowrap;
+}
+
+.mlb-live-players {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.mlb-live-player {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #111;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.mlb-live-player:hover {
+  text-decoration: underline;
+}
+
+.mlb-live-team-logo {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.mlb-live-player strong {
+  font-weight: 700;
+}
+
 .mlb-game-live-summary {
   display: flex;
   align-items: center;

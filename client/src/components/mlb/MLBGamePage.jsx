@@ -7,9 +7,25 @@ import MLBBaseMap from "./MLBBaseMap.jsx";
 
 const API_URL = "https://v4-vqu0.onrender.com";
 
+function getDateKey(date, timeZone = "America/Chicago") {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date);
+
+  const year = parts.find((part) => part.type === "year").value;
+  const month = parts.find((part) => part.type === "month").value;
+  const day = parts.find((part) => part.type === "day").value;
+
+  return `${year}${month}${day}`;
+}
+
 export default function MLBGamePage() {
   const { gameId } = useParams();
   const navigate = useNavigate();
+
   const [game, setGame] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -53,6 +69,10 @@ export default function MLBGamePage() {
     return <p>{error}</p>;
   }
 
+  if (!game) {
+    return <p>Game not found.</p>;
+  }
+
   const isPregame = game.status.state === "pre";
 
   const gameStatus = isPregame
@@ -62,12 +82,25 @@ export default function MLBGamePage() {
       })
     : game.status.detail;
 
-  const gameDate = new Date(game.date).toLocaleDateString([], {
-    month: "long",
-    day: "numeric",
-  });
+  const isToday =
+    getDateKey(new Date(game.date)) ===
+    getDateKey(new Date());
+
+  const gameDate = isToday
+    ? "Today"
+    : new Date(game.date).toLocaleDateString([], {
+        month: "long",
+        day: "numeric",
+      });
 
   const bases = game.liveCount?.bases || {};
+
+  function getInningSuffix(inning) {
+    if (inning === 1) return "st";
+    if (inning === 2) return "nd";
+    if (inning === 3) return "rd";
+    return "th";
+  }
 
   return (
     <main className="mlb-game-page">
@@ -136,19 +169,78 @@ export default function MLBGamePage() {
 
         {game.liveCount && (
           <div className="mlb-game-live-info">
-            <div className="mlb-game-live-summary">
-              <span>
-                Count: {game.liveCount.balls}-{game.liveCount.strikes}
-              </span>
+            <div className="mlb-game-live-matchup">
+              <div className="mlb-game-live-summary">
+                <span>
+                  Count: {game.liveCount.balls}-
+                  {game.liveCount.strikes}
+                </span>
 
-              <span>Outs: {game.liveCount.outs}</span>
+                <span>
+                  {game.liveCount.half}{" "}
+                  {game.liveCount.inning}
+                  {getInningSuffix(game.liveCount.inning)}
+                </span>
+
+                <span>
+                  Outs: {game.liveCount.outs}
+                </span>
+              </div>
+
+              <div className="mlb-live-players">
+                {game.currentPitcher && (
+                  <Link
+                    to={`/mlb/player/${game.currentPitcher.id}`}
+                    state={{
+                      playerName: game.currentPitcher.name,
+                      position: game.currentPitcher.position,
+                    }}
+                    className="mlb-live-player mlb-live-pitcher"
+                  >
+                    <span>Pitcher:</span>
+
+                    {game.currentPitcher.team?.logo && (
+                      <img
+                        src={game.currentPitcher.team.logo}
+                        alt={game.currentPitcher.team.abbreviation}
+                        className="mlb-live-team-logo"
+                      />
+                    )}
+
+                    <strong>{game.currentPitcher.name}</strong>
+                  </Link>
+                )}
+
+                {game.currentBatter && (
+                  <Link
+                    to={`/mlb/player/${game.currentBatter.id}`}
+                    state={{
+                      playerName: game.currentBatter.name,
+                      position: game.currentBatter.position,
+                    }}
+                    className="mlb-live-player mlb-live-batter"
+                  >
+                    <span>Batter:</span>
+
+                    {game.currentBatter.team?.logo && (
+                      <img
+                        src={game.currentBatter.team.logo}
+                        alt={game.currentBatter.team.abbreviation}
+                        className="mlb-live-team-logo"
+                      />
+                    )}
+
+                    <strong>{game.currentBatter.name}</strong>
+                  </Link>
+                )}
+              </div>
+
+              {game.liveCount.play && (
+                <p className="mlb-game-last-play">
+                  {game.liveCount.play}
+                </p>
+              )}
             </div>
-
-            {game.liveCount.play && (
-              <p className="mlb-game-last-play">
-                {game.liveCount.play}
-              </p>
-            )}
           </div>
         )}
       </section>
