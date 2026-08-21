@@ -122,9 +122,13 @@ function getProbablePitcher(competitor) {
     return null;
   }
 
-  const pitchingStats = probable.statistics?.find(
-    (stat) => stat.type === "pitching"
-  );
+  const stats =
+    probable.statistics?.splits?.categories || [];
+
+  const getStat = (abbreviation) =>
+    stats.find(
+      (stat) => stat.abbreviation === abbreviation
+    )?.displayValue || null;
 
   return {
     id: probable.athlete.id,
@@ -133,8 +137,15 @@ function getProbablePitcher(competitor) {
       probable.athlete.position?.abbreviation ||
       probable.athlete.position ||
       "SP",
-    record: probable.record || null,
-    era: pitchingStats?.era || null,
+    headshot:
+      probable.athlete.headshot?.href || null,
+    jersey:
+      probable.athlete.jersey || null,
+    record:
+      getStat("W") && getStat("L")
+        ? `${getStat("W")}-${getStat("L")}`
+        : null,
+    era: getStat("ERA"),
   };
 }
 
