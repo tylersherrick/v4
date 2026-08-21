@@ -10,5 +10,20 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <script>
+      const redirect = sessionStorage.getItem("redirect");
+
+      if (redirect) {
+        sessionStorage.removeItem("redirect");
+        const data = JSON.parse(redirect);
+        window.history.replaceState(
+          null,
+          "",
+          "/v4/" + data.route + data.query + data.hash
+        );
+      }
+    </script>
+
   </body>
 </html>
