@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import MLBLinescore from "./MLBLinescore.jsx";
 import MLBInjuries from "./MLBInjuries.jsx";
 import MLBGameBatting from "./MLBGameBatting.jsx";
+import MLBBaseMap from "./MLBBaseMap.jsx";
 
 const API_URL = "https://v4-vqu0.onrender.com";
 
@@ -61,13 +62,7 @@ export default function MLBGamePage() {
       })
     : game.status.detail;
 
-  const occupiedBases = game.liveCount
-    ? [
-        game.liveCount.bases?.first && "1st",
-        game.liveCount.bases?.second && "2nd",
-        game.liveCount.bases?.third && "3rd",
-      ].filter(Boolean)
-    : [];
+  const bases = game.liveCount?.bases || {};
 
   return (
     <main className="mlb-game-page">
@@ -108,6 +103,10 @@ export default function MLBGamePage() {
             <strong>{game.awayTeam.score}</strong>
           </div>
 
+          {game.liveCount && !isPregame && (
+            <MLBBaseMap bases={bases} />
+          )}
+
           <div className="mlb-game-team">
             <div className="mlb-game-team-info">
               {game.homeTeam.logo && (
@@ -141,13 +140,6 @@ export default function MLBGamePage() {
               <span>
                 Outs: {game.liveCount.outs}
               </span>
-
-              <span>
-                Bases:{" "}
-                {occupiedBases.length
-                  ? occupiedBases.join(", ")
-                  : "Empty"}
-              </span>
             </div>
 
             {game.liveCount.play && (
@@ -159,12 +151,14 @@ export default function MLBGamePage() {
         )}
       </section>
 
-      <section className="mlb-game-linescore">
-        <MLBLinescore
-          awayTeam={game.awayTeam}
-          homeTeam={game.homeTeam}
-        />
-      </section>
+      {!isPregame && (
+        <section className="mlb-game-linescore">
+          <MLBLinescore
+            awayTeam={game.awayTeam}
+            homeTeam={game.homeTeam}
+          />
+        </section>
+      )}
 
       {isPregame ? (
         <MLBInjuries
