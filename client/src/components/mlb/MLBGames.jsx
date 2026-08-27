@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useSportsData } from "../../context/SportsDataContext.jsx";
+import { getMLBGames } from "../../api/mlb.js";
 import MLBGameCard from "./MLBGameCard.jsx";
 import MLBPlayerSearch from "./MLBPlayerSearch.jsx";
-
-const API_URL = "https://v4-vqu0.onrender.com";
 
 function getToday() {
   const parts = new Intl.DateTimeFormat("en-CA", {
@@ -20,10 +20,6 @@ function getToday() {
   return `${year}-${month}-${day}`;
 }
 
-function formatApiDate(date) {
-  return date.replaceAll("-", "");
-}
-
 function changeDate(date, amount) {
   const current = new Date(`${date}T12:00:00`);
   current.setDate(current.getDate() + amount);
@@ -37,12 +33,26 @@ function changeDate(date, amount) {
 
 export default function MLBGames() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [games, setGames] = useState([]);
+
   const [date, setDate] = useState(
     searchParams.get("date") || getToday()
   );
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+
+  const {
+    sportsData,
+    getLeagueGames,
+    setLeagueGames,
+    setLeagueLoading,
+    setLeagueError,
+  } = useSportsData();
+
+  const {
+    games,
+    loading,
+    error,
+  } = sportsData.mlb;
+
+  const today = getToday();
 
   useEffect(() => {
     const urlDate = searchParams.get("date");
@@ -50,73 +60,88 @@ export default function MLBGames() {
     if (urlDate && urlDate !== date) {
       setDate(urlDate);
     }
-  }, [searchParams]);
+  }, [searchParams, date]);
 
   useEffect(() => {
-    async function loadGames() {
-      try {
-        const response = await fetch(
-          `${API_URL}/api/mlb/games?date=${formatApiDate(date)}`
-        );
+    const cachedGames = getLeagueGames(
+      "mlb",
+      date
+    );
 
-        if (!response.ok) {
-          throw new Error("Unable to load games");
-        }
-
-        const data = await response.json();
-
-        const statusOrder = {
-          in: 0,
-          pre: 1,
-          post: 2,
-        };
-
-        const sortedGames = [...data].sort(
-          (a, b) =>
-            (statusOrder[a.status?.state] ?? 1) -
-            (statusOrder[b.status?.state] ?? 1)
-        );
-
-        setGames(sortedGames);
-        setError("");
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    setLoading(true);
-    loadGames();
-
-    if (date !== getToday()) {
+    if (cachedGames) {
       return;
     }
 
-    const interval = setInterval(() => {
-      loadGames();
-    }, 3000);
+    async function loadGames() {
+      setLeagueLoading("mlb", true);
 
-    return () => clearInterval(interval);
+      try {
+        const loadedGames =
+          await getMLBGames(date);
+
+        setLeagueGames(
+          "mlb",
+          date,
+          loadedGames
+        );
+      } catch (error) {
+        setLeagueError(
+          "mlb",
+          error.message
+        );
+      }
+    }
+
+    loadGames();
   }, [date]);
+
+  useEffect(() => {
+    if (date !== today) {
+      return;
+    }
+
+    const interval = setInterval(
+      async () => {
+        try {
+          const loadedGames =
+            await getMLBGames(today);
+
+          setLeagueGames(
+            "mlb",
+            today,
+            loadedGames
+          );
+        } catch (error) {
+          setLeagueError(
+            "mlb",
+            error.message
+          );
+        }
+      },
+      3000
+    );
+
+    return () =>
+      clearInterval(interval);
+  }, [date, today]);
 
   function updateDate(newDate) {
     setDate(newDate);
 
-    const params = new URLSearchParams(searchParams);
+    const params =
+      new URLSearchParams(searchParams);
+
     params.set("date", newDate);
     setSearchParams(params);
   }
 
-  if (loading) {
+  if (loading && games.length === 0) {
     return <p>Loading MLB games...</p>;
   }
 
   if (error) {
     return <p>{error}</p>;
   }
-
-  const today = getToday();
 
   return (
     <main className="mlb-games-page">
@@ -130,7 +155,9 @@ export default function MLBGames() {
         <div className="mlb-games-date-nav">
           <button
             onClick={() =>
-              updateDate(changeDate(date, -1))
+              updateDate(
+                changeDate(date, -1)
+              )
             }
           >
             ←
@@ -140,12 +167,16 @@ export default function MLBGames() {
             type="date"
             value={date}
             onChange={(event) =>
-              updateDate(event.target.value)
+              updateDate(
+                event.target.value
+              )
             }
           />
 
           <button
-            onClick={() => updateDate(today)}
+            onClick={() =>
+              updateDate(today)
+            }
             disabled={date === today}
           >
             Today
@@ -153,7 +184,9 @@ export default function MLBGames() {
 
           <button
             onClick={() =>
-              updateDate(changeDate(date, 1))
+              updateDate(
+                changeDate(date, 1)
+              )
             }
           >
             →
