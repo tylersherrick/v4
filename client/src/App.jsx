@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-import HomePage from "./components/home/HomePage.jsx";
 import MLBGames from "./components/mlb/MLBGames.jsx";
 import MLBGamePage from "./components/mlb/MLBGamePage.jsx";
 import MLBTeamPage from "./components/mlb/MLBTeamPage.jsx";
@@ -9,8 +8,7 @@ import MLBFullSchedule from "./components/mlb/MLBFullSchedule.jsx";
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/mlb" element={<MLBGames />} />
+      <Route path="/" element={<MLBGames />} />
       <Route path="/mlb/game/:gameId" element={<MLBGamePage />} />
       <Route path="/mlb/team/:teamId" element={<MLBTeamPage />} />
       <Route path="/mlb/team/:teamId/schedule" element={<MLBFullSchedule />} />

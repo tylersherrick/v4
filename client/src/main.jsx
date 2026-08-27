@@ -8,14 +8,11 @@ import "./styles/components.css";
 import "./styles/team.css";
 import "./styles/player.css";
 import App from "./App.jsx";
-import { SportsDataProvider } from "./context/SportsDataContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <HashRouter>
-      <SportsDataProvider>
-        <App />
-      </SportsDataProvider>
+      <App />
     </HashRouter>
   </StrictMode>
 );
