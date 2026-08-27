@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import MLBLinescore from "./MLBLinescore.jsx";
 import MLBInjuries from "./MLBInjuries.jsx";
 import MLBGameBatting from "./MLBGameBatting.jsx";
@@ -25,6 +30,8 @@ function getDateKey(date, timeZone = "America/Chicago") {
 export default function MLBGamePage() {
   const { gameId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  console.log(location.state);
 
   const [game, setGame] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -110,7 +117,15 @@ export default function MLBGamePage() {
           href="#"
           onClick={(event) => {
             event.preventDefault();
-            navigate(-1);
+
+            const returnDate = location.state?.returnDate;
+
+            navigate({
+              pathname: "/",
+              search: returnDate
+                ? `?date=${returnDate}`
+                : "",
+            });
           }}
         >
           ← Back

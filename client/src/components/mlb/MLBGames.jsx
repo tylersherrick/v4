@@ -165,6 +165,7 @@ export default function MLBGames() {
             <MLBGameCard
               key={game.id}
               game={game}
+              date={date}
             />
           ))}
         </div>
