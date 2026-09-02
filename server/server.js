@@ -11,6 +11,11 @@ import mlbPlayerSearchRouter from "./routes/mlb/playerSearch.js";
 import mlbStandingsRouter from "./routes/mlb/standings.js";
 import mlbTeamLeadersRouter from "./routes/mlb/teamLeaders.js";
 
+import cfbGamesRouter from "./routes/cfb/games.js";
+import cfbGameRouter from "./routes/cfb/game.js";
+import cfbTeamRouter from "./routes/cfb/team.js";
+import cfbTeamScheduleRouter from "./routes/cfb/teamSchedule.js";
+
 const app = express();
 
 const PORT = process.env.PORT || 3000;
@@ -34,6 +39,13 @@ app.use("/api/mlb/player", mlbPlayerStatsRouter);
 app.use("/api/mlb/players", mlbPlayerSearchRouter);
 app.use("/api/mlb/standings", mlbStandingsRouter);
 app.use("/api/mlb/team", mlbTeamLeadersRouter);
+
+app.use("/api/cfb/games", cfbGamesRouter);
+app.use("/api/cfb/game", cfbGameRouter);
+app.use("/api/cfb/team", cfbTeamRouter);
+app.use("/api/cfb/team", cfbTeamScheduleRouter);
+
+
 
 app.listen(PORT, () => {
   console.log(`V4 API running on port ${PORT}`);
