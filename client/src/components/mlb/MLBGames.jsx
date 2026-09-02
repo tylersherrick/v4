@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import MLBGameCard from "./MLBGameCard.jsx";
 import MLBPlayerSearch from "./MLBPlayerSearch.jsx";
 
@@ -120,6 +120,7 @@ export default function MLBGames() {
 
   return (
     <main className="mlb-games-page">
+      <Link to="/">← Back to Game Center</Link>
       <h1>MLB</h1>
 
       <MLBPlayerSearch />

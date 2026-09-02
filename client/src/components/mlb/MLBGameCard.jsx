@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export default function MLBGameCard({ game, date }) {
+export default function MLBGameCard({ game, date, fromHome = false }) {
   const gameState = game.status?.state;
 
   const statusClass =
@@ -23,7 +23,10 @@ export default function MLBGameCard({ game, date }) {
   return (
     <Link
       to={`/mlb/game/${game.id}`}
-      state={{ returnDate: date }}
+      state={{
+        returnDate: date,
+        fromHome,
+      }}
       className="mlb-game-card"
     >
       <div className={`mlb-game-card-status ${statusClass}`}>

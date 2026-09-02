@@ -119,9 +119,15 @@ export default function MLBGamePage() {
             event.preventDefault();
 
             const returnDate = location.state?.returnDate;
+            const fromHome = location.state?.fromHome;
+
+            if (fromHome) {
+              navigate("/");
+              return;
+            }
 
             navigate({
-              pathname: "/",
+              pathname: "/mlb",
               search: returnDate
                 ? `?date=${returnDate}`
                 : "",
@@ -131,7 +137,7 @@ export default function MLBGamePage() {
           ← Back
         </a>
 
-        <Link to="/">← Back to Games</Link>
+        <Link to="/mlb">← Back to Games</Link>
       </div>
 
       <section className="mlb-game-header">
