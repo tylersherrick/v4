@@ -1,5 +1,5 @@
 const ESPN_URL =
-  "https://site.api.espn.com/apis/site/v2/sports/football/college-football/athletes";
+  "https://sports.core.api.espn.com/v2/sports/football/leagues/college-football/athletes";
 
 export async function getPlayer(playerId) {
   const response = await fetch(`${ESPN_URL}/${playerId}`);
@@ -10,8 +10,7 @@ export async function getPlayer(playerId) {
     );
   }
 
-  const data = await response.json();
-  const athlete = data.athlete || data;
+  const athlete = await response.json();
 
   return {
     id: athlete.id || playerId,
@@ -25,16 +24,5 @@ export async function getPlayer(playerId) {
     height: athlete.displayHeight || null,
     weight: athlete.displayWeight || null,
     headshot: athlete.headshot?.href || null,
-    team: athlete.team
-      ? {
-          id: athlete.team.id || null,
-          name: athlete.team.displayName || null,
-          abbreviation: athlete.team.abbreviation || null,
-          logo:
-            athlete.team.logo ||
-            athlete.team.logos?.[0]?.href ||
-            null,
-        }
-      : null,
   };
 }
