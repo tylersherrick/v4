@@ -1,6 +1,9 @@
 const ESPN_URL =
   "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams";
 
+const CORE_URL =
+  "https://sports.core.api.espn.com/v2/sports/football/leagues/college-football";
+
 const CONFERENCES = {
   1: { name: "ACC", abbreviation: "ACC" },
   4: { name: "Big 12", abbreviation: "Big 12" },
@@ -16,19 +19,53 @@ const CONFERENCES = {
 };
 
 export async function getTeam(teamId) {
-  const response = await fetch(`${ESPN_URL}/${teamId}`);
+  const season = new Date().getFullYear();
 
-  if (!response.ok) {
+  const [teamResponse, coachesResponse] = await Promise.all([
+    fetch(`${ESPN_URL}/${teamId}`),
+    fetch(
+      `${CORE_URL}/seasons/${season}/teams/${teamId}/coaches`
+    ),
+  ]);
+
+  if (!teamResponse.ok) {
     throw new Error(
-      `ESPN request failed: ${response.status}`
+      `ESPN request failed: ${teamResponse.status}`
     );
   }
 
-  const data = await response.json();
+  const data = await teamResponse.json();
   const team = data.team;
 
   if (!team) {
     throw new Error("Team data not found.");
+  }
+
+  let headCoach = null;
+
+  if (coachesResponse.ok) {
+    const coachesData = await coachesResponse.json();
+    const coachRef = coachesData.items?.[0]?.$ref;
+
+    if (coachRef) {
+      const coachResponse = await fetch(
+        coachRef.replace("http://", "https://")
+      );
+
+      if (coachResponse.ok) {
+        const coach = await coachResponse.json();
+
+        headCoach = {
+          id: coach.id || null,
+          name:
+            coach.firstName && coach.lastName
+              ? `${coach.firstName} ${coach.lastName}`
+              : null,
+          firstName: coach.firstName || null,
+          lastName: coach.lastName || null,
+        };
+      }
+    }
   }
 
   const conferenceId = team.groups?.id;
@@ -63,5 +100,6 @@ export async function getTeam(teamId) {
     )?.summary || null,
     standingSummary:
       team.standingSummary || null,
+    headCoach,
   };
 }
