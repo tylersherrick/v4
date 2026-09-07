@@ -11,8 +11,10 @@ import MLBCareerTotals from "./MLBCareerTotals.jsx";
 import MLBCareerFielding from "./MLBCareerFielding.jsx";
 import MLBPlayerNews from "./MLBPlayerNews.jsx";
 
-const API_URL = "https://v4-vqu0.onrender.com";
-
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  import.meta.env.VITE_RENDER_API_URL;
+  
 export default function MLBPlayerPage() {
   const { playerId } = useParams();
   const location = useLocation();

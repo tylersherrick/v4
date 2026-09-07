@@ -10,8 +10,10 @@ import MLBTeamSchedule from "./MLBTeamSchedule.jsx";
 import MLBTeamStanding from "./MLBTeamStanding.jsx";
 import MLBTeamLeaders from "./MLBTeamLeaders.jsx";
 
-const API_URL = "https://v4-vqu0.onrender.com";
-
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  import.meta.env.VITE_RENDER_API_URL;
+  
 export default function MLBTeamPage() {
   const { teamId } = useParams();
   const navigate = useNavigate();

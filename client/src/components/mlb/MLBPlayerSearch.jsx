@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-const API_URL = "https://v4-vqu0.onrender.com";
-
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  import.meta.env.VITE_RENDER_API_URL;
+  
 export default function MLBPlayerSearch() {
   const [name, setName] = useState("");
   const [players, setPlayers] = useState([]);

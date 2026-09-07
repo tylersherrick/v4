@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-const API_URL = "https://v4-vqu0.onrender.com";
-
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  import.meta.env.VITE_RENDER_API_URL;
+  
 export default function MLBFullSchedule() {
   const { teamId } = useParams();
   const navigate = useNavigate();

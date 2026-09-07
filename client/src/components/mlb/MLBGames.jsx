@@ -3,8 +3,10 @@ import { Link, useSearchParams } from "react-router-dom";
 import MLBGameCard from "./MLBGameCard.jsx";
 import MLBPlayerSearch from "./MLBPlayerSearch.jsx";
 
-const API_URL = "https://v4-vqu0.onrender.com";
-
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  import.meta.env.VITE_RENDER_API_URL;
+  
 function getToday() {
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone: "America/Chicago",

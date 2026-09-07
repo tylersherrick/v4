@@ -10,8 +10,10 @@ import MLBInjuries from "./MLBInjuries.jsx";
 import MLBGameBatting from "./MLBGameBatting.jsx";
 import MLBBaseMap from "./MLBBaseMap.jsx";
 
-const API_URL = "https://v4-vqu0.onrender.com";
-
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  import.meta.env.VITE_RENDER_API_URL;
+  
 function getDateKey(date, timeZone = "America/Chicago") {
   const parts = new Intl.DateTimeFormat("en-US", {
     timeZone,
