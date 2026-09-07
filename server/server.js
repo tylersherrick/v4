@@ -15,6 +15,8 @@ import cfbGamesRouter from "./routes/cfb/games.js";
 import cfbGameRouter from "./routes/cfb/game.js";
 import cfbTeamRouter from "./routes/cfb/team.js";
 import cfbTeamScheduleRouter from "./routes/cfb/teamSchedule.js";
+import cfbRosterRouter from "./routes/cfb/roster.js";
+import cfbPlayerRouter from "./routes/cfb/player.js";
 
 const app = express();
 
@@ -44,6 +46,8 @@ app.use("/api/cfb/games", cfbGamesRouter);
 app.use("/api/cfb/game", cfbGameRouter);
 app.use("/api/cfb/team", cfbTeamRouter);
 app.use("/api/cfb/team", cfbTeamScheduleRouter);
+app.use("/api/cfb/team", cfbRosterRouter);
+app.use("/api/cfb/player", cfbPlayerRouter);
 
 
 

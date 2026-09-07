@@ -61,7 +61,7 @@ export async function getTeamSchedule(teamId, season) {
             name: awayTeam?.team?.displayName,
             abbreviation: awayTeam?.team?.abbreviation,
             logo: awayTeam?.team?.logo,
-            score: awayTeam?.score,
+            score: awayTeam?.score?.displayValue ?? null,
             rank:
               awayTeam?.curatedRank?.current <= 25
                 ? awayTeam.curatedRank.current
@@ -72,7 +72,7 @@ export async function getTeamSchedule(teamId, season) {
             name: homeTeam?.team?.displayName,
             abbreviation: homeTeam?.team?.abbreviation,
             logo: homeTeam?.team?.logo,
-            score: homeTeam?.score,
+            score: homeTeam?.score?.displayValue ?? null,
             rank:
               homeTeam?.curatedRank?.current <= 25
                 ? homeTeam.curatedRank.current
