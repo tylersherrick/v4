@@ -1,5 +1,5 @@
-/* MLB Game Page Navigation */
-.mlb-game-nav {
+/* Game Page Navigation */
+.game-nav {
   display: flex;
   justify-content: space-between;
   gap: 16px;
@@ -7,13 +7,13 @@
   font-size: 0.9rem;
 }
 
-.mlb-game-nav a {
+.game-nav a {
   color: #555;
   text-decoration: none;
 }
 
-/* MLB Game Header */
-.mlb-game-header {
+/* Game Header */
+.game-header {
   padding: 18px 16px;
   margin-bottom: 16px;
   background: #fff;
@@ -21,74 +21,93 @@
   border-radius: 8px;
 }
 
-/* MLB Game Matchup */
-.mlb-game-header h1 {
+.game-header h1 {
   margin-bottom: 16px;
-  font-size: 1rem;
+  font-size: 0.85rem;
   font-weight: 700;
   text-align: center;
+  white-space: nowrap;
 }
 
-.mlb-game-matchup {
+/* Game Matchup */
+.game-matchup {
   margin-bottom: 18px;
   font-size: 1.1rem;
   font-weight: 600;
   text-align: center;
 }
 
-/* MLB Game Scoreboard */
-.mlb-game-scoreboard {
+/* Game Scoreboard */
+.game-scoreboard {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 54px 54px;
   align-items: center;
 }
 
-.mlb-game-team {
+.game-team {
   display: contents;
 }
 
-.mlb-game-team:first-child .mlb-game-team-info {
+.game-team:first-child .game-team-info {
   grid-column: 1;
   grid-row: 1;
 }
 
-.mlb-game-team:first-child strong {
+.game-team:first-child > strong {
   grid-column: 3;
   grid-row: 1;
 }
 
-.mlb-game-team:last-child .mlb-game-team-info {
+.game-team:last-child .game-team-info {
   grid-column: 1;
   grid-row: 2;
 }
 
-.mlb-game-team:last-child strong {
+.game-team:last-child > strong {
   grid-column: 3;
   grid-row: 2;
 }
 
-.mlb-game-team-info {
+.game-team-info {
   display: flex;
   align-items: center;
   gap: 14px;
   min-width: 0;
 }
 
-.mlb-game-team-info img {
+.game-team-info img {
   width: 44px;
   height: 44px;
   object-fit: contain;
   flex-shrink: 0;
 }
 
-.mlb-game-team-info a {
+.game-team-info a {
   font-size: 1.05rem;
   font-weight: 700;
   text-decoration: none;
 }
 
-.mlb-game-team strong {
+.game-team-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.game-team-details strong {
+  font-size: 1.05rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.game-team-details span {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.game-team > strong {
   min-width: 42px;
   margin-left: 16px;
   margin-right: 4px;
@@ -97,47 +116,8 @@
   text-align: right;
 }
 
-.mlb-base-map {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  justify-self: center;
-  align-self: center;
-  position: relative;
-  width: 50px;
-  height: 50px;
-}
-
-.mlb-base {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  background: #ddd;
-  border: 1px solid #aaa;
-  transform: rotate(45deg);
-}
-
-.mlb-base.occupied {
-  background: #111;
-  border-color: #111;
-}
-
-.mlb-base-second {
-  top: 0;
-  left: 15px;
-}
-
-.mlb-base-third {
-  top: 15px;
-  left: 0;
-}
-
-.mlb-base-first {
-  top: 15px;
-  right: 0;
-}
-
-/* MLB Game Status */
-.mlb-game-status {
+/* Game Status */
+.game-status {
   margin: 16px 0 0;
   padding-top: 12px;
   border-top: 1px solid #eee;
@@ -147,350 +127,48 @@
   text-align: center;
 }
 
-.mlb-game-status.live {
+.game-status.live {
   color: #c62828;
 }
 
-.mlb-game-status.final {
+.game-status.final {
   color: #666;
 }
 
-.mlb-game-status.pregame {
+.game-status.pregame {
   color: #444;
 }
 
-/* MLB Game Live Information */
-.mlb-game-live-info {
-  margin-top: 14px;
-  padding: 12px;
-  background: #f5f5f5;
-  border-radius: 7px;
-}
-
-.mlb-game-live-matchup {
+/* Game Tabs */
+.game-tabs {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.mlb-game-live-summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  width: 100%;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-.mlb-game-live-summary span {
-  white-space: nowrap;
-}
-
-.mlb-live-players {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  width: 100%;
-}
-
-.mlb-live-player {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #111;
-  text-decoration: none;
-  font-size: 0.85rem;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.mlb-live-player:hover {
-  text-decoration: underline;
-}
-
-.mlb-live-team-logo {
-  width: 18px;
-  height: 18px;
-  object-fit: contain;
-  flex-shrink: 0;
-}
-
-.mlb-live-player strong {
-  font-weight: 700;
-}
-
-.mlb-game-live-summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  font-size: 0.85rem;
-  font-weight: 600;
-}
-
-.mlb-game-live-summary span {
-  white-space: nowrap;
-}
-
-.mlb-game-last-play {
-  margin: 10px 0 0;
-  padding: 10px 12px;
-  background: #fff;
-  border: 1px solid #e5e5e5;
-  border-radius: 6px;
-  color: #444;
-  font-size: 0.85rem;
-  line-height: 1.4;
-}
-
-.mlb-linescore {
-  width: fit-content;
-  max-width: 100%;
-  margin: 0 auto 24px;
-  padding: 12px 14px;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow-x: auto;
-}
-
-/* MLB Linescore Row */
-.mlb-linescore-row {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  min-height: 30px;
-  font-size: 0.85rem;
-}
-
-.mlb-linescore-row > :first-child {
-  flex: 0 0 38px;
-  width: 38px;
-  text-align: left;
-}
-
-.mlb-linescore-row > :not(:first-child) {
-  flex: 0 0 20px;
-  width: 20px;
-  text-align: center;
-}
-
-.mlb-linescore-header {
-  margin-bottom: 4px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid #eee;
-  color: #666;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-.mlb-linescore-team {
-  font-weight: 700;
-}
-
-.mlb-linescore-total {
-  font-weight: 700;
-}
-
-.mlb-game-info {
-  margin-bottom: 24px;
-}
-
-.mlb-game-info-tabs {
-  display: flex;
-  gap: 4px;
   margin-bottom: 16px;
   border-bottom: 1px solid #ddd;
 }
 
-.mlb-game-info-tabs button {
-  padding: 10px 16px;
-  color: #666;
+.game-tabs button {
+  flex: 1;
+  padding: 12px 8px;
   background: transparent;
   border: 0;
   border-bottom: 2px solid transparent;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.mlb-game-info-tabs button:hover {
-  color: #111;
-  background: #f5f5f5;
-}
-
-.mlb-game-info-tabs button.active {
-  color: #111;
-  border-bottom-color: #111;
-}
-
-.mlb-lineups,
-.mlb-injuries {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.mlb-lineups-team,
-.mlb-injuries-team {
-  padding: 16px;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-}
-
-.mlb-lineups-team h3,
-.mlb-injuries-team h3 {
-  margin: 0 0 10px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #eee;
-  font-size: 0.95rem;
-}
-
-.mlb-lineup-list,
-.mlb-injury-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.mlb-lineup-player {
-  display: grid;
-  grid-template-columns: 30px 1fr 40px;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 0;
-  border-bottom: 1px solid #eee;
-  font-size: 0.85rem;
-}
-
-.mlb-lineup-player:last-child {
-  border-bottom: 0;
-}
-
-.mlb-lineup-order {
-  color: #888;
-  text-align: right;
-}
-
-.mlb-lineup-name,
-.mlb-injury-player-name {
-  color: #111;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.mlb-lineup-name:hover,
-.mlb-injury-player-name:hover {
-  text-decoration: underline;
-}
-
-.mlb-lineup-position {
-  color: #666;
-  text-align: right;
-}
-
-.mlb-lineup-empty,
-.mlb-injury-empty {
-  margin: 0;
-  color: #666;
-  font-size: 0.85rem;
-}
-
-.mlb-injury-player {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 8px 0;
-  border-bottom: 1px solid #eee;
-  font-size: 0.85rem;
-}
-
-.mlb-injury-player:last-child {
-  border-bottom: 0;
-}
-
-.mlb-injury-details {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  color: #666;
-  text-align: right;
-}
-
-.mlb-starting-pitcher {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
-  padding: 9px 10px;
-  background: #f5f5f5;
-  border-radius: 6px;
-  color: #111;
-  text-decoration: none;
-  font-size: 0.85rem;
-  white-space: nowrap;
-}
-
-.mlb-starting-pitcher:hover {
-  background: #eee;
-}
-
-.mlb-starting-pitcher-label {
-  color: #666;
-  font-weight: 600;
-}
-
-.mlb-starting-pitcher-name {
-  font-weight: 700;
-}
-
-.mlb-starting-pitcher-record {
   color: #777;
-}
-
-.mlb-starting-pitcher-empty {
-  margin: 0 0 12px;
-  padding: 9px 10px;
-  background: #f5f5f5;
-  border-radius: 6px;
-  color: #666;
-  font-size: 0.85rem;
-}
-
-.mlb-lineup-team-tabs {
-  display: flex;
-  border-bottom: 1px solid #ddd;
-  margin-bottom: 16px;
-}
-
-.mlb-lineup-team-tabs button {
-  flex: 1;
-  background: none;
-  border: none;
-  padding: 12px 8px;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 0.85rem;
   font-weight: 600;
-  color: #777;
   cursor: pointer;
-  border-bottom: 2px solid transparent;
 }
 
-.mlb-lineup-team-tabs button.active {
+.game-tabs button:hover {
+  color: #111;
+  background: #f5f5f5;
+}
+
+.game-tabs button.active {
   color: #111;
   border-bottom-color: #111;
 }
 
-.mlb-lineup-team-tabs button:hover {
-  color: #111;
-}
-
-.mlb-lineups {
-  width: 100%;
-}
-
-.mlb-lineups-team h3 {
-  margin-top: 0;
+.game-tab-content {
+  margin-bottom: 24px;
 }

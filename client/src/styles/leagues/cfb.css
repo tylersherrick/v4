@@ -1,0 +1,156 @@
+/* CFB Linescore */
+.cfb-linescore {
+  margin-top: 12px;
+  overflow-x: auto;
+}
+
+.cfb-linescore table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cfb-linescore th,
+.cfb-linescore td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.cfb-linescore th {
+  color: #666;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.cfb-linescore th:first-child,
+.cfb-linescore td:first-child {
+  width: 100%;
+  text-align: left;
+  font-weight: 700;
+}
+
+.cfb-linescore th:last-child,
+.cfb-linescore td:last-child {
+  font-weight: 700;
+}
+
+.cfb-linescore tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* CFB Team Stats */
+.cfb-team-stats {
+  margin-top: 12px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cfb-team-stats-header {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr 1fr;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.cfb-team-stats-team {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 0.8rem;
+}
+
+.cfb-team-stats-team:first-child {
+  grid-column: 1;
+}
+
+.cfb-team-stats-team:last-child {
+  grid-column: 3;
+}
+
+.cfb-team-stats-team img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.cfb-team-stat-row {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr 1fr;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.cfb-team-stat-row:last-child {
+  border-bottom: 0;
+}
+
+.cfb-team-stat-row span {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.cfb-team-stat-row strong:first-child {
+  padding-left: 35%;
+  text-align: left;
+}
+
+.cfb-team-stat-row strong:last-child {
+  padding-right: 35%;
+  text-align: right;
+}
+
+/* CFB Games Week Navigation */
+.cfb-games-week-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.cfb-games-week-nav button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  color: #111;
+  font-size: 1.2rem;
+}
+
+.cfb-games-week-nav select {
+  flex: 1;
+  min-width: 0;
+  height: 42px;
+  padding: 0 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  color: #111;
+}
+
+.cfb-games-week-nav button:hover {
+  background: #f0f0f0;
+}
+
+.cfb-games-week-nav .cfb-current-week-button {
+  width: 70px;
+  min-width: 70px;
+  font-size: 0.72rem;
+  white-space: nowrap;
+}

@@ -73,6 +73,12 @@ export default function MLB() {
     }
 
     loadGames();
+
+    const interval = setInterval(() => {
+      loadGames();
+    }, 3000);
+
+    return () => clearInterval(interval);
   }, []);
 
   if (games.length === 0) {

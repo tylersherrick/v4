@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function CFBGameCard({ game }) {
   const gameState = game.status?.state;
 
@@ -10,77 +12,94 @@ export default function CFBGameCard({ game }) {
 
   const showScore = gameState !== "pre";
 
-  const gameTime =
+  const gameDate = new Date(game.date);
+
+  const formattedDate = gameDate
+    .toLocaleDateString([], {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+    })
+    .replace("Sep", "Sept");
+
+  const formattedTime = gameDate.toLocaleTimeString([], {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+
+  const gameStatus =
     gameState === "pre"
-      ? new Date(game.date).toLocaleTimeString([], {
-          hour: "numeric",
-          minute: "2-digit",
-        })
+      ? formattedTime
       : game.status?.detail;
 
   return (
-    <div className="mlb-game-card">
-      <div className={`mlb-game-card-status ${statusClass}`}>
-        {gameTime}
-      </div>
-
-      <div className="mlb-game-card-team">
-        <div className="mlb-game-card-team-info">
-          {game.awayTeam.logo && (
-            <img
-              src={game.awayTeam.logo}
-              alt={game.awayTeam.abbreviation}
-            />
-          )}
-
-          <div className="mlb-game-card-team-name">
-            <span className="mlb-game-card-team-abbreviation">
-              {game.awayTeam.rank <= 25 &&
-                `#${game.awayTeam.rank} `}
-              {game.awayTeam.abbreviation}
-            </span>
-
-            <span className="mlb-game-card-team-full">
-              {game.awayTeam.rank <= 25 &&
-                `#${game.awayTeam.rank} `}
-              {game.awayTeam.name}
-            </span>
-          </div>
+    <Link
+      to={`/cfb/game/${game.id}`}
+      className="mlb-game-card-link"
+    >
+      <div className="mlb-game-card">
+        <div className={`mlb-game-card-status ${statusClass}`}>
+          {formattedDate} · {gameStatus}
         </div>
 
-        {showScore && (
-          <strong>{game.awayTeam.score ?? "-"}</strong>
-        )}
-      </div>
+        <div className="mlb-game-card-team">
+          <div className="mlb-game-card-team-info">
+            {game.awayTeam.logo && (
+              <img
+                src={game.awayTeam.logo}
+                alt={game.awayTeam.abbreviation}
+              />
+            )}
 
-      <div className="mlb-game-card-team">
-        <div className="mlb-game-card-team-info">
-          {game.homeTeam.logo && (
-            <img
-              src={game.homeTeam.logo}
-              alt={game.homeTeam.abbreviation}
-            />
-          )}
+            <div className="mlb-game-card-team-name">
+              <span className="mlb-game-card-team-abbreviation">
+                {game.awayTeam.rank <= 25 &&
+                  `#${game.awayTeam.rank} `}
+                {game.awayTeam.abbreviation}
+              </span>
 
-          <div className="mlb-game-card-team-name">
-            <span className="mlb-game-card-team-abbreviation">
-              {game.homeTeam.rank <= 25 &&
-                `#${game.homeTeam.rank} `}
-              {game.homeTeam.abbreviation}
-            </span>
-
-            <span className="mlb-game-card-team-full">
-              {game.homeTeam.rank <= 25 &&
-                `#${game.homeTeam.rank} `}
-              {game.homeTeam.name}
-            </span>
+              <span className="mlb-game-card-team-full">
+                {game.awayTeam.rank <= 25 &&
+                  `#${game.awayTeam.rank} `}
+                {game.awayTeam.name}
+              </span>
+            </div>
           </div>
+
+          {showScore && (
+            <strong>{game.awayTeam.score ?? "-"}</strong>
+          )}
         </div>
 
-        {showScore && (
-          <strong>{game.homeTeam.score ?? "-"}</strong>
-        )}
+        <div className="mlb-game-card-team">
+          <div className="mlb-game-card-team-info">
+            {game.homeTeam.logo && (
+              <img
+                src={game.homeTeam.logo}
+                alt={game.homeTeam.abbreviation}
+              />
+            )}
+
+            <div className="mlb-game-card-team-name">
+              <span className="mlb-game-card-team-abbreviation">
+                {game.homeTeam.rank <= 25 &&
+                  `#${game.homeTeam.rank} `}
+                {game.homeTeam.abbreviation}
+              </span>
+
+              <span className="mlb-game-card-team-full">
+                {game.homeTeam.rank <= 25 &&
+                  `#${game.homeTeam.rank} `}
+                {game.homeTeam.name}
+              </span>
+            </div>
+          </div>
+
+          {showScore && (
+            <strong>{game.homeTeam.score ?? "-"}</strong>
+          )}
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }

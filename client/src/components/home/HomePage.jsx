@@ -7,7 +7,7 @@ export default function HomePage() {
     <main>
       <nav className="sports-nav">
         <Link to="/mlb">MLB</Link>
-        <span>CFB</span>
+        <Link to="/cfb">CFB</Link>
         <span>NFL</span>
         <span>NBA</span>
         <span>NHL</span>

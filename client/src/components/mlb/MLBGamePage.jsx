@@ -13,7 +13,7 @@ import MLBBaseMap from "./MLBBaseMap.jsx";
 const API_URL =
   import.meta.env.VITE_API_URL ||
   import.meta.env.VITE_RENDER_API_URL;
-  
+
 function getDateKey(date, timeZone = "America/Chicago") {
   const parts = new Intl.DateTimeFormat("en-US", {
     timeZone,
@@ -105,16 +105,9 @@ export default function MLBGamePage() {
 
   const bases = game.liveCount?.bases || {};
 
-  function getInningSuffix(inning) {
-    if (inning === 1) return "st";
-    if (inning === 2) return "nd";
-    if (inning === 3) return "rd";
-    return "th";
-  }
-
   return (
     <main className="mlb-game-page">
-      <div className="mlb-game-nav">
+      <div className="game-nav">
         <a
           href="#"
           onClick={(event) => {
@@ -142,14 +135,14 @@ export default function MLBGamePage() {
         <Link to="/mlb">← Back to Games</Link>
       </div>
 
-      <section className="mlb-game-header">
+      <section className="game-header">
         <h1>
           {game.awayTeam.name} at {game.homeTeam.name}
         </h1>
 
-        <div className="mlb-game-scoreboard">
-          <div className="mlb-game-team">
-            <div className="mlb-game-team-info">
+        <div className="game-scoreboard">
+          <div className="game-team">
+            <div className="game-team-info">
               {game.awayTeam.logo && (
                 <img
                   src={game.awayTeam.logo}
@@ -169,8 +162,8 @@ export default function MLBGamePage() {
             <MLBBaseMap bases={bases} />
           )}
 
-          <div className="mlb-game-team">
-            <div className="mlb-game-team-info">
+          <div className="game-team">
+            <div className="game-team-info">
               {game.homeTeam.logo && (
                 <img
                   src={game.homeTeam.logo}
@@ -187,7 +180,7 @@ export default function MLBGamePage() {
           </div>
         </div>
 
-        <p className="mlb-game-status">
+        <p className="game-status">
           {gameStatus}
           {!isLive && ` · ${gameDate}`}
         </p>
@@ -201,9 +194,7 @@ export default function MLBGamePage() {
                   {game.liveCount.strikes}
                 </span>
 
-                <span>
-                
-                </span>
+                <span></span>
 
                 <span>
                   Outs: {game.liveCount.outs}

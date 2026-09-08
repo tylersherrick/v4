@@ -7,6 +7,8 @@ import "./styles/game.css";
 import "./styles/components.css";
 import "./styles/team.css";
 import "./styles/player.css";
+import "./styles/leagues/mlb.css";
+import "./styles/leagues/cfb.css";
 import App from "./App.jsx";
 
 createRoot(document.getElementById("root")).render(

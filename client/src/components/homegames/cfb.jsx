@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import CFBGameCard from "../cfb/CFBGameCard";
 
 const ESPN_URL =
@@ -82,6 +83,12 @@ export default function CFB() {
     }
 
     loadGames();
+
+    const interval = setInterval(() => {
+      loadGames();
+    }, 3000);
+
+    return () => clearInterval(interval);
   }, []);
 
   if (games.length === 0) {
@@ -90,7 +97,9 @@ export default function CFB() {
 
   return (
     <section>
-      <h2>CFB</h2>
+      <h2>
+        <Link to="/cfb">CFB</Link>
+      </h2>
 
       <div className="mlb-games-grid">
         {games.map((game) => (
