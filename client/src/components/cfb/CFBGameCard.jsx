@@ -1,6 +1,7 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 export default function CFBGameCard({ game }) {
+  const location = useLocation();
   const gameState = game.status?.state;
 
   const statusClass =
@@ -34,7 +35,7 @@ export default function CFBGameCard({ game }) {
 
   return (
     <Link
-      to={`/cfb/game/${game.id}`}
+      to={`/cfb/game/${game.id}${location.search}`}
       className="mlb-game-card-link"
     >
       <div className="mlb-game-card">

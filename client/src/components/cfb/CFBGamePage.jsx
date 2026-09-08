@@ -46,6 +46,17 @@ const TEAM_STATS = [
   ["possessionTime", "Possession"],
 ];
 
+const PREGAME_TEAM_STATS = [
+  ["record", "Record"],
+  ["pointsPerGame", "Points / Game"],
+  ["totalYardsPerGame", "Total Yards / Game"],
+  ["passingYardsPerGame", "Passing Yards / Game"],
+  ["rushingYardsPerGame", "Rushing Yards / Game"],
+  ["thirdDownPct", "3rd Down %"],
+  ["turnoverDifferential", "Turnover Differential"],
+  ["sacksPerGame", "Sacks / Game"],
+];
+
 export default function CFBGamePage() {
   const { gameId } = useParams();
   const navigate = useNavigate();
@@ -149,6 +160,28 @@ export default function CFBGamePage() {
 
   const awayTeamStats = game.awayTeam.teamStats || {};
   const homeTeamStats = game.homeTeam.teamStats || {};
+
+  const teamStats = isPregame
+    ? PREGAME_TEAM_STATS
+    : TEAM_STATS;
+
+  function getTeamStat(team, stats, key) {
+    if (key === "record") {
+      return team.record ?? "-";
+    }
+
+    const value = stats[key];
+
+    if (value == null) {
+      return "-";
+    }
+
+    if (key === "thirdDownPct") {
+      return `${value}%`;
+    }
+
+    return value;
+  }
 
   return (
     <main className="cfb-game-page">
@@ -370,11 +403,25 @@ export default function CFBGamePage() {
                 </div>
               </div>
 
-              {TEAM_STATS.map(([key, label]) => (
+              {teamStats.map(([key, label]) => (
                 <div className="cfb-team-stat-row" key={key}>
-                  <strong>{awayTeamStats[key] ?? "-"}</strong>
+                  <strong>
+                    {getTeamStat(
+                      game.awayTeam,
+                      awayTeamStats,
+                      key
+                    )}
+                  </strong>
+
                   <span>{label}</span>
-                  <strong>{homeTeamStats[key] ?? "-"}</strong>
+
+                  <strong>
+                    {getTeamStat(
+                      game.homeTeam,
+                      homeTeamStats,
+                      key
+                    )}
+                  </strong>
                 </div>
               ))}
             </div>
