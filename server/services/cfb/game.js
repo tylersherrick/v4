@@ -36,6 +36,93 @@ function getTeamStats(data, teamId) {
   );
 }
 
+function getSeasonStat(categories, categoryName, statName) {
+  const category = categories.find(
+    (item) => item.name === categoryName
+  );
+
+  const stat = category?.stats?.find(
+    (item) => item.name === statName
+  );
+
+  return stat?.displayValue ?? stat?.value ?? null;
+}
+
+function getGamesPlayed(record) {
+  if (!record) {
+    return 0;
+  }
+
+  return record
+    .split("-")
+    .map(Number)
+    .filter(Number.isFinite)
+    .reduce((total, value) => total + value, 0);
+}
+
+async function getSeasonTeamStats(teamId, record) {
+  const url =
+    "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams/" +
+    `${teamId}/statistics`;
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    return {};
+  }
+
+  const data = await response.json();
+  const categories =
+    data.results?.stats?.categories || [];
+
+  const sacks = Number(
+    getSeasonStat(
+      categories,
+      "defensive",
+      "sacks"
+    )
+  );
+
+  const gamesPlayed = getGamesPlayed(record);
+
+  return {
+    pointsPerGame: getSeasonStat(
+      categories,
+      "passing",
+      "totalPointsPerGame"
+    ),
+    totalYardsPerGame: getSeasonStat(
+      categories,
+      "passing",
+      "yardsPerGame"
+    ),
+    passingYardsPerGame: getSeasonStat(
+      categories,
+      "passing",
+      "passingYardsPerGame"
+    ),
+    rushingYardsPerGame: getSeasonStat(
+      categories,
+      "rushing",
+      "rushingYardsPerGame"
+    ),
+    thirdDownPct: getSeasonStat(
+      categories,
+      "miscellaneous",
+      "thirdDownConvPct"
+    ),
+    turnoverDifferential: getSeasonStat(
+      categories,
+      "miscellaneous",
+      "turnOverDifferential"
+    ),
+    sacksPerGame:
+      gamesPlayed > 0 && Number.isFinite(sacks)
+        ? (sacks / gamesPlayed).toFixed(1)
+        : null,
+  };
+}
+
 function getPlayerStats(data, teamId) {
   const team = data.boxscore?.players?.find(
     (teamData) =>
@@ -213,6 +300,33 @@ export async function getGame(gameId) {
   const awayId = awayCompetitor?.team?.id;
   const homeId = homeCompetitor?.team?.id;
 
+  const awayRecord =
+    awayCompetitor?.record?.find(
+      (record) => record.type === "total"
+    )?.summary || null;
+
+  const homeRecord =
+    homeCompetitor?.record?.find(
+      (record) => record.type === "total"
+    )?.summary || null;
+
+  const isPregame =
+    competition.status?.type?.state === "pre";
+
+  let awayTeamStats;
+  let homeTeamStats;
+
+  if (isPregame) {
+    [awayTeamStats, homeTeamStats] =
+      await Promise.all([
+        getSeasonTeamStats(awayId, awayRecord),
+        getSeasonTeamStats(homeId, homeRecord),
+      ]);
+  } else {
+    awayTeamStats = getTeamStats(data, awayId);
+    homeTeamStats = getTeamStats(data, homeId);
+  }
+
   return {
     id: data.header?.id || gameId,
     date: competition.date,
@@ -257,13 +371,10 @@ export async function getGame(gameId) {
           ? awayCompetitor.rank
           : null,
       score: awayCompetitor?.score,
-      record:
-        awayCompetitor?.record?.find(
-          (record) => record.type === "total"
-        )?.summary || null,
+      record: awayRecord,
       quarterScores:
         getQuarterScores(awayCompetitor),
-      teamStats: getTeamStats(data, awayId),
+      teamStats: awayTeamStats,
       playerStats: getPlayerStats(data, awayId),
       leaders: getLeaders(data, awayId),
       injuries: getTeamInjuries(data, awayId),
@@ -280,13 +391,10 @@ export async function getGame(gameId) {
           ? homeCompetitor.rank
           : null,
       score: homeCompetitor?.score,
-      record:
-        homeCompetitor?.record?.find(
-          (record) => record.type === "total"
-        )?.summary || null,
+      record: homeRecord,
       quarterScores:
         getQuarterScores(homeCompetitor),
-      teamStats: getTeamStats(data, homeId),
+      teamStats: homeTeamStats,
       playerStats: getPlayerStats(data, homeId),
       leaders: getLeaders(data, homeId),
       injuries: getTeamInjuries(data, homeId),
