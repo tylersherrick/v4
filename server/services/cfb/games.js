@@ -22,6 +22,7 @@ export async function getGames(season, week) {
     const awayTeam = competition?.competitors?.find(
       (team) => team.homeAway === "away"
     );
+
     const homeTeam = competition?.competitors?.find(
       (team) => team.homeAway === "home"
     );
@@ -79,9 +80,23 @@ export async function getGames(season, week) {
       return new Date(a.date) - new Date(b.date);
     });
 
-  const currentWeek = data.leagues?.[0]?.calendar
-    ?.flatMap((seasonType) => seasonType.entries || [])
-    .find((entry) => Number(entry.value) === data.week?.number);
+  const calendarEntries =
+    data.leagues?.[0]?.calendar?.flatMap(
+      (seasonType) => seasonType.entries || []
+    ) || [];
+
+  const currentWeek = calendarEntries.find(
+    (entry) =>
+      Number(entry.value) === data.week?.number
+  );
+
+  const weeks = calendarEntries
+    .filter((entry) => Number(entry.value) >= 1)
+    .map((entry) => ({
+      number: Number(entry.value),
+      label: entry.label,
+      dateRange: entry.detail,
+    }));
 
   return {
     season: data.season?.year,
@@ -90,6 +105,7 @@ export async function getGames(season, week) {
       label: currentWeek?.label,
       dateRange: currentWeek?.detail,
     },
+    weeks,
     games: rankedGames,
   };
 }
