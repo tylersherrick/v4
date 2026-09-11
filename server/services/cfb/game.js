@@ -1,3 +1,6 @@
+import { getTeamLeaders } from "./teamLeaders.js";
+import { getTeamPlayerStats } from "./teamPlayerStats.js";
+
 function getTeamLogo(competitor) {
   return (
     competitor?.team?.logo ||
@@ -315,16 +318,34 @@ export async function getGame(gameId) {
 
   let awayTeamStats;
   let homeTeamStats;
+  let awayPlayerStats;
+  let homePlayerStats;
+  let awayLeaders;
+  let homeLeaders;
 
   if (isPregame) {
-    [awayTeamStats, homeTeamStats] =
-      await Promise.all([
-        getSeasonTeamStats(awayId, awayRecord),
-        getSeasonTeamStats(homeId, homeRecord),
-      ]);
+    [
+      awayTeamStats,
+      homeTeamStats,
+      awayPlayerStats,
+      homePlayerStats,
+      awayLeaders,
+      homeLeaders,
+    ] = await Promise.all([
+      getSeasonTeamStats(awayId, awayRecord),
+      getSeasonTeamStats(homeId, homeRecord),
+      getTeamPlayerStats(awayId),
+      getTeamPlayerStats(homeId),
+      getTeamLeaders(awayId),
+      getTeamLeaders(homeId),
+    ]);
   } else {
     awayTeamStats = getTeamStats(data, awayId);
     homeTeamStats = getTeamStats(data, homeId);
+    awayPlayerStats = getPlayerStats(data, awayId);
+    homePlayerStats = getPlayerStats(data, homeId);
+    awayLeaders = getLeaders(data, awayId);
+    homeLeaders = getLeaders(data, homeId);
   }
 
   return {
@@ -375,8 +396,8 @@ export async function getGame(gameId) {
       quarterScores:
         getQuarterScores(awayCompetitor),
       teamStats: awayTeamStats,
-      playerStats: getPlayerStats(data, awayId),
-      leaders: getLeaders(data, awayId),
+      playerStats: awayPlayerStats,
+      leaders: awayLeaders,
       injuries: getTeamInjuries(data, awayId),
     },
 
@@ -395,8 +416,8 @@ export async function getGame(gameId) {
       quarterScores:
         getQuarterScores(homeCompetitor),
       teamStats: homeTeamStats,
-      playerStats: getPlayerStats(data, homeId),
-      leaders: getLeaders(data, homeId),
+      playerStats: homePlayerStats,
+      leaders: homeLeaders,
       injuries: getTeamInjuries(data, homeId),
     },
   };

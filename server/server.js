@@ -21,6 +21,7 @@ import cfbPlayerStatsRouter from "./routes/cfb/playerStats.js";
 import cfbPlayerSearchRouter from "./routes/cfb/playerSearch.js";
 import cfbRankingsRouter from "./routes/cfb/rankings.js";
 import cfbCoachRouter from "./routes/cfb/coach.js";
+import cfbTeamLeadersRouter from "./routes/cfb/teamLeaders.js";
 
 const app = express();
 
@@ -56,6 +57,7 @@ app.use("/api/cfb/player", cfbPlayerStatsRouter);
 app.use("/api/cfb/players", cfbPlayerSearchRouter);
 app.use("/api/cfb/rankings", cfbRankingsRouter);
 app.use("/api/cfb/coach", cfbCoachRouter);
+app.use("/api/cfb/team-leaders", cfbTeamLeadersRouter);
 
 
 
