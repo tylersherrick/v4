@@ -7,6 +7,7 @@ import MLBPlayerPage from "./components/mlb/MLBPlayerPage.jsx";
 import MLBFullSchedule from "./components/mlb/MLBFullSchedule.jsx";
 import CFBGames from "./components/cfb/CFBGames.jsx";
 import CFBGamePage from "./components/cfb/CFBGamePage.jsx";
+import CFBPlayerPage from "./components/cfb/CFBPlayerPage.jsx";
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
       
       <Route path="/cfb" element={<CFBGames />} />
       <Route path="/cfb/game/:gameId" element={<CFBGamePage />} />
+      <Route path="/cfb/player/:playerId" element={<CFBPlayerPage />} />
     </Routes>
   );
 }

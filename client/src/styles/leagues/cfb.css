@@ -1,4 +1,5 @@
 /* CFB Linescore */
+
 .cfb-linescore {
   margin-top: 12px;
   overflow-x: auto;
@@ -44,6 +45,7 @@
 }
 
 /* CFB Team Stats */
+
 .cfb-team-stats {
   margin-top: 12px;
   background: #fff;
@@ -111,7 +113,159 @@
   text-align: right;
 }
 
+/* CFB Player Stats */
+
+.cfb-player-stats {
+  margin-top: 12px;
+}
+
+.cfb-player-stats-teams {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cfb-player-stats-teams button {
+  padding: 11px 12px;
+  border: 0;
+  background: #fff;
+  color: #777;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cfb-player-stats-teams button:first-child {
+  border-right: 1px solid #ddd;
+}
+
+.cfb-player-stats-teams button:hover {
+  background: #f5f5f5;
+  color: #111;
+}
+
+.cfb-player-stats-teams button.active {
+  background: #f0f0f0;
+  color: #111;
+  box-shadow: inset 0 -2px 0 #111;
+}
+
+.cfb-player-stats-tabs {
+  display: flex;
+  margin-bottom: 12px;
+  overflow-x: auto;
+  border-bottom: 1px solid #ddd;
+}
+
+.cfb-player-stats-tabs button {
+  flex: 1;
+  min-width: max-content;
+  padding: 10px 6px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: #777;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.cfb-player-stats-tabs button:hover {
+  background: #f5f5f5;
+  color: #111;
+}
+
+.cfb-player-stats-tabs button.active {
+  color: #111;
+  border-bottom-color: #111;
+}
+
+.cfb-player-stat-category {
+  margin-bottom: 16px;
+}
+
+.cfb-player-stat-category h3 {
+  margin: 0;
+  padding: 10px 12px;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-bottom: 0;
+  border-radius: 8px 8px 0 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.cfb-player-stats-table-wrap {
+  overflow-x: auto;
+  border: 1px solid #ddd;
+  border-radius: 0 0 8px 8px;
+}
+
+.cfb-player-stats-table {
+  width: 100%;
+  min-width: max-content;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.cfb-player-stats-table th,
+.cfb-player-stats-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 0.8rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.cfb-player-stats-table th {
+  color: #666;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.cfb-player-stats-table th:first-child,
+.cfb-player-stats-table td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  min-width: 115px;
+  background: #fff;
+  text-align: left;
+}
+
+.cfb-player-stats-table th:first-child {
+  z-index: 2;
+}
+
+.cfb-player-stats-table td:first-child a {
+  color: #111;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.cfb-player-stats-table td:first-child a:hover {
+  text-decoration: underline;
+}
+
+.cfb-player-stats-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.cfb-player-stats-content > p {
+  padding: 20px;
+  color: #666;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
 /* CFB Games Week Navigation */
+
 .cfb-games-week-nav {
   display: flex;
   align-items: center;
@@ -153,4 +307,106 @@
   min-width: 70px;
   font-size: 0.72rem;
   white-space: nowrap;
+}
+
+/* CFB Leaders */
+
+.cfb-leaders {
+  margin-top: 12px;
+}
+
+.cfb-leaders-team {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cfb-leaders-team-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.cfb-leaders-team-header img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.cfb-leaders-team-header h2 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.cfb-leader-category {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.cfb-leader-category:last-child {
+  border-bottom: 0;
+}
+
+.cfb-leader-category h3 {
+  margin: 0 0 10px;
+  color: #666;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.cfb-leader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cfb-leader + .cfb-leader {
+  margin-top: 10px;
+}
+
+.cfb-leader > img {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.cfb-leader > div {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.cfb-leader a {
+  color: #111;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.cfb-leader a:hover {
+  text-decoration: underline;
+}
+
+.cfb-leader strong {
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.cfb-leaders-team > p {
+  padding: 20px;
+  color: #666;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+@media (max-width: 650px) {
+  .cfb-leaders {
+    grid-template-columns: 1fr;
+  }
 }
