@@ -28,6 +28,14 @@ const PLAYER_STAT_CATEGORIES = {
   ],
 };
 
+const PREGAME_LEADER_CATEGORIES = [
+  ["passingYards", "Passing Yards"],
+  ["rushingYards", "Rushing Yards"],
+  ["receivingYards", "Receiving Yards"],
+  ["sacks", "Sacks"],
+  ["totalTackles", "Total Tackles"],
+];
+
 function getDateKey(date) {
   const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: TIME_ZONE,
@@ -183,6 +191,10 @@ export default function CFBGamePage() {
   const [activeTab, setActiveTab] = useState("summary");
   const [playerStatTab, setPlayerStatTab] = useState("passing");
   const [playerStatsTeam, setPlayerStatsTeam] = useState("away");
+  const [pregameLeaders, setPregameLeaders] = useState({
+    away: null,
+    home: null,
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -216,6 +228,52 @@ export default function CFBGamePage() {
 
     return () => clearInterval(interval);
   }, [gameId]);
+
+  useEffect(() => {
+    if (
+      game?.status?.state !== "pre" ||
+      !game.awayTeam?.id ||
+      !game.homeTeam?.id
+    ) {
+      return;
+    }
+
+    async function loadPregameLeaders() {
+      try {
+        const [awayResponse, homeResponse] =
+          await Promise.all([
+            fetch(
+              `${API_URL}/api/cfb/team-leaders/${game.awayTeam.id}`
+            ),
+            fetch(
+              `${API_URL}/api/cfb/team-leaders/${game.homeTeam.id}`
+            ),
+          ]);
+
+        if (!awayResponse.ok || !homeResponse.ok) {
+          throw new Error("Unable to load pregame leaders");
+        }
+
+        const [away, home] = await Promise.all([
+          awayResponse.json(),
+          homeResponse.json(),
+        ]);
+
+        setPregameLeaders({
+          away,
+          home,
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    loadPregameLeaders();
+  }, [
+    game?.status?.state,
+    game?.awayTeam?.id,
+    game?.homeTeam?.id,
+  ]);
 
   if (loading) {
     return <p>Loading CFB game...</p>;
@@ -289,6 +347,9 @@ export default function CFBGamePage() {
     playerStatsTeam === "away"
       ? game.awayTeam
       : game.homeTeam;
+
+  const selectedPregameLeaders =
+    pregameLeaders[playerStatsTeam];
 
   const selectedPlayerCategories =
     PLAYER_STAT_CATEGORIES[playerStatTab];
@@ -660,38 +721,94 @@ export default function CFBGamePage() {
                 <h2>{selectedPlayerTeam.name}</h2>
               </div>
 
-              {selectedPlayerTeam.leaders?.length > 0 ? (
-                selectedPlayerTeam.leaders
-                  .filter((category) => category.leaders?.length > 0)
-                  .map((category) => (
-                  <div
-                    className="cfb-leader-category"
-                    key={category.name}
-                  >
-                    <h3>{category.displayName}</h3>
+              {isPregame ? (
+                selectedPregameLeaders ? (
+                  PREGAME_LEADER_CATEGORIES.map(
+                    ([key, label]) => {
+                      const leader =
+                        selectedPregameLeaders[key];
 
-                    {category.leaders.map((leader) => (
-                      <div
-                        className="cfb-leader"
-                        key={`${category.name}-${leader.id}`}
-                      >
-                        {leader.headshot && (
-                          <img
-                            src={leader.headshot}
-                            alt={leader.name}
-                          />
-                        )}
+                      if (!leader?.name) {
+                        return null;
+                      }
 
-                        <div>
-                          <Link to={`/cfb/player/${leader.id}`}>
-                            {leader.name}
-                          </Link>
-                          <strong>{leader.value ?? "-"}</strong>
+                      return (
+                        <div
+                          className="cfb-leader-category"
+                          key={key}
+                        >
+                          <h3>{label}</h3>
+
+                          <div className="cfb-leader">
+                            {leader.headshot && (
+                              <img
+                                src={leader.headshot}
+                                alt={leader.name}
+                              />
+                            )}
+
+                            <div>
+                              {leader.id ? (
+                                <Link
+                                  to={`/cfb/player/${leader.id}`}
+                                >
+                                  {leader.name}
+                                </Link>
+                              ) : (
+                                <span>{leader.name}</span>
+                              )}
+
+                              <strong>
+                                {leader.total ?? "-"}
+                              </strong>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                ))
+                      );
+                    }
+                  )
+                ) : (
+                  <p>Loading leaders...</p>
+                )
+              ) : selectedPlayerTeam.leaders?.length > 0 ? (
+                selectedPlayerTeam.leaders
+                  .filter(
+                    (category) =>
+                      category.leaders?.length > 0
+                  )
+                  .map((category) => (
+                    <div
+                      className="cfb-leader-category"
+                      key={category.name}
+                    >
+                      <h3>{category.displayName}</h3>
+
+                      {category.leaders.map((leader) => (
+                        <div
+                          className="cfb-leader"
+                          key={`${category.name}-${leader.id}`}
+                        >
+                          {leader.headshot && (
+                            <img
+                              src={leader.headshot}
+                              alt={leader.name}
+                            />
+                          )}
+
+                          <div>
+                            <Link
+                              to={`/cfb/player/${leader.id}`}
+                            >
+                              {leader.name}
+                            </Link>
+                            <strong>
+                              {leader.value ?? "-"}
+                            </strong>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ))
               ) : (
                 <p>No leaders available.</p>
               )}
