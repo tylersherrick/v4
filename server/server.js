@@ -23,6 +23,17 @@ import cfbRankingsRouter from "./routes/cfb/rankings.js";
 import cfbCoachRouter from "./routes/cfb/coach.js";
 import cfbTeamLeadersRouter from "./routes/cfb/teamLeaders.js";
 
+import nflGamesRouter from "./routes/nfl/games.js";
+import nflGameRouter from "./routes/nfl/game.js";
+import nflTeamRouter from "./routes/nfl/team.js";
+import nflTeamScheduleRouter from "./routes/nfl/teamSchedule.js";
+import nflRosterRouter from "./routes/nfl/roster.js";
+import nflPlayerRouter from "./routes/nfl/player.js";
+import nflPlayerStatsRouter from "./routes/nfl/playerStats.js";
+import nflPlayerSearchRouter from "./routes/nfl/playerSearch.js";
+import nflCoachRouter from "./routes/nfl/coach.js";
+import nflTeamLeadersRouter from "./routes/nfl/teamLeaders.js";
+
 const app = express();
 
 const PORT = process.env.PORT || 3000;
@@ -58,6 +69,17 @@ app.use("/api/cfb/players", cfbPlayerSearchRouter);
 app.use("/api/cfb/rankings", cfbRankingsRouter);
 app.use("/api/cfb/coach", cfbCoachRouter);
 app.use("/api/cfb/team-leaders", cfbTeamLeadersRouter);
+
+app.use("/api/nfl/games", nflGamesRouter);
+app.use("/api/nfl/game", nflGameRouter);
+app.use("/api/nfl/team", nflTeamRouter);
+app.use("/api/nfl/team", nflTeamScheduleRouter);
+app.use("/api/nfl/team", nflRosterRouter);
+app.use("/api/nfl/player", nflPlayerRouter);
+app.use("/api/nfl/player", nflPlayerStatsRouter);
+app.use("/api/nfl/players", nflPlayerSearchRouter);
+app.use("/api/nfl/coach", nflCoachRouter);
+app.use("/api/nfl/team-leaders", nflTeamLeadersRouter);
 
 
 
