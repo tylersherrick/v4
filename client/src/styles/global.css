@@ -91,7 +91,7 @@ section {
   white-space: nowrap;
 }
 
-.sports-nav a::after {
+.sports-nav a.active::after {
   content: "";
   position: absolute;
   left: 0;
@@ -105,9 +105,28 @@ section {
   color: #777;
 }
 
+.sports-nav-back {
+  margin-left: auto;
+}
+
 @media (min-width: 700px) {
   main {
     width: min(1200px, calc(100% - 32px));
     padding: 24px 0 48px;
+  }
+}
+
+@media (max-width: 699px) {
+  .sports-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .sports-nav-back {
+    flex-basis: 100%;
+    margin-left: 0;
+    padding-top: 8px;
+    text-align: center;
   }
 }

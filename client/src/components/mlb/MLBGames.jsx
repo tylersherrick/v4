@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import SportsNav from "../home/SportsNav.jsx";
 import MLBGameCard from "./MLBGameCard.jsx";
 import MLBPlayerSearch from "./MLBPlayerSearch.jsx";
 
 const API_URL =
   import.meta.env.VITE_API_URL ||
   import.meta.env.VITE_RENDER_API_URL;
-  
+
 function getToday() {
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone: "America/Chicago",
@@ -122,7 +123,8 @@ export default function MLBGames() {
 
   return (
     <main className="mlb-games-page">
-      <Link to="/">← Back to Game Center</Link>
+      <SportsNav showBack />
+
       <h1>MLB</h1>
 
       <MLBPlayerSearch />

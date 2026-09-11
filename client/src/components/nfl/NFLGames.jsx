@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import SportsNav from "../home/SportsNav.jsx";
-import CFBGameCard from "./CFBGameCard.jsx";
-import CFBPlayerSearch from "./CFBPlayerSearch.jsx";
+import NFLGameCard from "./NFLGameCard.jsx";
+import NFLPlayerSearch from "./NFLPlayerSearch.jsx";
 
 const API_URL =
   import.meta.env.VITE_API_URL ||
   import.meta.env.VITE_RENDER_API_URL;
 
-export default function CFBGames() {
+export default function NFLGames() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [games, setGames] = useState([]);
   const [season, setSeason] = useState(null);
@@ -19,20 +19,32 @@ export default function CFBGames() {
   const [error, setError] = useState("");
 
   const selectedWeek = searchParams.get("week");
+  const selectedSeasonType = searchParams.get("seasonType");
 
   useEffect(() => {
     async function loadGames() {
       try {
-        const query = selectedWeek
-          ? `?season=${season || new Date().getFullYear()}&week=${selectedWeek}`
+        const params = new URLSearchParams();
+
+        if (selectedWeek && selectedSeasonType) {
+          params.set(
+            "season",
+            season || new Date().getFullYear()
+          );
+          params.set("week", selectedWeek);
+          params.set("seasonType", selectedSeasonType);
+        }
+
+        const query = params.toString()
+          ? `?${params.toString()}`
           : "";
 
         const response = await fetch(
-          `${API_URL}/api/cfb/games${query}`
+          `${API_URL}/api/nfl/games${query}`
         );
 
         if (!response.ok) {
-          throw new Error("Unable to load CFB games");
+          throw new Error("Unable to load NFL games");
         }
 
         const data = await response.json();
@@ -42,8 +54,11 @@ export default function CFBGames() {
         setWeek(data.week);
         setWeeks(data.weeks || []);
 
-        if (!selectedWeek) {
-          setCurrentWeek(data.week?.number);
+        if (!selectedWeek || !selectedSeasonType) {
+          setCurrentWeek({
+            number: data.week?.number,
+            seasonType: data.seasonType,
+          });
         }
 
         setError("");
@@ -62,30 +77,32 @@ export default function CFBGames() {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [selectedWeek]);
+  }, [selectedWeek, selectedSeasonType]);
 
-  function updateWeek(newWeek) {
-    const selected = weeks.find(
-      (item) => item.number === newWeek
-    );
-
+  function updateWeek(selected) {
     if (!selected) {
       return;
     }
 
     const params = new URLSearchParams(searchParams);
-    params.set("week", newWeek);
+
+    params.set("week", selected.number);
+    params.set("seasonType", selected.seasonType);
+
     setSearchParams(params);
   }
 
   function goToCurrentWeek() {
     const params = new URLSearchParams(searchParams);
+
     params.delete("week");
+    params.delete("seasonType");
+
     setSearchParams(params);
   }
 
   if (loading) {
-    return <p>Loading CFB games...</p>;
+    return <p>Loading NFL games...</p>;
   }
 
   if (error) {
@@ -93,16 +110,26 @@ export default function CFBGames() {
   }
 
   const currentWeekIndex = weeks.findIndex(
-    (item) => item.number === week?.number
+    (item) =>
+      item.number === week?.number &&
+      item.seasonType === week?.seasonType
   );
+
+  const selectedValue =
+    week?.number && week?.seasonType
+      ? `${week.seasonType}-${week.number}`
+      : "";
+
+  const isCurrentWeek =
+    week?.number === currentWeek?.number &&
+    week?.seasonType === currentWeek?.seasonType;
 
   return (
     <main className="cfb-games-page">
       <SportsNav showBack />
+      <h1>NFL</h1>
 
-      <h1>College Football</h1>
-
-      <CFBPlayerSearch />
+      <NFLPlayerSearch />
 
       <section className="cfb-games-section">
         <h2>Games</h2>
@@ -110,9 +137,7 @@ export default function CFBGames() {
         <div className="cfb-games-week-nav">
           <button
             onClick={() =>
-              updateWeek(
-                weeks[currentWeekIndex - 1]?.number
-              )
+              updateWeek(weeks[currentWeekIndex - 1])
             }
             disabled={currentWeekIndex <= 0}
           >
@@ -120,15 +145,24 @@ export default function CFBGames() {
           </button>
 
           <select
-            value={week?.number || ""}
-            onChange={(event) =>
-              updateWeek(Number(event.target.value))
-            }
+            value={selectedValue}
+            onChange={(event) => {
+              const [seasonType, weekNumber] =
+                event.target.value.split("-");
+
+              const selected = weeks.find(
+                (item) =>
+                  item.seasonType === Number(seasonType) &&
+                  item.number === Number(weekNumber)
+              );
+
+              updateWeek(selected);
+            }}
           >
             {weeks.map((item) => (
               <option
-                key={item.number}
-                value={item.number}
+                key={`${item.seasonType}-${item.number}`}
+                value={`${item.seasonType}-${item.number}`}
               >
                 {item.label || `Week ${item.number}`}
                 {item.dateRange
@@ -141,16 +175,14 @@ export default function CFBGames() {
           <button
             className="cfb-current-week-button"
             onClick={goToCurrentWeek}
-            disabled={week?.number === currentWeek}
+            disabled={isCurrentWeek}
           >
             Current Week
           </button>
 
           <button
             onClick={() =>
-              updateWeek(
-                weeks[currentWeekIndex + 1]?.number
-              )
+              updateWeek(weeks[currentWeekIndex + 1])
             }
             disabled={
               currentWeekIndex === -1 ||
@@ -163,7 +195,7 @@ export default function CFBGames() {
 
         <div className="cfb-games-grid">
           {games.map((game) => (
-            <CFBGameCard
+            <NFLGameCard
               key={game.id}
               game={game}
             />

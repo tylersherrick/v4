@@ -133,7 +133,7 @@ function StatTable({ category }) {
   );
 }
 
-export default function CFBPlayerPage() {
+export default function NFLPlayerPage() {
   const { playerId } = useParams();
   const navigate = useNavigate();
 
@@ -149,8 +149,8 @@ export default function CFBPlayerPage() {
       try {
         const [playerResponse, statsResponse] =
           await Promise.all([
-            fetch(`${API_URL}/api/cfb/player/${playerId}`),
-            fetch(`${API_URL}/api/cfb/player/${playerId}/stats`),
+            fetch(`${API_URL}/api/nfl/player/${playerId}`),
+            fetch(`${API_URL}/api/nfl/player/${playerId}/stats`),
           ]);
 
         if (!playerResponse.ok || !statsResponse.ok) {
@@ -248,7 +248,7 @@ export default function CFBPlayerPage() {
           ← Back
         </a>
 
-        <Link to="/cfb">← Back to Games</Link>
+        <Link to="/nfl">← Back to Games</Link>
       </div>
 
       <section className="cfb-player-header">

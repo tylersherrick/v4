@@ -8,6 +8,9 @@ import MLBFullSchedule from "./components/mlb/MLBFullSchedule.jsx";
 import CFBGames from "./components/cfb/CFBGames.jsx";
 import CFBGamePage from "./components/cfb/CFBGamePage.jsx";
 import CFBPlayerPage from "./components/cfb/CFBPlayerPage.jsx";
+import NFLGames from "./components/nfl/NFLGames.jsx";
+import NFLGamePage from "./components/nfl/NFLGamePage.jsx";
+import NFLPlayerPage from "./components/nfl/NFLPlayerPage.jsx";
 
 export default function App() {
   return (
@@ -19,10 +22,14 @@ export default function App() {
       <Route path="/mlb/team/:teamId" element={<MLBTeamPage />} />
       <Route path="/mlb/team/:teamId/schedule" element={<MLBFullSchedule />} />
       <Route path="/mlb/player/:playerId" element={<MLBPlayerPage />} />
-      
+
       <Route path="/cfb" element={<CFBGames />} />
       <Route path="/cfb/game/:gameId" element={<CFBGamePage />} />
       <Route path="/cfb/player/:playerId" element={<CFBPlayerPage />} />
+
+      <Route path="/nfl" element={<NFLGames />} />
+      <Route path="/nfl/game/:gameId" element={<NFLGamePage />} />
+      <Route path="/nfl/player/:playerId" element={<NFLPlayerPage />} />
     </Routes>
   );
 }

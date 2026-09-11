@@ -32,9 +32,7 @@ async function getGamesPlayed(teamId, season) {
   );
 
   if (!response.ok) {
-    throw new Error(
-      `ESPN schedule request failed: ${response.status}`
-    );
+    return 0;
   }
 
   const data = await response.json();
@@ -66,9 +64,14 @@ export async function getTeamLeaders(teamId, season) {
   ]);
 
   if (!response.ok) {
-    throw new Error(
-      `ESPN request failed: ${response.status}`
-    );
+    return {
+      gamesPlayed,
+      passingYards: null,
+      rushingYards: null,
+      receivingYards: null,
+      sacks: null,
+      totalTackles: null,
+    };
   }
 
   const data = await response.json();

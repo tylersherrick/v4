@@ -1,11 +1,12 @@
 const ESPN_URL =
   "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard";
 
-export async function getGames(season, week) {
+export async function getGames(season, week, seasonType) {
   const params = new URLSearchParams();
 
   if (season) params.set("dates", season);
   if (week) params.set("week", week);
+  if (seasonType) params.set("seasontype", seasonType);
 
   const url = `${ESPN_URL}?${params.toString()}`;
   const response = await fetch(url);
@@ -72,30 +73,37 @@ export async function getGames(season, week) {
     return new Date(a.date) - new Date(b.date);
   });
 
-  const calendarEntries =
-    data.leagues?.[0]?.calendar?.flatMap(
-      (seasonType) => seasonType.entries || []
-    ) || [];
+  const calendar = data.leagues?.[0]?.calendar || [];
 
-  const currentWeek = calendarEntries.find(
-    (entry) =>
-      Number(entry.value) === data.week?.number
+  const weeks = calendar.flatMap((type) =>
+    (type.entries || [])
+      .filter((entry) => Number(entry.value) >= 1)
+      .map((entry) => ({
+        number: Number(entry.value),
+        seasonType: Number(type.value),
+        label: entry.label,
+        dateRange: entry.detail,
+      }))
   );
 
-  const weeks = calendarEntries
-    .filter((entry) => Number(entry.value) >= 1)
-    .map((entry) => ({
-      number: Number(entry.value),
-      label: entry.label,
-      dateRange: entry.detail,
-    }));
+  const currentSeasonType = Number(
+    data.season?.type ?? seasonType
+  );
+
+  const currentWeek = weeks.find(
+    (entry) =>
+      entry.number === Number(data.week?.number) &&
+      entry.seasonType === currentSeasonType
+  );
 
   return {
     season: data.season?.year,
+    seasonType: currentSeasonType,
     week: {
       number: data.week?.number,
+      seasonType: currentSeasonType,
       label: currentWeek?.label,
-      dateRange: currentWeek?.detail,
+      dateRange: currentWeek?.dateRange,
     },
     weeks,
     games: sortedGames,

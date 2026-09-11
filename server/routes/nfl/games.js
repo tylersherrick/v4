@@ -7,7 +7,8 @@ router.get("/", async (req, res) => {
   try {
     const games = await getGames(
       req.query.season,
-      req.query.week
+      req.query.week,
+      req.query.seasonType
     );
 
     res.json(games);
