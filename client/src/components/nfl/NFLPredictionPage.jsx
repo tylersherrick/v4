@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import "../../styles/leagues/nfl.css";
 
-const PREDICTION_API_URL = "http://127.0.0.1:8000";
-
+const PREDICTION_API_URL =
+  import.meta.env.VITE_PREDICTION_API_URL ||
+  "https://sports-prediction-engine.onrender.com";
+  
 const NFL_TEAM_ABBREVIATIONS = {
   "Arizona Cardinals": "ari",
   "Atlanta Falcons": "atl",
