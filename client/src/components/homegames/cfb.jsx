@@ -37,6 +37,7 @@ export default function CFB() {
               state: event.status?.type?.state,
               detail: event.status?.type?.detail,
             },
+            possession: competition?.situation?.possession || null,
             awayTeam: {
               id: awayTeam?.team?.id,
               name: awayTeam?.team?.displayName,

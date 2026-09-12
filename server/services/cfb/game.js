@@ -235,37 +235,66 @@ function getOdds(data) {
   };
 }
 
-function getLiveGame(data, competition) {
+function getLiveGame(data, competition, scoreboardCompetition) {
   if (competition.status?.type?.state !== "in") {
     return null;
   }
 
   const plays = data.plays || [];
   const currentPlay = plays[plays.length - 1];
-
-  if (!currentPlay) {
-    return null;
-  }
+  const situation = scoreboardCompetition?.situation;
 
   return {
     quarter:
       competition.status?.period ??
-      currentPlay.period?.number ??
+      currentPlay?.period?.number ??
       null,
     clock:
       competition.status?.displayClock ||
-      currentPlay.clock?.displayValue ||
+      currentPlay?.clock?.displayValue ||
       null,
     down:
-      currentPlay.start?.down ?? null,
+      situation?.down ??
+      currentPlay?.start?.down ??
+      null,
     distance:
-      currentPlay.start?.distance ?? null,
+      situation?.distance ??
+      currentPlay?.start?.distance ??
+      null,
     yardLine:
-      currentPlay.start?.yardLine ?? null,
+      situation?.yardLine ??
+      currentPlay?.start?.yardLine ??
+      null,
     possession:
-      currentPlay.start?.team?.id || null,
-    text: currentPlay.text || null,
+      situation?.possession ??
+      currentPlay?.start?.team?.id ??
+      null,
+    text:
+      situation?.lastPlay?.shortText ||
+      situation?.lastPlay?.text ||
+      currentPlay?.shortText ||
+      currentPlay?.text ||
+      null,
   };
+}
+
+async function getScoreboardCompetition(gameId) {
+  const url =
+    "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard";
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const data = await response.json();
+
+  const event = data.events?.find(
+    (event) => String(event.id) === String(gameId)
+  );
+
+  return event?.competitions?.[0] || null;
 }
 
 export async function getGame(gameId) {
@@ -316,6 +345,16 @@ export async function getGame(gameId) {
   const isPregame =
     competition.status?.type?.state === "pre";
 
+  const isLive =
+    competition.status?.type?.state === "in";
+
+  let scoreboardCompetition = null;
+
+  if (isLive) {
+    scoreboardCompetition =
+      await getScoreboardCompetition(gameId);
+  }
+
   let awayTeamStats;
   let homeTeamStats;
   let awayPlayerStats;
@@ -362,7 +401,11 @@ export async function getGame(gameId) {
         competition.status?.displayClock || null,
     },
 
-    liveGame: getLiveGame(data, competition),
+    liveGame: getLiveGame(
+      data,
+      competition,
+      scoreboardCompetition
+    ),
 
     venue: {
       name:

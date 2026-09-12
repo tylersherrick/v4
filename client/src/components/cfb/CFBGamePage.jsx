@@ -57,6 +57,65 @@ function getYesterday() {
   return yesterday;
 }
 
+function getOrdinal(value) {
+  const number = Number(value);
+
+  if (number === 1) return "1st";
+  if (number === 2) return "2nd";
+  if (number === 3) return "3rd";
+
+  return `${number}th`;
+}
+
+function formatLastPlay(text) {
+  if (!text) {
+    return "";
+  }
+
+  let play = text
+    .replace(/^\(\d{1,2}:\d{2}\)\s*/, "")
+    .replace(/^(?:No Huddle-)?(?:Shotgun|Under Center)\s*/i, "")
+    .replace(/^#\d+\s*/, "")
+    .replace(/\s*\([^)]*\)\s*$/, "")
+    .trim();
+
+  const rushMatch = play.match(
+    /^([A-Za-z.'’-]+)\s+rush(?:es)?(?:\s+\w+)?\s+for\s+(-?\d+)\s+yards?/i
+  );
+
+  if (rushMatch) {
+    return `${rushMatch[1]} rush for ${rushMatch[2]} yards`;
+  }
+
+  const passMatch = play.match(
+    /^([A-Za-z.'’-]+)\s+pass(?:es)?\s+(?:complete\s+)?to\s+(?:#\d+\s+)?([A-Za-z.'’-]+).*?for\s+(-?\d+)\s+yards?/i
+  );
+
+  if (passMatch) {
+    return `${passMatch[1]} pass to ${passMatch[2]} for ${passMatch[3]} yards`;
+  }
+
+  const incompleteMatch = play.match(
+    /^([A-Za-z.'’-]+)\s+pass\s+incomplete(?:\s+to\s+(?:#\d+\s+)?([A-Za-z.'’-]+))?/i
+  );
+
+  if (incompleteMatch) {
+    return incompleteMatch[2]
+      ? `${incompleteMatch[1]} pass incomplete to ${incompleteMatch[2]}`
+      : `${incompleteMatch[1]} pass incomplete`;
+  }
+
+  const sackMatch = play.match(
+    /^([A-Za-z.'’-]+)\s+sacked.*?for\s+(-?\d+)\s+yards?/i
+  );
+
+  if (sackMatch) {
+    return `${sackMatch[1]} sacked for ${sackMatch[2]} yards`;
+  }
+
+  return play;
+}
+
 function getPregamePlayerCategories(playerStats, categoryNames) {
   const categories = {};
 
@@ -290,6 +349,16 @@ export default function CFBGamePage() {
   const isPregame = game.status?.state === "pre";
   const isLive = game.status?.state === "in";
 
+  const awayHasPossession =
+    isLive &&
+    String(game.liveGame?.possession) ===
+      String(game.awayTeam.id);
+
+  const homeHasPossession =
+    isLive &&
+    String(game.liveGame?.possession) ===
+      String(game.homeTeam.id);
+
   const gameDate = new Date(game.date);
 
   const isToday =
@@ -418,6 +487,7 @@ export default function CFBGamePage() {
                   {game.awayTeam.rank &&
                     `#${game.awayTeam.rank} `}
                   {game.awayTeam.abbreviation}
+                  {awayHasPossession && " 🏈"}
                 </strong>
 
                 {game.awayTeam.record && (
@@ -445,6 +515,7 @@ export default function CFBGamePage() {
                   {game.homeTeam.rank &&
                     `#${game.homeTeam.rank} `}
                   {game.homeTeam.abbreviation}
+                  {homeHasPossession && " 🏈"}
                 </strong>
 
                 {game.homeTeam.record && (
@@ -464,23 +535,23 @@ export default function CFBGamePage() {
           {!isLive && ` · ${formattedDate}`}
         </p>
 
-        {isLive && game.liveGame && (
-          <div className="cfb-game-live">
-            <strong>
-              {game.liveGame.quarter} · {game.liveGame.clock}
-            </strong>
+        {isLive &&
+          game.liveGame &&
+          !game.status?.detail?.toLowerCase().includes("end of") &&
+          !game.status?.detail?.toLowerCase().includes("halftime") && (
+            <div className="cfb-game-live">
+              {game.liveGame.down && (
+                <span>
+                  {getOrdinal(game.liveGame.down)} &{" "}
+                  {game.liveGame.distance}
+                </span>
+              )}
 
-            {game.liveGame.down && (
-              <span>
-                {game.liveGame.down} & {game.liveGame.distance}
-              </span>
-            )}
-
-            {game.liveGame.play && (
-              <p>{game.liveGame.play}</p>
-            )}
-          </div>
-        )}
+              {game.liveGame.text && (
+                <p>{formatLastPlay(game.liveGame.text)}</p>
+              )}
+            </div>
+          )}
       </section>
 
       <div className="game-tabs">

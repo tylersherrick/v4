@@ -13,6 +13,14 @@ export default function CFBGameCard({ game }) {
 
   const showScore = gameState !== "pre";
 
+  const awayHasPossession =
+    gameState === "in" &&
+    game.possession === game.awayTeam.id;
+
+  const homeHasPossession =
+    gameState === "in" &&
+    game.possession === game.homeTeam.id;
+
   const gameDate = new Date(game.date);
 
   const formattedDate = gameDate
@@ -57,12 +65,14 @@ export default function CFBGameCard({ game }) {
                 {game.awayTeam.rank <= 25 &&
                   `#${game.awayTeam.rank} `}
                 {game.awayTeam.abbreviation}
+                {awayHasPossession && " 🏈"}
               </span>
 
               <span className="mlb-game-card-team-full">
                 {game.awayTeam.rank <= 25 &&
                   `#${game.awayTeam.rank} `}
                 {game.awayTeam.name}
+                {awayHasPossession && " 🏈"}
               </span>
             </div>
           </div>
@@ -86,12 +96,14 @@ export default function CFBGameCard({ game }) {
                 {game.homeTeam.rank <= 25 &&
                   `#${game.homeTeam.rank} `}
                 {game.homeTeam.abbreviation}
+                {homeHasPossession && " 🏈"}
               </span>
 
               <span className="mlb-game-card-team-full">
                 {game.homeTeam.rank <= 25 &&
                   `#${game.homeTeam.rank} `}
                 {game.homeTeam.name}
+                {homeHasPossession && " 🏈"}
               </span>
             </div>
           </div>
