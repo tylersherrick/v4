@@ -1,0 +1,172 @@
+/* NFL Prediction Page */
+
+.prediction-page {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.prediction-page .game-nav {
+  margin-bottom: 16px;
+}
+
+.prediction-page .game-nav a {
+  color: #111;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.prediction-page .game-nav a:hover {
+  text-decoration: underline;
+}
+
+.prediction-header {
+  margin-bottom: 20px;
+}
+
+.prediction-header > span {
+  display: block;
+  margin-bottom: 6px;
+  color: #666;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.prediction-matchup {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 24px;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.prediction-team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.prediction-team img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+.prediction-team strong {
+  color: #111;
+  font-size: 1rem;
+}
+
+.prediction-team span {
+  color: #666;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.prediction-at {
+  color: #999;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.prediction-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.prediction-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.prediction-primary {
+  grid-column: 1 / -1;
+}
+
+.prediction-label {
+  display: block;
+  padding: 10px 12px;
+  background: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+  color: #666;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.prediction-card h2 {
+  margin: 0;
+  padding: 12px 12px 4px;
+  font-size: 1rem;
+}
+
+.prediction-big-number {
+  padding: 0 12px;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.prediction-detail {
+  display: block;
+  padding: 2px 12px 12px;
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.prediction-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 12px;
+  border-top: 1px solid #eee;
+  font-size: 0.85rem;
+}
+
+.prediction-row span {
+  color: #666;
+}
+
+.prediction-row strong {
+  text-align: right;
+}
+
+.prediction-explanation {
+  padding: 12px;
+  background: #f5f5f5;
+  border-top: 1px solid #ddd;
+  color: #555;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 650px) {
+  .prediction-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .prediction-primary {
+    grid-column: auto;
+  }
+
+  .prediction-matchup {
+    gap: 10px;
+    padding: 16px 10px;
+  }
+
+  .prediction-team img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .prediction-team strong {
+    font-size: 0.85rem;
+  }
+}

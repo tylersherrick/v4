@@ -11,6 +11,7 @@ import CFBPlayerPage from "./components/cfb/CFBPlayerPage.jsx";
 import NFLGames from "./components/nfl/NFLGames.jsx";
 import NFLGamePage from "./components/nfl/NFLGamePage.jsx";
 import NFLPlayerPage from "./components/nfl/NFLPlayerPage.jsx";
+import NFLPredictionPage from "./components/nfl/NFLPredictionPage.jsx";
 
 export default function App() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
       <Route path="/nfl" element={<NFLGames />} />
       <Route path="/nfl/game/:gameId" element={<NFLGamePage />} />
       <Route path="/nfl/player/:playerId" element={<NFLPlayerPage />} />
+      <Route path="/prediction/:gameId" element={<NFLPredictionPage />} />
     </Routes>
   );
 }

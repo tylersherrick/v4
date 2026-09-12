@@ -395,6 +395,12 @@ export default function NFLGamePage() {
           ← Back
         </a>
 
+        {isPregame && (
+          <Link to={`/prediction/${gameId}`}>
+            Game Prediction
+          </Link>
+        )}
+
         <Link to="/nfl">← Back to Games</Link>
       </div>
 
