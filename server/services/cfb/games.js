@@ -1,17 +1,52 @@
 const ESPN_URL =
   "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard";
 
-export async function getGames(season, week) {
+const CONFERENCES = {
+  acc: 1,
+  "big-12": 4,
+  "big-ten": 5,
+  "conference-usa": 12,
+  independents: 18,
+  mac: 15,
+  "mountain-west": 17,
+  "pac-12": 9,
+  sec: 8,
+  "sun-belt": 37,
+  aac: 151,
+};
+
+export async function getGames(
+  season,
+  week,
+  conference = "top25"
+) {
   const params = new URLSearchParams();
 
-  if (season) params.set("dates", season);
-  if (week) params.set("week", week);
+  if (season) {
+    params.set("dates", season);
+  }
+
+  if (week) {
+    params.set("week", week);
+  }
+
+  if (
+    conference !== "top25" &&
+    CONFERENCES[conference]
+  ) {
+    params.set(
+      "groups",
+      CONFERENCES[conference]
+    );
+  }
 
   const url = `${ESPN_URL}?${params.toString()}`;
   const response = await fetch(url);
 
   if (!response.ok) {
-    throw new Error(`ESPN request failed: ${response.status}`);
+    throw new Error(
+      `ESPN request failed: ${response.status}`
+    );
   }
 
   const data = await response.json();
@@ -37,7 +72,8 @@ export async function getGames(season, week) {
         completed: event.status?.type?.completed,
       },
       venue: competition?.venue?.fullName,
-      possession: competition?.situation?.possession || null,
+      possession:
+        competition?.situation?.possession || null,
       awayTeam: {
         id: awayTeam?.team?.id,
         name: awayTeam?.team?.displayName,
@@ -63,23 +99,26 @@ export async function getGames(season, week) {
     post: 2,
   };
 
-  const rankedGames = games
-    .filter(
-      (game) =>
-        game.awayTeam.rank <= 25 ||
-        game.homeTeam.rank <= 25
-    )
-    .sort((a, b) => {
-      const statusDifference =
-        (statusOrder[a.status?.state] ?? 1) -
-        (statusOrder[b.status?.state] ?? 1);
+  const filteredGames =
+    conference === "top25"
+      ? games.filter(
+          (game) =>
+            game.awayTeam.rank <= 25 ||
+            game.homeTeam.rank <= 25
+        )
+      : games;
 
-      if (statusDifference !== 0) {
-        return statusDifference;
-      }
+  const sortedGames = filteredGames.sort((a, b) => {
+    const statusDifference =
+      (statusOrder[a.status?.state] ?? 1) -
+      (statusOrder[b.status?.state] ?? 1);
 
-      return new Date(a.date) - new Date(b.date);
-    });
+    if (statusDifference !== 0) {
+      return statusDifference;
+    }
+
+    return new Date(a.date) - new Date(b.date);
+  });
 
   const calendarEntries =
     data.leagues?.[0]?.calendar?.flatMap(
@@ -107,6 +146,7 @@ export async function getGames(season, week) {
       dateRange: currentWeek?.detail,
     },
     weeks,
-    games: rankedGames,
+    conference,
+    games: sortedGames,
   };
 }
