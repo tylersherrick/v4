@@ -14,6 +14,15 @@ export default function CFBGameTabs({
       </button>
 
       <button
+        onClick={() => setActiveTab("gamecast")}
+        className={
+          activeTab === "gamecast" ? "active" : ""
+        }
+      >
+        Gamecast
+      </button>
+
+      <button
         onClick={() => setActiveTab("teamStats")}
         className={
           activeTab === "teamStats" ? "active" : ""

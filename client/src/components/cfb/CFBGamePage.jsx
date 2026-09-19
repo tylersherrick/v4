@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import CFBGamecast from "./CFBGamecast.jsx";
 import CFBGameHeader from "./CFBGameHeader.jsx";
 import CFBGameLeaders from "./CFBGameLeaders.jsx";
 import CFBGameNav from "./CFBGameNav.jsx";
@@ -86,6 +87,10 @@ export default function CFBGamePage() {
             game={game}
             isPregame={isPregame}
           />
+        )}
+
+        {activeTab === "gamecast" && (
+          <CFBGamecast gamecast={game.gamecast} />
         )}
 
         {activeTab === "teamStats" && (

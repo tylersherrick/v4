@@ -1369,3 +1369,285 @@
     display: none;
   }
 }
+
+/* Gamecast */
+
+.cfb-gamecast {
+  width: 100%;
+}
+
+.cfb-gamecast-drive-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+.cfb-gamecast-possession {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cfb-gamecast-possession img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.cfb-gamecast-possession div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cfb-gamecast-possession strong {
+  font-size: 18px;
+}
+
+.cfb-gamecast-possession span {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.cfb-gamecast-drive-stats {
+  display: flex;
+  gap: 18px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.cfb-gamecast-field {
+  display: flex;
+  width: 100%;
+  height: 180px;
+  margin-bottom: 24px;
+  overflow: hidden;
+  border-radius: 8px;
+  color: white;
+}
+
+.cfb-gamecast-endzone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 7%;
+  min-width: 42px;
+  background: #245b2a;
+  font-size: 11px;
+  font-weight: 700;
+  writing-mode: vertical-rl;
+  letter-spacing: 2px;
+}
+
+.cfb-gamecast-playing-field {
+  position: relative;
+  flex: 1;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent calc(10% - 1px),
+      rgba(255, 255, 255, 0.28) calc(10% - 1px),
+      rgba(255, 255, 255, 0.28) 10%
+    ),
+    #2f7d32;
+}
+
+.cfb-gamecast-playing-field::before,
+.cfb-gamecast-playing-field::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  border-top: 2px dashed rgba(255, 255, 255, 0.55);
+}
+
+.cfb-gamecast-playing-field::before {
+  top: 25%;
+}
+
+.cfb-gamecast-playing-field::after {
+  bottom: 25%;
+}
+
+.cfb-gamecast-yard-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.cfb-gamecast-yard-line span {
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  transform: translateY(-50%);
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.8;
+}
+
+.cfb-gamecast-yard-line.line-20 {
+  left: 20%;
+}
+
+.cfb-gamecast-yard-line.line-40 {
+  left: 40%;
+}
+
+.cfb-gamecast-yard-line.line-50 {
+  left: 50%;
+}
+
+.cfb-gamecast-yard-line.line-60 {
+  left: 60%;
+}
+
+.cfb-gamecast-yard-line.line-80 {
+  left: 80%;
+}
+
+.cfb-gamecast-ball {
+  position: absolute;
+  top: 50%;
+  width: 18px;
+  height: 11px;
+  background: #6f3b1f;
+  border: 2px solid white;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+}
+
+.cfb-gamecast-position-label {
+  position: absolute;
+  top: 62%;
+  transform: translateX(-50%);
+  padding: 3px 6px;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  z-index: 3;
+}
+
+.cfb-gamecast-current-drive {
+  margin-top: 20px;
+}
+
+.cfb-gamecast-current-drive h3 {
+  margin-bottom: 12px;
+}
+
+.cfb-gamecast-play-list {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cfb-gamecast-play {
+  padding: 14px 16px;
+  border-bottom: 1px solid #ddd;
+}
+
+.cfb-gamecast-play:last-child {
+  border-bottom: none;
+}
+
+.cfb-gamecast-play-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+.cfb-gamecast-play-meta span {
+  font-weight: 600;
+}
+
+.cfb-gamecast-play p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+@media (max-width: 650px) {
+  .cfb-gamecast-drive-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .cfb-gamecast-drive-stats {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .cfb-gamecast-field {
+    height: 150px;
+  }
+
+  .cfb-gamecast-endzone {
+    min-width: 30px;
+    width: 30px;
+  }
+
+  .cfb-gamecast-position-label {
+    font-size: 10px;
+  }
+
+  .cfb-gamecast-play {
+    padding: 12px;
+  }
+
+  .cfb-gamecast-play-meta {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+  }
+}
+
+.cfb-game-live-situation {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+  text-align: center;
+}
+
+.cfb-game-live-situation strong {
+  font-size: 16px;
+}
+
+@media (max-width: 650px) {
+  .game-tabs {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+
+  .game-tabs button {
+    flex: 1;
+    min-width: 0;
+    padding-left: 4px;
+    padding-right: 4px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+}
+
+.cfb-game-live-situation {
+  margin-top: 6px;
+  text-align: center;
+}
+
+.cfb-game-live-situation-text {
+  color: #444;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
