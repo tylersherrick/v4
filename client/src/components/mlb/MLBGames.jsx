@@ -44,6 +44,7 @@ export default function MLBGames() {
   const [date, setDate] = useState(
     searchParams.get("date") || getToday()
   );
+  const [activeTab, setActiveTab] = useState("games");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -127,54 +128,76 @@ export default function MLBGames() {
 
       <h1>MLB</h1>
 
-      <MLBPlayerSearch />
+      <div className="game-tabs">
+        <button
+          onClick={() => setActiveTab("games")}
+          className={activeTab === "games" ? "active" : ""}
+        >
+          Games
+        </button>
 
-      <section className="mlb-games-section">
-        <h2>Games</h2>
+        <button
+          onClick={() => setActiveTab("playerSearch")}
+          className={
+            activeTab === "playerSearch" ? "active" : ""
+          }
+        >
+          Player Search
+        </button>
+      </div>
 
-        <div className="mlb-games-date-nav">
-          <button
-            onClick={() =>
-              updateDate(changeDate(date, -1))
-            }
-          >
-            ←
-          </button>
+      {activeTab === "games" && (
+        <section className="mlb-games-section">
+          <h2>Games</h2>
 
-          <input
-            type="date"
-            value={date}
-            onChange={(event) =>
-              updateDate(event.target.value)
-            }
-          />
+          <div className="mlb-games-date-nav">
+            <button
+              onClick={() =>
+                updateDate(changeDate(date, -1))
+              }
+            >
+              ←
+            </button>
 
-          <button
-            onClick={() => updateDate(today)}
-            disabled={date === today}
-          >
-            Today
-          </button>
-
-          <button
-            onClick={() =>
-              updateDate(changeDate(date, 1))
-            }
-          >
-            →
-          </button>
-        </div>
-
-        <div className="mlb-games-grid">
-          {games.map((game) => (
-            <MLBGameCard
-              key={game.id}
-              game={game}
-              date={date}
+            <input
+              type="date"
+              value={date}
+              onChange={(event) =>
+                updateDate(event.target.value)
+              }
             />
-          ))}
-        </div>
-      </section>
+
+            <button
+              onClick={() => updateDate(today)}
+              disabled={date === today}
+            >
+              Today
+            </button>
+
+            <button
+              onClick={() =>
+                updateDate(changeDate(date, 1))
+              }
+            >
+              →
+            </button>
+          </div>
+
+          <div className="mlb-games-grid">
+            {games.map((game) => (
+              <MLBGameCard
+                key={game.id}
+                game={game}
+                date={date}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {activeTab === "playerSearch" && (
+        <MLBPlayerSearch />
+      )}
     </main>
   );
 }

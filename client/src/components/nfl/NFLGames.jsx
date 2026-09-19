@@ -15,6 +15,7 @@ export default function NFLGames() {
   const [week, setWeek] = useState(null);
   const [weeks, setWeeks] = useState([]);
   const [currentWeek, setCurrentWeek] = useState(null);
+  const [activeTab, setActiveTab] = useState("games");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -127,81 +128,104 @@ export default function NFLGames() {
   return (
     <main className="cfb-games-page">
       <SportsNav showBack />
+
       <h1>NFL</h1>
 
-      <NFLPlayerSearch />
+      <div className="game-tabs">
+        <button
+          onClick={() => setActiveTab("games")}
+          className={activeTab === "games" ? "active" : ""}
+        >
+          Games
+        </button>
 
-      <section className="cfb-games-section">
-        <h2>Games</h2>
+        <button
+          onClick={() => setActiveTab("playerSearch")}
+          className={
+            activeTab === "playerSearch" ? "active" : ""
+          }
+        >
+          Player Search
+        </button>
+      </div>
 
-        <div className="cfb-games-week-nav">
-          <button
-            onClick={() =>
-              updateWeek(weeks[currentWeekIndex - 1])
-            }
-            disabled={currentWeekIndex <= 0}
-          >
-            ←
-          </button>
+      {activeTab === "games" && (
+        <section className="cfb-games-section">
+          <h2>Games</h2>
 
-          <select
-            value={selectedValue}
-            onChange={(event) => {
-              const [seasonType, weekNumber] =
-                event.target.value.split("-");
+          <div className="cfb-games-week-nav">
+            <button
+              onClick={() =>
+                updateWeek(weeks[currentWeekIndex - 1])
+              }
+              disabled={currentWeekIndex <= 0}
+            >
+              ←
+            </button>
 
-              const selected = weeks.find(
-                (item) =>
-                  item.seasonType === Number(seasonType) &&
-                  item.number === Number(weekNumber)
-              );
+            <select
+              value={selectedValue}
+              onChange={(event) => {
+                const [seasonType, weekNumber] =
+                  event.target.value.split("-");
 
-              updateWeek(selected);
-            }}
-          >
-            {weeks.map((item) => (
-              <option
-                key={`${item.seasonType}-${item.number}`}
-                value={`${item.seasonType}-${item.number}`}
-              >
-                {item.label || `Week ${item.number}`}
-                {item.dateRange
-                  ? ` · ${item.dateRange.replaceAll("Sep", "Sept")}`
-                  : ""}
-              </option>
+                const selected = weeks.find(
+                  (item) =>
+                    item.seasonType === Number(seasonType) &&
+                    item.number === Number(weekNumber)
+                );
+
+                updateWeek(selected);
+              }}
+            >
+              {weeks.map((item) => (
+                <option
+                  key={`${item.seasonType}-${item.number}`}
+                  value={`${item.seasonType}-${item.number}`}
+                >
+                  {item.label || `Week ${item.number}`}
+                  {item.dateRange
+                    ? ` · ${item.dateRange.replaceAll("Sep", "Sept")}`
+                    : ""}
+                </option>
+              ))}
+            </select>
+
+            <button
+              className="cfb-current-week-button"
+              onClick={goToCurrentWeek}
+              disabled={isCurrentWeek}
+            >
+              Current Week
+            </button>
+
+            <button
+              onClick={() =>
+                updateWeek(weeks[currentWeekIndex + 1])
+              }
+              disabled={
+                currentWeekIndex === -1 ||
+                currentWeekIndex >= weeks.length - 1
+              }
+            >
+              →
+            </button>
+          </div>
+
+          <div className="cfb-games-grid">
+            {games.map((game) => (
+              <NFLGameCard
+                key={game.id}
+                game={game}
+              />
             ))}
-          </select>
+          </div>
+        </section>
+      )}
 
-          <button
-            className="cfb-current-week-button"
-            onClick={goToCurrentWeek}
-            disabled={isCurrentWeek}
-          >
-            Current Week
-          </button>
-
-          <button
-            onClick={() =>
-              updateWeek(weeks[currentWeekIndex + 1])
-            }
-            disabled={
-              currentWeekIndex === -1 ||
-              currentWeekIndex >= weeks.length - 1
-            }
-          >
-            →
-          </button>
-        </div>
-
-        <div className="cfb-games-grid">
-          {games.map((game) => (
-            <NFLGameCard
-              key={game.id}
-              game={game}
-            />
-          ))}
-        </div>
-      </section>
+      {activeTab === "playerSearch" && (
+        <NFLPlayerSearch />
+      )}
     </main>
   );
 }
