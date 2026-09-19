@@ -43,6 +43,8 @@ export default function CFBTeamPage() {
     location.state?.gamesLocation ||
     `/cfb${gamesQuery ? `?${gamesQuery}` : ""}`;
 
+  const gameLocation = location.state?.gameLocation;
+
   function setActiveTab(tab) {
     const params = new URLSearchParams(searchParams);
 
@@ -103,7 +105,16 @@ export default function CFBTeamPage() {
           href="#"
           onClick={(event) => {
             event.preventDefault();
-            navigate(-1);
+
+            if (gameLocation) {
+              navigate(gameLocation, {
+                state: {
+                  gamesLocation,
+                },
+              });
+            } else {
+              navigate(-1);
+            }
           }}
         >
           ← Back

@@ -153,7 +153,7 @@ export default function CFBGameHeader({ game }) {
         <div className="game-team">
           <Link
             to={`/cfb/team/${game.awayTeam.id}${location.search}`}
-            state={{ gamesLocation }}
+            state={{ gamesLocation, gameLocation: `${location.pathname}${location.search}`, }}
             className="game-team-info"
           >
             {game.awayTeam.logo && (
@@ -185,7 +185,7 @@ export default function CFBGameHeader({ game }) {
         <div className="game-team">
           <Link
             to={`/cfb/team/${game.homeTeam.id}${location.search}`}
-            state={{ gamesLocation }}
+            state={{ gamesLocation, gameLocation: `${location.pathname}${location.search}`, }}
             className="game-team-info"
           >
             {game.homeTeam.logo && (
