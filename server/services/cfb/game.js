@@ -1,6 +1,7 @@
 import { getTeamLeaders } from "./teamLeaders.js";
 import { getTeamPlayerStats } from "./teamPlayerStats.js";
 import { getTeamSchedule } from "./teamSchedule.js";
+import { getGamecast } from "./gamecast.js";
 
 function getTeamLogo(competitor) {
   return (
@@ -461,6 +462,8 @@ export async function getGame(gameId) {
       competition,
       scoreboardCompetition
     ),
+
+    gamecast: getGamecast(data),
 
     venue: {
       name:
