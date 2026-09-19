@@ -1486,31 +1486,25 @@
 .cfb-gamecast-yard-line span {
   position: absolute;
   top: 50%;
-  left: 5px;
+  padding: 0 5px;
   transform: translateY(-50%);
   font-size: 12px;
   font-weight: 700;
   opacity: 0.8;
+  white-space: nowrap;
 }
 
-.cfb-gamecast-yard-line.line-20 {
-  left: 20%;
+.cfb-gamecast-yard-line:nth-child(-n + 4) span {
+  right: 0;
 }
 
-.cfb-gamecast-yard-line.line-40 {
-  left: 40%;
-}
-
-.cfb-gamecast-yard-line.line-50 {
+.cfb-gamecast-yard-line:nth-child(5) span {
   left: 50%;
+  transform: translate(-50%, -50%);
 }
 
-.cfb-gamecast-yard-line.line-60 {
-  left: 60%;
-}
-
-.cfb-gamecast-yard-line.line-80 {
-  left: 80%;
+.cfb-gamecast-yard-line:nth-child(n + 6) span {
+  left: 0;
 }
 
 .cfb-gamecast-ball {
@@ -1617,12 +1611,14 @@
 .cfb-game-live-situation {
   display: flex;
   justify-content: center;
-  margin-top: 8px;
+  margin-top: 6px;
   text-align: center;
 }
 
-.cfb-game-live-situation strong {
-  font-size: 16px;
+.cfb-game-live-situation-text {
+  color: #444;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 @media (max-width: 650px) {
@@ -1639,15 +1635,4 @@
     font-size: 13px;
     white-space: nowrap;
   }
-}
-
-.cfb-game-live-situation {
-  margin-top: 6px;
-  text-align: center;
-}
-
-.cfb-game-live-situation-text {
-  color: #444;
-  font-size: 0.9rem;
-  font-weight: 600;
 }
