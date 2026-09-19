@@ -60,7 +60,10 @@ export async function getTeamSchedule(teamId, season) {
             id: awayTeam?.team?.id,
             name: awayTeam?.team?.displayName,
             abbreviation: awayTeam?.team?.abbreviation,
-            logo: awayTeam?.team?.logo,
+            logo:
+              awayTeam?.team?.logo ||
+              awayTeam?.team?.logos?.[0]?.href ||
+              `https://a.espncdn.com/i/teamlogos/ncaa/500/${awayTeam?.team?.id}.png`,
             score: awayTeam?.score?.displayValue ?? null,
             rank:
               awayTeam?.curatedRank?.current <= 25
@@ -71,7 +74,10 @@ export async function getTeamSchedule(teamId, season) {
             id: homeTeam?.team?.id,
             name: homeTeam?.team?.displayName,
             abbreviation: homeTeam?.team?.abbreviation,
-            logo: homeTeam?.team?.logo,
+            logo:
+              homeTeam?.team?.logo ||
+              homeTeam?.team?.logos?.[0]?.href ||
+              `https://a.espncdn.com/i/teamlogos/ncaa/500/${homeTeam?.team?.id}.png`,
             score: homeTeam?.score?.displayValue ?? null,
             rank:
               homeTeam?.curatedRank?.current <= 25
