@@ -37,49 +37,138 @@
   line-height: 1.4;
 }
 
-/* CFB Linescore */
-.cfb-linescore {
+/* CFB Game Summary */
+
+.cfb-game-summary {
   margin-top: 12px;
-  overflow-x: auto;
 }
 
-.cfb-linescore table {
-  width: 100%;
-  border-collapse: collapse;
+.cfb-game-summary h2 {
+  margin: 0 0 12px;
+  font-size: 1rem;
+}
+
+.cfb-summary-info {
+  margin-bottom: 20px;
+}
+
+.cfb-summary-venue {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.cfb-summary-venue strong {
+  color: #111;
+  font-size: 0.9rem;
+}
+
+.cfb-summary-venue span {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.cfb-summary-info > p {
+  padding: 14px 16px;
+  margin: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.cfb-summary-recent {
+  margin-top: 20px;
+}
+
+.cfb-summary-team {
+  margin-bottom: 14px;
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
 }
 
-.cfb-linescore th,
-.cfb-linescore td {
-  padding: 10px 12px;
-  border-bottom: 1px solid #eee;
+.cfb-summary-team:last-child {
+  margin-bottom: 0;
+}
+
+.cfb-summary-team-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+}
+
+.cfb-summary-team-header img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.cfb-summary-team-header > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cfb-summary-team-header strong {
+  color: #111;
+  font-size: 0.9rem;
+}
+
+.cfb-summary-team-header span {
+  color: #666;
+  font-size: 0.78rem;
+}
+
+.cfb-summary-recent-games {
+  display: flex;
+  flex-direction: column;
+}
+
+.cfb-summary-recent-games > p {
+  padding: 16px;
+  margin: 0;
+  color: #666;
   font-size: 0.85rem;
   text-align: center;
 }
 
-.cfb-linescore th {
-  color: #666;
-  font-size: 0.75rem;
-  font-weight: 700;
+.cfb-summary-recent-game {
+  display: grid;
+  grid-template-columns: 30px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  border-bottom: 1px solid #eee;
+  font-size: 0.85rem;
 }
 
-.cfb-linescore th:first-child,
-.cfb-linescore td:first-child {
-  width: 100%;
-  text-align: left;
-  font-weight: 700;
-}
-
-.cfb-linescore th:last-child,
-.cfb-linescore td:last-child {
-  font-weight: 700;
-}
-
-.cfb-linescore tbody tr:last-child td {
+.cfb-summary-recent-game:last-child {
   border-bottom: 0;
+}
+
+.cfb-summary-recent-game strong {
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.cfb-summary-recent-game span:nth-child(2) {
+  color: #444;
+}
+
+.cfb-summary-recent-game span:last-child {
+  color: #111;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 /* CFB Team Stats */
@@ -589,5 +678,510 @@
 
   .cfb-player-header-info h1 {
     font-size: 1.25rem;
+  }
+}
+
+/* CFB Games Conference Navigation */
+
+.cfb-games-conference-nav {
+  margin-bottom: 10px;
+}
+
+.cfb-games-conference-nav select {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  color: #111;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cfb-games-conference-nav select:hover {
+  background: #f5f5f5;
+}
+
+.cfb-games-conference-nav select:focus {
+  outline: none;
+  border-color: #999;
+}
+
+/* CFB Games Grid */
+
+.cfb-games-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+/* CFB Game Card */
+
+.cfb-game-card {
+  display: block;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  color: #111;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cfb-game-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.cfb-game-card-status {
+  margin-bottom: 8px;
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.cfb-game-card-team {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 36px;
+  font-size: 1rem;
+}
+
+.cfb-game-card-team strong {
+  min-width: 24px;
+  text-align: right;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.cfb-game-card-team-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cfb-game-card-team-info img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.cfb-game-card-team-name {
+  display: flex;
+  align-items: center;
+}
+
+.cfb-game-card-team-abbreviation {
+  font-weight: 600;
+}
+
+.cfb-game-card-team-full {
+  display: none;
+  font-weight: 600;
+}
+
+.cfb-game-card-status.live {
+  color: #c62828;
+  font-weight: 700;
+}
+
+.cfb-game-card-status.final {
+  color: #666;
+  font-weight: 600;
+}
+
+.cfb-game-card-status.pregame {
+  color: #444;
+  font-weight: 600;
+}
+
+.cfb-game-card-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (min-width: 700px) {
+  .cfb-games-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .cfb-game-card-team-abbreviation {
+    display: none;
+  }
+
+  .cfb-game-card-team-full {
+    display: inline;
+  }
+}
+
+@media (min-width: 1050px) {
+  .cfb-games-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+}
+
+/* CFB Games Tabs */
+
+.cfb-games-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 16px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cfb-games-tabs button {
+  padding: 12px;
+  border: 0;
+  background: #fff;
+  color: #777;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cfb-games-tabs button + button {
+  border-left: 1px solid #ddd;
+}
+
+.cfb-games-tabs button:hover {
+  background: #f5f5f5;
+  color: #111;
+}
+
+.cfb-games-tabs button.active {
+  background: #f0f0f0;
+  color: #111;
+  box-shadow: inset 0 -2px 0 #111;
+}
+
+/* CFB Player Search */
+
+.cfb-player-search {
+  margin-bottom: 28px;
+}
+
+.cfb-player-search h2 {
+  margin: 0 0 12px;
+  font-size: 1.2rem;
+}
+
+.cfb-player-search-form {
+  display: flex;
+  gap: 8px;
+}
+
+.cfb-player-search-input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  color: #111;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.cfb-player-search-button {
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  color: #111;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cfb-player-search-button:hover {
+  background: #f5f5f5;
+}
+
+.cfb-player-search-error {
+  margin-top: 10px;
+  color: #c62828;
+  font-size: 0.85rem;
+}
+
+.cfb-player-search-results {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.cfb-player-search-result {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  color: #111;
+  text-decoration: none;
+}
+
+.cfb-player-search-result:hover {
+  background: #f5f5f5;
+}
+
+.cfb-player-search-result img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.cfb-player-search-result span {
+  display: block;
+  margin-top: 2px;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+/* CFB Team Page */
+
+.cfb-team-page {
+  max-width: 1200px;
+}
+
+.cfb-team-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  font-size: 0.9rem;
+}
+
+.cfb-team-nav a {
+  color: #555;
+  text-decoration: none;
+}
+
+.cfb-team-header {
+  padding: 20px;
+  margin-bottom: 16px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.cfb-team-header > h1 {
+  margin: 0 0 18px;
+  font-size: clamp(1.4rem, 5vw, 2rem);
+  text-align: center;
+}
+
+.cfb-team-header-content {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.cfb-team-logo {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.cfb-team-header-info p {
+  margin-bottom: 4px;
+  color: #666;
+}
+
+.cfb-team-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #ddd;
+}
+
+.cfb-team-tabs a {
+  padding: 10px 16px;
+  color: #666;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-bottom: 2px solid transparent;
+  transition: 0.15s ease;
+}
+
+.cfb-team-tabs a:hover {
+  color: #111;
+  background: #f5f5f5;
+}
+
+.cfb-team-tabs a.active {
+  color: #111;
+  border-bottom-color: #111;
+}
+
+.cfb-team-overview {
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.cfb-team-overview h2 {
+  margin: 0 0 16px;
+}
+
+.cfb-team-overview p {
+  margin-bottom: 8px;
+  color: #666;
+}
+
+.cfb-team-overview strong {
+  color: #111;
+}
+
+@media (min-width: 700px) {
+  .cfb-team-header {
+    padding: 24px;
+  }
+
+  .cfb-team-logo {
+    width: 110px;
+    height: 110px;
+  }
+}
+
+.game-team-info {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* CFB Team Schedule */
+
+.cfb-team-schedule {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cfb-team-schedule-game {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 62px;
+  padding: 10px 16px;
+  border-bottom: 1px solid #eee;
+  color: #111;
+  text-decoration: none;
+}
+
+.cfb-team-schedule-game:last-child {
+  border-bottom: 0;
+}
+
+.cfb-team-schedule-game:hover {
+  background: #f5f5f5;
+}
+
+.cfb-team-schedule-date {
+  white-space: nowrap;
+}
+
+.cfb-team-schedule-date strong {
+  font-size: 0.85rem;
+}
+
+.cfb-team-schedule-opponent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.cfb-team-schedule-opponent img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.cfb-team-schedule-opponent span {
+  color: #777;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.cfb-team-schedule-opponent strong {
+  overflow: hidden;
+  font-size: 0.9rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cfb-team-schedule-result {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.cfb-team-schedule-result strong {
+  font-size: 0.9rem;
+}
+
+.cfb-team-schedule-result span {
+  color: #666;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 650px) {
+  .cfb-team-schedule-game {
+    grid-template-columns: 58px minmax(0, 1fr) auto;
+    gap: 8px;
+    min-height: 56px;
+    padding: 8px 10px;
+  }
+
+  .cfb-team-schedule-date strong {
+    font-size: 0.78rem;
+  }
+
+  .cfb-team-schedule-opponent {
+    gap: 6px;
+  }
+
+  .cfb-team-schedule-opponent img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .cfb-team-schedule-opponent span {
+    font-size: 0.72rem;
+  }
+
+  .cfb-team-schedule-opponent strong {
+    font-size: 0.8rem;
+  }
+
+  .cfb-team-schedule-result {
+    gap: 4px;
+  }
+
+  .cfb-team-schedule-result strong,
+  .cfb-team-schedule-result span {
+    font-size: 0.75rem;
   }
 }

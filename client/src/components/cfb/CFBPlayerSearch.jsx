@@ -36,15 +36,15 @@ export default function CFBPlayerSearch() {
   }
 
   return (
-    <section className="mlb-player-search">
+    <section className="cfb-player-search">
       <h2>Player Search</h2>
 
       <form
-        className="mlb-player-search-form"
+        className="cfb-player-search-form"
         onSubmit={handleSearch}
       >
         <input
-          className="mlb-player-search-input"
+          className="cfb-player-search-input"
           type="text"
           value={name}
           onChange={(event) => setName(event.target.value)}
@@ -52,7 +52,7 @@ export default function CFBPlayerSearch() {
         />
 
         <button
-          className="mlb-player-search-button"
+          className="cfb-player-search-button"
           type="submit"
         >
           Search
@@ -60,13 +60,13 @@ export default function CFBPlayerSearch() {
       </form>
 
       {error && (
-        <p className="mlb-player-search-error">
+        <p className="cfb-player-search-error">
           {error}
         </p>
       )}
 
       {players.length > 0 && (
-        <div className="mlb-player-search-results">
+        <div className="cfb-player-search-results">
           {players.map((player) => (
             <Link
               key={player.id}
@@ -76,7 +76,7 @@ export default function CFBPlayerSearch() {
                 team: player.team,
                 headshot: player.headshot,
               }}
-              className="mlb-player-search-result"
+              className="cfb-player-search-result"
             >
               {player.headshot && (
                 <img
