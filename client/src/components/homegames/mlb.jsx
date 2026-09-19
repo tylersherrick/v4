@@ -5,13 +5,25 @@ import MLBGameCard from "../mlb/MLBGameCard.jsx";
 const ESPN_URL =
   "https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard";
 
+function getTodayDate() {
+  const now = new Date();
+
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+
+  return `${year}${month}${day}`;
+}
+
 export default function MLB() {
   const [games, setGames] = useState([]);
 
   useEffect(() => {
     async function loadGames() {
       try {
-        const response = await fetch(ESPN_URL);
+        const response = await fetch(
+          `${ESPN_URL}?dates=${getTodayDate()}`
+        );
 
         if (!response.ok) {
           throw new Error("Unable to load MLB games");

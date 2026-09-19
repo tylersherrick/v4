@@ -1185,3 +1185,187 @@
     font-size: 0.75rem;
   }
 }
+
+/* CFB Team Roster */
+
+.cfb-team-roster {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cfb-team-roster-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-bottom: 1px solid #ddd;
+}
+
+.cfb-team-roster-tabs button {
+  padding: 12px;
+  background: #fff;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: #666;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cfb-team-roster-tabs button:hover {
+  background: #f5f5f5;
+  color: #111;
+}
+
+.cfb-team-roster-tabs button.active {
+  color: #111;
+  border-bottom-color: #111;
+}
+
+.cfb-team-roster-table {
+  width: 100%;
+}
+
+.cfb-team-roster-header,
+.cfb-team-roster-player {
+  display: grid;
+  grid-template-columns:
+    minmax(180px, 1fr)
+    60px
+    100px
+    80px
+    90px;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+}
+
+.cfb-team-roster-header {
+  background: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+  color: #666;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.cfb-team-roster-player {
+  min-height: 62px;
+  border-bottom: 1px solid #eee;
+  color: #111;
+  text-decoration: none;
+}
+
+.cfb-team-roster-player:last-child {
+  border-bottom: 0;
+}
+
+.cfb-team-roster-player:hover {
+  background: #f5f5f5;
+}
+
+.cfb-team-roster-player-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.cfb-team-roster-player-info img,
+.cfb-team-roster-headshot {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.cfb-team-roster-headshot {
+  background: #eee;
+}
+
+.cfb-team-roster-player-info div {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cfb-team-roster-player-info strong {
+  overflow: hidden;
+  font-size: 0.9rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cfb-team-roster-player-info span {
+  color: #777;
+  font-size: 0.75rem;
+}
+
+.cfb-team-roster-player > span {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 650px) {
+  .cfb-team-roster-tabs button {
+    padding: 10px 6px;
+    font-size: 0.8rem;
+  }
+
+  .cfb-team-roster-header,
+  .cfb-team-roster-player {
+    grid-template-columns:
+      minmax(140px, 1fr)
+      42px
+      76px;
+    gap: 8px;
+    padding: 8px 10px;
+  }
+
+  .cfb-team-roster-header span:nth-child(4),
+  .cfb-team-roster-header span:nth-child(5),
+  .cfb-team-roster-player > span:nth-child(4),
+  .cfb-team-roster-player > span:nth-child(5) {
+    display: none;
+  }
+
+  .cfb-team-roster-player-info img,
+  .cfb-team-roster-headshot {
+    width: 36px;
+    height: 36px;
+  }
+
+  .cfb-team-roster-player-info {
+    gap: 8px;
+  }
+
+  .cfb-team-roster-player-info strong {
+    font-size: 0.82rem;
+  }
+
+  .cfb-team-roster-player > span {
+    font-size: 0.78rem;
+  }
+}
+
+.cfb-team-leaders-row {
+  grid-template-columns:
+    minmax(220px, 1fr)
+    180px
+    100px
+    100px;
+}
+
+@media (max-width: 650px) {
+  .cfb-team-leaders-row {
+    grid-template-columns:
+      minmax(140px, 1fr)
+      100px
+      55px;
+  }
+
+  .cfb-team-leaders-row > span:nth-child(4) {
+    display: none;
+  }
+}

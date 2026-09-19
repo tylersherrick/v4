@@ -6,6 +6,8 @@ import {
   useParams,
   useSearchParams,
 } from "react-router-dom";
+import CFBTeamLeaders from "./CFBTeamLeaders.jsx";
+import CFBTeamRoster from "./CFBTeamRoster.jsx";
 import CFBTeamSchedule from "./CFBTeamSchedule.jsx";
 
 const API_URL =
@@ -239,15 +241,11 @@ export default function CFBTeamPage() {
       )}
 
       {activeTab === "roster" && (
-        <section className="cfb-team-roster">
-          <p>Roster coming next.</p>
-        </section>
+        <CFBTeamRoster teamId={teamId} />
       )}
 
       {activeTab === "leaders" && (
-        <section className="cfb-team-leaders">
-          <p>Leaders coming next.</p>
-        </section>
+        <CFBTeamLeaders teamId={teamId} />
       )}
     </main>
   );
