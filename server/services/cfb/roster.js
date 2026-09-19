@@ -7,22 +7,22 @@ const OFFENSE_POSITIONS = [
   "FB",
   "WR",
   "TE",
-  "OL",
   "OT",
   "OG",
   "C",
+  "OL",
 ];
 
 const DEFENSE_POSITIONS = [
-  "DL",
   "DE",
   "DT",
-  "LB",
-  "ILB",
+  "DL",
   "OLB",
-  "DB",
+  "ILB",
+  "LB",
   "CB",
   "S",
+  "DB",
 ];
 
 const SPECIAL_TEAMS_POSITIONS = [
@@ -50,6 +50,23 @@ function formatPlayer(player) {
   };
 }
 
+function sortPlayers(players, positionOrder) {
+  return [...players].sort((a, b) => {
+    const aPosition = positionOrder.indexOf(
+      a.position
+    );
+    const bPosition = positionOrder.indexOf(
+      b.position
+    );
+
+    if (aPosition !== bPosition) {
+      return aPosition - bPosition;
+    }
+
+    return a.name.localeCompare(b.name);
+  });
+}
+
 export async function getRoster(teamId) {
   const response = await fetch(`${ESPN_URL}/${teamId}/roster`);
 
@@ -66,16 +83,25 @@ export async function getRoster(teamId) {
       (group.items || []).map(formatPlayer)
     ) || [];
 
-  const offense = players.filter((player) =>
-    OFFENSE_POSITIONS.includes(player.position)
+  const offense = sortPlayers(
+    players.filter((player) =>
+      OFFENSE_POSITIONS.includes(player.position)
+    ),
+    OFFENSE_POSITIONS
   );
 
-  const defense = players.filter((player) =>
-    DEFENSE_POSITIONS.includes(player.position)
+  const defense = sortPlayers(
+    players.filter((player) =>
+      DEFENSE_POSITIONS.includes(player.position)
+    ),
+    DEFENSE_POSITIONS
   );
 
-  const specialTeams = players.filter((player) =>
-    SPECIAL_TEAMS_POSITIONS.includes(player.position)
+  const specialTeams = sortPlayers(
+    players.filter((player) =>
+      SPECIAL_TEAMS_POSITIONS.includes(player.position)
+    ),
+    SPECIAL_TEAMS_POSITIONS
   );
 
   return {
