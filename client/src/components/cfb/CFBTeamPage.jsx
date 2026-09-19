@@ -108,6 +108,7 @@ export default function CFBTeamPage() {
 
             if (gameLocation) {
               navigate(gameLocation, {
+                replace: true,
                 state: {
                   gamesLocation,
                 },
