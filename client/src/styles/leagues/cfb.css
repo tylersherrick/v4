@@ -1636,3 +1636,17 @@
     white-space: nowrap;
   }
 }
+
+.cfb-summary-recent-opponent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.cfb-summary-recent-opponent img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex-shrink: 0;
+}

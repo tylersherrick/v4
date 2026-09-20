@@ -30,7 +30,7 @@ export async function getTeamSchedule(teamId, season) {
       logo:
         data.team?.logo ||
         data.team?.logos?.[0]?.href ||
-        null,
+        `https://a.espncdn.com/i/teamlogos/nfl/500/${data.team?.abbreviation?.toLowerCase()}.png`,
     },
     season: data.season?.year || Number(season) || null,
     games:
@@ -60,14 +60,20 @@ export async function getTeamSchedule(teamId, season) {
             id: awayTeam?.team?.id,
             name: awayTeam?.team?.displayName,
             abbreviation: awayTeam?.team?.abbreviation,
-            logo: awayTeam?.team?.logo,
+            logo:
+              awayTeam?.team?.logo ||
+              awayTeam?.team?.logos?.[0]?.href ||
+              `https://a.espncdn.com/i/teamlogos/nfl/500/${awayTeam?.team?.abbreviation?.toLowerCase()}.png`,
             score: awayTeam?.score?.displayValue ?? null,
           },
           homeTeam: {
             id: homeTeam?.team?.id,
             name: homeTeam?.team?.displayName,
             abbreviation: homeTeam?.team?.abbreviation,
-            logo: homeTeam?.team?.logo,
+            logo:
+              homeTeam?.team?.logo ||
+              homeTeam?.team?.logos?.[0]?.href ||
+              `https://a.espncdn.com/i/teamlogos/nfl/500/${homeTeam?.team?.abbreviation?.toLowerCase()}.png`,
             score: homeTeam?.score?.displayValue ?? null,
           },
         };

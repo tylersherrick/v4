@@ -1,6 +1,7 @@
 import { getGamecast } from "./gamecast.js";
 import { getTeamLeaders } from "./teamLeaders.js";
 import { getTeamPlayerStats } from "./teamPlayerStats.js";
+import { getTeamSchedule } from "./teamSchedule.js";
 
 function getTeamLogo(competitor) {
   return (
@@ -19,6 +20,22 @@ function getQuarterScores(competitor) {
         quarter.value ??
         "0",
     })) || []
+  );
+}
+
+function getTeamRecord(competitor) {
+  return (
+    competitor?.record?.find(
+      (record) =>
+        record.type === "total" ||
+        record.name === "overall"
+    )?.summary ||
+    competitor?.records?.find(
+      (record) =>
+        record.type === "total" ||
+        record.name === "overall"
+    )?.summary ||
+    null
   );
 }
 
@@ -260,6 +277,38 @@ function getLiveGame(competition, gamecast) {
   };
 }
 
+async function getRecentGames(
+  teamId,
+  season,
+  gameDate
+) {
+  try {
+    const schedule = await getTeamSchedule(
+      teamId,
+      season
+    );
+
+    return schedule.games
+      .filter(
+        (game) =>
+          game.status?.completed &&
+          new Date(game.date) < new Date(gameDate)
+      )
+      .sort(
+        (a, b) =>
+          new Date(b.date) - new Date(a.date)
+      )
+      .slice(0, 3);
+  } catch (error) {
+    console.error(
+      `Unable to load recent games for team ${teamId}:`,
+      error
+    );
+
+    return [];
+  }
+}
+
 export async function getGame(gameId) {
   const url =
     "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary" +
@@ -296,17 +345,31 @@ export async function getGame(gameId) {
   const homeId = homeCompetitor?.team?.id;
 
   const awayRecord =
-    awayCompetitor?.record?.find(
-      (record) => record.type === "total"
-    )?.summary || null;
+    getTeamRecord(awayCompetitor);
 
   const homeRecord =
-    homeCompetitor?.record?.find(
-      (record) => record.type === "total"
-    )?.summary || null;
+    getTeamRecord(homeCompetitor);
 
   const isPregame =
     competition.status?.type?.state === "pre";
+
+  const season =
+    data.header?.season?.year ||
+    new Date(competition.date).getFullYear();
+
+  const [awayRecentGames, homeRecentGames] =
+    await Promise.all([
+      getRecentGames(
+        awayId,
+        season,
+        competition.date
+      ),
+      getRecentGames(
+        homeId,
+        season,
+        competition.date
+      ),
+    ]);
 
   let awayTeamStats;
   let homeTeamStats;
@@ -394,6 +457,7 @@ export async function getGame(gameId) {
       playerStats: awayPlayerStats,
       leaders: awayLeaders,
       injuries: getTeamInjuries(data, awayId),
+      recentGames: awayRecentGames,
     },
 
     homeTeam: {
@@ -410,6 +474,7 @@ export async function getGame(gameId) {
       playerStats: homePlayerStats,
       leaders: homeLeaders,
       injuries: getTeamInjuries(data, homeId),
+      recentGames: homeRecentGames,
     },
   };
 }

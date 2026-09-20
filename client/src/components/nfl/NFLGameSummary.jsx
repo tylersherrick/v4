@@ -1,80 +1,136 @@
-export default function NFLGameSummary({
-  game,
-  isPregame,
-}) {
-  const awayQuarterScores =
-    game.awayTeam.quarterScores || [];
+function RecentGames({ team }) {
+  const games = team.recentGames || [];
 
-  const homeQuarterScores =
-    game.homeTeam.quarterScores || [];
-
-  const quarterCount = Math.max(
-    awayQuarterScores.length,
-    homeQuarterScores.length
-  );
+  if (!games.length) {
+    return (
+      <p>No previous games available this season.</p>
+    );
+  }
 
   return (
-    <div>
-      <h2>Scoring</h2>
+    <div className="cfb-summary-recent-games">
+      {games.map((game) => {
+        const isAway =
+          String(game.awayTeam.id) === String(team.id);
 
-      {!isPregame && quarterCount > 0 && (
-        <div className="cfb-linescore">
-          <table>
-            <thead>
-              <tr>
-                <th>Team</th>
+        const teamScore = Number(
+          isAway
+            ? game.awayTeam.score
+            : game.homeTeam.score
+        );
 
-                {Array.from(
-                  { length: quarterCount },
-                  (_, index) => (
-                    <th key={index}>
-                      {index < 4
-                        ? index + 1
-                        : `OT${index - 3}`}
-                    </th>
-                  )
-                )}
+        const opponent = isAway
+          ? game.homeTeam
+          : game.awayTeam;
 
-                <th>T</th>
-              </tr>
-            </thead>
+        const opponentScore = Number(opponent.score);
 
-            <tbody>
-              <tr>
-                <td>{game.awayTeam.name}</td>
+        const result =
+          teamScore > opponentScore
+            ? "W"
+            : teamScore < opponentScore
+              ? "L"
+              : "T";
 
-                {Array.from(
-                  { length: quarterCount },
-                  (_, index) => (
-                    <td key={index}>
-                      {awayQuarterScores[index]?.score ??
-                        "-"}
-                    </td>
-                  )
-                )}
+        return (
+          <div
+            className="cfb-summary-recent-game"
+            key={game.id}
+          >
+            <strong>{result}</strong>
 
-                <td>{game.awayTeam.score}</td>
-              </tr>
+            <span className="cfb-summary-recent-opponent">
+              {isAway ? "at" : "vs"}
 
-              <tr>
-                <td>{game.homeTeam.name}</td>
+              {opponent.logo && (
+                <img
+                  src={opponent.logo}
+                  alt={opponent.name}
+                />
+              )}
 
-                {Array.from(
-                  { length: quarterCount },
-                  (_, index) => (
-                    <td key={index}>
-                      {homeQuarterScores[index]?.score ??
-                        "-"}
-                    </td>
-                  )
-                )}
+              {opponent.name}
+            </span>
 
-                <td>{game.homeTeam.score}</td>
-              </tr>
-            </tbody>
-          </table>
+            <span>
+              {teamScore}-{opponentScore}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+export default function NFLGameSummary({ game }) {
+  const venueLocation = [
+    game.venue?.city,
+    game.venue?.state,
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+  return (
+    <div className="cfb-game-summary">
+      <section className="cfb-summary-info">
+        <h2>Game Info</h2>
+
+        {game.venue?.name ? (
+          <div className="cfb-summary-venue">
+            <strong>{game.venue.name}</strong>
+
+            {venueLocation && (
+              <span>{venueLocation}</span>
+            )}
+          </div>
+        ) : (
+          <p>Venue information unavailable.</p>
+        )}
+      </section>
+
+      <section className="cfb-summary-recent">
+        <h2>Recent Games</h2>
+
+        <div className="cfb-summary-team">
+          <div className="cfb-summary-team-header">
+            {game.awayTeam.logo && (
+              <img
+                src={game.awayTeam.logo}
+                alt={game.awayTeam.name}
+              />
+            )}
+
+            <div>
+              <strong>{game.awayTeam.name}</strong>
+              {game.awayTeam.record && (
+                <span>{game.awayTeam.record}</span>
+              )}
+            </div>
+          </div>
+
+          <RecentGames team={game.awayTeam} />
         </div>
-      )}
+
+        <div className="cfb-summary-team">
+          <div className="cfb-summary-team-header">
+            {game.homeTeam.logo && (
+              <img
+                src={game.homeTeam.logo}
+                alt={game.homeTeam.name}
+              />
+            )}
+
+            <div>
+              <strong>{game.homeTeam.name}</strong>
+              {game.homeTeam.record && (
+                <span>{game.homeTeam.record}</span>
+              )}
+            </div>
+          </div>
+
+          <RecentGames team={game.homeTeam} />
+        </div>
+      </section>
     </div>
   );
 }

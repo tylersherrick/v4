@@ -1,3 +1,8 @@
+import {
+  Link,
+  useLocation,
+} from "react-router-dom";
+
 const TIME_ZONE = "America/Chicago";
 
 function getDateKey(date) {
@@ -23,6 +28,12 @@ function getOrdinal(number) {
 }
 
 export default function NFLGameHeader({ game }) {
+  const location = useLocation();
+
+  const gamesLocation =
+    location.state?.gamesLocation ||
+    `/nfl${location.search}`;
+
   const isPregame = game.status?.state === "pre";
   const isLive = game.status?.state === "in";
 
@@ -90,7 +101,14 @@ export default function NFLGameHeader({ game }) {
 
       <div className="game-scoreboard">
         <div className="game-team">
-          <div className="game-team-info">
+          <Link
+            to={`/nfl/team/${game.awayTeam.id}${location.search}`}
+            state={{
+              gamesLocation,
+              gameLocation: `${location.pathname}${location.search}`,
+            }}
+            className="game-team-info"
+          >
             {game.awayTeam.logo && (
               <img
                 src={game.awayTeam.logo}
@@ -108,7 +126,7 @@ export default function NFLGameHeader({ game }) {
                 <span>{game.awayTeam.record}</span>
               )}
             </div>
-          </div>
+          </Link>
 
           {!isPregame && (
             <strong>{game.awayTeam.score}</strong>
@@ -116,7 +134,14 @@ export default function NFLGameHeader({ game }) {
         </div>
 
         <div className="game-team">
-          <div className="game-team-info">
+          <Link
+            to={`/nfl/team/${game.homeTeam.id}${location.search}`}
+            state={{
+              gamesLocation,
+              gameLocation: `${location.pathname}${location.search}`,
+            }}
+            className="game-team-info"
+          >
             {game.homeTeam.logo && (
               <img
                 src={game.homeTeam.logo}
@@ -134,7 +159,7 @@ export default function NFLGameHeader({ game }) {
                 <span>{game.homeTeam.record}</span>
               )}
             </div>
-          </div>
+          </Link>
 
           {!isPregame && (
             <strong>{game.homeTeam.score}</strong>
@@ -154,7 +179,7 @@ export default function NFLGameHeader({ game }) {
           <div className="cfb-game-live-situation">
             <span className="cfb-game-live-situation-text">
               {getOrdinal(game.liveGame.down)} &{" "}
-              {game.liveGame.distance} ·{" "}
+              {game.liveGame.distance} @{" "}
               {game.gamecast.currentSituation.possessionText}
             </span>
           </div>
