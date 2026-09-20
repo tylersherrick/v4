@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import NFLGameCard from "../nfl/NFLGameCard";
 
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  import.meta.env.VITE_RENDER_API_URL;
+
 const ESPN_URL =
   "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard";
 
@@ -37,17 +41,20 @@ export default function NFL() {
               state: event.status?.type?.state,
               detail: event.status?.type?.detail,
             },
+            possession: null,
             awayTeam: {
               id: awayTeam?.team?.id,
               name: awayTeam?.team?.displayName,
-              abbreviation: awayTeam?.team?.abbreviation,
+              abbreviation:
+                awayTeam?.team?.abbreviation,
               logo: awayTeam?.team?.logo,
               score: awayTeam?.score,
             },
             homeTeam: {
               id: homeTeam?.team?.id,
               name: homeTeam?.team?.displayName,
-              abbreviation: homeTeam?.team?.abbreviation,
+              abbreviation:
+                homeTeam?.team?.abbreviation,
               logo: homeTeam?.team?.logo,
               score: homeTeam?.score,
             },
@@ -68,7 +75,65 @@ export default function NFL() {
           )
           .slice(0, 3);
 
-        setGames(selectedGames);
+        const gamesWithPossession = await Promise.all(
+          selectedGames.map(async (game) => {
+            if (game.status?.state !== "in") {
+              return game;
+            }
+
+            try {
+              const gameResponse = await fetch(
+                `${API_URL}/api/nfl/game/${game.id}`
+              );
+
+              if (!gameResponse.ok) {
+                console.log(
+                  "NFL game request failed:",
+                  game.id,
+                  gameResponse.status
+                );
+
+                return game;
+              }
+
+              const gameData =
+                await gameResponse.json();
+
+              console.log(
+                "NFL possession:",
+                game.id,
+                {
+                  liveGame: gameData.liveGame,
+                  possession:
+                    gameData.liveGame?.possession,
+                  awayId: game.awayTeam.id,
+                  homeId: game.homeTeam.id,
+                  away:
+                    game.awayTeam.abbreviation,
+                  home:
+                    game.homeTeam.abbreviation,
+                }
+              );
+
+              return {
+                ...game,
+                possession:
+                  gameData.liveGame?.possession ??
+                  null,
+              };
+            } catch (error) {
+              console.error(
+                "Unable to load NFL possession:",
+                game.id,
+                error
+              );
+
+              return game;
+            }
+          })
+        );
+
+        setGames(gamesWithPossession);
       } catch (error) {
         console.error(error);
       }

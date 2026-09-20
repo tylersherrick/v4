@@ -38,6 +38,8 @@ export async function getGames(season, week, seasonType) {
         completed: event.status?.type?.completed,
       },
       venue: competition?.venue?.fullName,
+      possession:
+        competition?.situation?.possession ?? null,
       awayTeam: {
         id: awayTeam?.team?.id,
         name: awayTeam?.team?.displayName,

@@ -1,3 +1,4 @@
+import { getGamecast } from "./gamecast.js";
 import { getTeamLeaders } from "./teamLeaders.js";
 import { getTeamPlayerStats } from "./teamPlayerStats.js";
 
@@ -235,36 +236,27 @@ function getOdds(data) {
   };
 }
 
-function getLiveGame(data, competition) {
+function getLiveGame(competition, gamecast) {
   if (competition.status?.type?.state !== "in") {
     return null;
   }
 
-  const plays = data.plays || [];
-  const currentPlay = plays[plays.length - 1];
+  const situation = gamecast.currentSituation;
 
-  if (!currentPlay) {
+  if (!situation) {
     return null;
   }
 
   return {
     quarter:
-      competition.status?.period ??
-      currentPlay.period?.number ??
-      null,
+      competition.status?.period ?? null,
     clock:
-      competition.status?.displayClock ||
-      currentPlay.clock?.displayValue ||
-      null,
-    down:
-      currentPlay.start?.down ?? null,
-    distance:
-      currentPlay.start?.distance ?? null,
-    yardLine:
-      currentPlay.start?.yardLine ?? null,
-    possession:
-      currentPlay.start?.team?.id || null,
-    text: currentPlay.text || null,
+      competition.status?.displayClock || null,
+    down: situation.down,
+    distance: situation.distance,
+    yardLine: situation.yardLine,
+    possession: situation.possession,
+    text: situation.downDistanceText,
   };
 }
 
@@ -348,6 +340,8 @@ export async function getGame(gameId) {
     homeLeaders = getLeaders(data, homeId);
   }
 
+  const gamecast = getGamecast(data);
+
   return {
     id: data.header?.id || gameId,
     date: competition.date,
@@ -362,7 +356,12 @@ export async function getGame(gameId) {
         competition.status?.displayClock || null,
     },
 
-    liveGame: getLiveGame(data, competition),
+    liveGame: getLiveGame(
+      competition,
+      gamecast
+    ),
+
+    gamecast,
 
     venue: {
       name:

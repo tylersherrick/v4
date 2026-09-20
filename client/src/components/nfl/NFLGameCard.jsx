@@ -13,6 +13,16 @@ export default function NFLGameCard({ game }) {
 
   const showScore = gameState !== "pre";
 
+  const awayHasPossession =
+    gameState === "in" &&
+    String(game.possession) ===
+      String(game.awayTeam.id);
+
+  const homeHasPossession =
+    gameState === "in" &&
+    String(game.possession) ===
+      String(game.homeTeam.id);
+
   const gameDate = new Date(game.date);
 
   const formattedDate = gameDate
@@ -39,7 +49,9 @@ export default function NFLGameCard({ game }) {
       className="mlb-game-card-link"
     >
       <div className="mlb-game-card">
-        <div className={`mlb-game-card-status ${statusClass}`}>
+        <div
+          className={`mlb-game-card-status ${statusClass}`}
+        >
           {formattedDate} · {gameStatus}
         </div>
 
@@ -60,11 +72,19 @@ export default function NFLGameCard({ game }) {
               <span className="mlb-game-card-team-full">
                 {game.awayTeam.name}
               </span>
+
+              {awayHasPossession && (
+                <span className="nfl-possession">
+                  🏈
+                </span>
+              )}
             </div>
           </div>
 
           {showScore && (
-            <strong>{game.awayTeam.score ?? "-"}</strong>
+            <strong>
+              {game.awayTeam.score ?? "-"}
+            </strong>
           )}
         </div>
 
@@ -85,11 +105,19 @@ export default function NFLGameCard({ game }) {
               <span className="mlb-game-card-team-full">
                 {game.homeTeam.name}
               </span>
+
+              {homeHasPossession && (
+                <span className="nfl-possession">
+                  🏈
+                </span>
+              )}
             </div>
           </div>
 
           {showScore && (
-            <strong>{game.homeTeam.score ?? "-"}</strong>
+            <strong>
+              {game.homeTeam.score ?? "-"}
+            </strong>
           )}
         </div>
       </div>
