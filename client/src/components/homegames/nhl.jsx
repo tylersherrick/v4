@@ -66,7 +66,7 @@ export default function NHL() {
               (statusOrder[a.status?.state] ?? 1) -
               (statusOrder[b.status?.state] ?? 1)
           )
-          .slice(0, 4);
+          .slice(0, 3);
 
         setGames(selectedGames);
       } catch (error) {

@@ -73,7 +73,7 @@ export default function NFL() {
               (statusOrder[a.status?.state] ?? 1) -
               (statusOrder[b.status?.state] ?? 1)
           )
-          .slice(0, 4);
+          .slice(0, 3);
 
         const gamesWithPossession = await Promise.all(
           selectedGames.map(async (game) => {
