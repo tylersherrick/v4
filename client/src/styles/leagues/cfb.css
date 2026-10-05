@@ -1650,3 +1650,47 @@
   object-fit: contain;
   flex-shrink: 0;
 }
+
+@media (min-width: 700px) and (max-width: 1049px) {
+  .cfb-game-card {
+    padding: 11px 12px;
+  }
+
+  .cfb-game-card-team {
+    min-height: 32px;
+    font-size: 0.88rem;
+  }
+
+  .cfb-game-card-team-info {
+    gap: 7px;
+    min-width: 0;
+  }
+
+  .cfb-game-card-team-info img {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+
+  .cfb-game-card-team-name {
+    min-width: 0;
+  }
+
+  .cfb-game-card-team-full {
+    display: none;
+  }
+
+  .cfb-game-card-team-abbreviation {
+    display: inline;
+  }
+
+  .cfb-game-card-team strong {
+    min-width: 20px;
+    font-size: 1.1rem;
+  }
+
+  .cfb-game-card-status {
+    margin-bottom: 6px;
+    font-size: 0.75rem;
+  }
+}

@@ -1,32 +1,20 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import MLBGameCard from "../mlb/MLBGameCard.jsx";
+import NHLGameCard from "../nhl/NHLGameCard";
 
 const ESPN_URL =
-  "https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard";
+  "https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard";
 
-function getTodayDate() {
-  const now = new Date();
-
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
-
-  return `${year}${month}${day}`;
-}
-
-export default function MLB() {
+export default function NHL() {
   const [games, setGames] = useState([]);
 
   useEffect(() => {
     async function loadGames() {
       try {
-        const response = await fetch(
-          `${ESPN_URL}?dates=${getTodayDate()}`
-        );
+        const response = await fetch(ESPN_URL);
 
         if (!response.ok) {
-          throw new Error("Unable to load MLB games");
+          throw new Error("Unable to load NHL games");
         }
 
         const data = await response.json();
@@ -50,12 +38,14 @@ export default function MLB() {
               detail: event.status?.type?.detail,
             },
             awayTeam: {
+              id: awayTeam?.team?.id,
               name: awayTeam?.team?.displayName,
               abbreviation: awayTeam?.team?.abbreviation,
               logo: awayTeam?.team?.logo,
               score: awayTeam?.score,
             },
             homeTeam: {
+              id: homeTeam?.team?.id,
               name: homeTeam?.team?.displayName,
               abbreviation: homeTeam?.team?.abbreviation,
               logo: homeTeam?.team?.logo,
@@ -99,16 +89,15 @@ export default function MLB() {
 
   return (
     <section>
-      <Link to="/mlb">
-        <h2>MLB</h2>
-      </Link>
+      <h2>
+        <Link to="/nhl">NHL</Link>
+      </h2>
 
       <div className="mlb-games-grid">
         {games.map((game) => (
-          <MLBGameCard
+          <NHLGameCard
             key={game.id}
             game={game}
-            fromHome={true}
           />
         ))}
       </div>

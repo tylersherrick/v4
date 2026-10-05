@@ -75,7 +75,7 @@ export default function CFB() {
               (statusOrder[a.status?.state] ?? 1) -
               (statusOrder[b.status?.state] ?? 1)
           )
-          .slice(0, 3);
+          .slice(0, 4);
 
         setGames(selectedGames);
       } catch (error) {

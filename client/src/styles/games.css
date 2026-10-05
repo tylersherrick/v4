@@ -226,8 +226,8 @@
   }
 
   .mlb-games-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
   }
 
   /* MLB Game Card Team Names - Tablet and Up */
@@ -237,6 +237,51 @@
 
   .mlb-game-card-team-full {
     display: inline;
+  }
+}
+
+/* Compact Three-Card Layout */
+@media (min-width: 700px) and (max-width: 1049px) {
+  .mlb-game-card {
+    padding: 10px;
+  }
+
+  .mlb-game-card-team {
+    min-height: 30px;
+    font-size: 0.78rem;
+  }
+
+  .mlb-game-card-team-info {
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .mlb-game-card-team-info img {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+
+  .mlb-game-card-team-name {
+    min-width: 0;
+  }
+
+  .mlb-game-card-team-full {
+    display: none;
+  }
+
+  .mlb-game-card-team-abbreviation {
+    display: inline;
+  }
+
+  .mlb-game-card-team strong {
+    min-width: 18px;
+    font-size: 1rem;
+  }
+
+  .mlb-game-card-status {
+    margin-bottom: 5px;
+    font-size: 0.7rem;
   }
 }
 
@@ -263,4 +308,75 @@
   border-radius: 6px;
   background: #fff;
   color: #111;
+}
+
+@media (min-width: 700px) and (max-width: 1049px) {
+  .mlb-game-card-team {
+    font-size: 0.9rem;
+  }
+
+  .mlb-game-card-status {
+    font-size: 0.75rem;
+  }
+
+  .cfb-game-card .mlb-game-card-team {
+    font-size: 0.82rem;
+  }
+
+  .cfb-game-card .mlb-game-card-status {
+    font-size: 0.72rem;
+  }
+}
+
+@media (min-width: 700px) and (max-width: 1049px) {
+  .mlb-game-card,
+  .cfb-game-card {
+    padding: 11px 12px;
+  }
+
+  .mlb-game-card-team,
+  .cfb-game-card-team {
+    min-height: 32px;
+    font-size: 0.88rem;
+  }
+
+  .mlb-game-card-team-info,
+  .cfb-game-card-team-info {
+    gap: 7px;
+    min-width: 0;
+  }
+
+  .mlb-game-card-team-info img,
+  .cfb-game-card-team-info img {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+
+  .mlb-game-card-team-name,
+  .cfb-game-card-team-name {
+    min-width: 0;
+  }
+
+  .mlb-game-card-team-full,
+  .cfb-game-card-team-full {
+    display: none;
+  }
+
+  .mlb-game-card-team-abbreviation,
+  .cfb-game-card-team-abbreviation {
+    display: inline;
+  }
+
+  .mlb-game-card-team strong,
+  .cfb-game-card-team strong {
+    min-width: 20px;
+    font-size: 1.1rem;
+  }
+
+  .mlb-game-card-status,
+  .cfb-game-card-status {
+    margin-bottom: 6px;
+    font-size: 0.75rem;
+  }
 }

@@ -73,7 +73,7 @@ export default function NFL() {
               (statusOrder[a.status?.state] ?? 1) -
               (statusOrder[b.status?.state] ?? 1)
           )
-          .slice(0, 3);
+          .slice(0, 4);
 
         const gamesWithPossession = await Promise.all(
           selectedGames.map(async (game) => {
@@ -98,22 +98,6 @@ export default function NFL() {
 
               const gameData =
                 await gameResponse.json();
-
-              console.log(
-                "NFL possession:",
-                game.id,
-                {
-                  liveGame: gameData.liveGame,
-                  possession:
-                    gameData.liveGame?.possession,
-                  awayId: game.awayTeam.id,
-                  homeId: game.homeTeam.id,
-                  away:
-                    game.awayTeam.abbreviation,
-                  home:
-                    game.homeTeam.abbreviation,
-                }
-              );
 
               return {
                 ...game,
