@@ -14,6 +14,10 @@ import NFLGamePage from "./components/nfl/NFLGamePage.jsx";
 import NFLPlayerPage from "./components/nfl/NFLPlayerPage.jsx";
 import NFLTeamPage from "./components/nfl/NFLTeamPage.jsx";
 import NFLPredictionPage from "./components/nfl/NFLPredictionPage.jsx";
+import NHLGames from "./components/nhl/NHLGames.jsx";
+import NHLGamePage from "./components/nhl/NHLGamePage.jsx";
+import NHLTeamPage from "./components/nhl/NHLTeamPage.jsx";
+import NHLPlayerPage from "./components/nhl/NHLPlayerPage.jsx";
 
 export default function App() {
   return (
@@ -36,6 +40,11 @@ export default function App() {
       <Route path="/nfl/team/:teamId" element={<NFLTeamPage />} />
       <Route path="/nfl/player/:playerId" element={<NFLPlayerPage />} />
       <Route path="/prediction/:gameId" element={<NFLPredictionPage />} />
+
+      <Route path="/nhl" element={<NHLGames />} />
+      <Route path="/nhl/game/:gameId" element={<NHLGamePage />} />
+      <Route path="/nhl/team/:teamId" element={<NHLTeamPage />} />
+      <Route path="/nhl/player/:playerId" element={<NHLPlayerPage />} />
     </Routes>
   );
 }

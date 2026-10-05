@@ -1694,3 +1694,51 @@
     font-size: 0.75rem;
   }
 }
+
+.cfb-summary-recent-game > strong {
+  white-space: nowrap;
+}
+
+.cfb-gamecast-current-drive {
+  margin-bottom: 12px;
+}
+
+.cfb-gamecast-period-toggle {
+  width: 100%;
+  min-height: 64px;
+  padding: 0 22px;
+  border: 1px solid #d6d6d6;
+  border-radius: 10px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  text-align: left;
+}
+
+.cfb-gamecast-period-toggle:hover {
+  background: #f7f7f7;
+}
+
+.cfb-gamecast-period-toggle h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.cfb-gamecast-period-toggle span {
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.cfb-gamecast-period-toggle + .cfb-gamecast-play-list {
+  border: 1px solid #d6d6d6;
+  border-top: 0;
+  border-radius: 0 0 10px 10px;
+  overflow: hidden;
+}
+
+.cfb-gamecast-period-toggle:has(+ .cfb-gamecast-play-list) {
+  border-radius: 10px 10px 0 0;
+}
