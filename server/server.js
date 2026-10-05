@@ -34,6 +34,17 @@ import nflPlayerSearchRouter from "./routes/nfl/playerSearch.js";
 import nflCoachRouter from "./routes/nfl/coach.js";
 import nflTeamLeadersRouter from "./routes/nfl/teamLeaders.js";
 
+import nhlGamesRouter from "./routes/nhl/games.js";
+import nhlGameRouter from "./routes/nhl/game.js";
+import nhlTeamRouter from "./routes/nhl/team.js";
+import nhlTeamScheduleRouter from "./routes/nhl/teamSchedule.js";
+import nhlRosterRouter from "./routes/nhl/roster.js";
+import nhlPlayerRouter from "./routes/nhl/player.js";
+import nhlPlayerStatsRouter from "./routes/nhl/playerStats.js";
+import nhlPlayerSearchRouter from "./routes/nhl/playerSearch.js";
+import nhlTeamLeadersRouter from "./routes/nhl/teamLeaders.js";
+import nhlCoachRouter from "./routes/nhl/coach.js";
+
 const app = express();
 
 const PORT = process.env.PORT || 3000;
@@ -81,7 +92,16 @@ app.use("/api/nfl/players", nflPlayerSearchRouter);
 app.use("/api/nfl/coach", nflCoachRouter);
 app.use("/api/nfl/team-leaders", nflTeamLeadersRouter);
 
-
+app.use("/api/nhl/games", nhlGamesRouter);
+app.use("/api/nhl/game", nhlGameRouter);
+app.use("/api/nhl/team", nhlTeamRouter);
+app.use("/api/nhl/team", nhlTeamScheduleRouter);
+app.use("/api/nhl/team", nhlRosterRouter);
+app.use("/api/nhl/player", nhlPlayerRouter);
+app.use("/api/nhl/player", nhlPlayerStatsRouter);
+app.use("/api/nhl/players", nhlPlayerSearchRouter);
+app.use("/api/nhl/team-leaders", nhlTeamLeadersRouter);
+app.use("/api/nhl/coach", nhlCoachRouter);
 
 app.listen(PORT, () => {
   console.log(`V4 API running on port ${PORT}`);
