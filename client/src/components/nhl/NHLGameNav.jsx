@@ -1,9 +1,13 @@
+
 import {
   Link,
   useNavigate,
 } from "react-router-dom";
 
-export default function NHLGameNav() {
+export default function NHLGameNav({
+  gameId,
+  isPregame,
+}) {
   const navigate = useNavigate();
 
   return (
@@ -17,6 +21,12 @@ export default function NHLGameNav() {
       >
         ← Back
       </a>
+
+      {isPregame && (
+        <Link to={`/nhl/prediction/${gameId}`}>
+          Game Prediction
+        </Link>
+      )}
 
       <Link to="/nhl">← Back to Games</Link>
     </div>

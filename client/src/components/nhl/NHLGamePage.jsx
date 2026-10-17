@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import NHLGamecast from "./NHLGamecast.jsx";
@@ -65,9 +66,15 @@ export default function NHLGamePage() {
     return <p>Game not found.</p>;
   }
 
+  const isPregame =
+    game.status?.state === "pre";
+
   return (
     <main className="cfb-game-page">
-      <NHLGameNav />
+      <NHLGameNav
+        gameId={gameId}
+        isPregame={isPregame}
+      />
 
       <NHLGameHeader game={game} />
 
