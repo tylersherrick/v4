@@ -49,6 +49,9 @@ export default function MLBGames() {
   );
   const [activeTab, setActiveTab] = useState("games");
   const [loading, setLoading] = useState(true);
+  const [initialLoad, setInitialLoad] = useState(
+    () => !sessionStorage.getItem("gameCenterLoaded")
+  );
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -90,7 +93,8 @@ export default function MLBGames() {
 
         if (showLoading) {
           const elapsed = Date.now() - startTime;
-          const remaining = Math.max(0, 500 - elapsed);
+          const minimumDuration = initialLoad ? 1500 : 500;
+          const remaining = Math.max(0, minimumDuration - elapsed);
 
           await new Promise((resolve) =>
             setTimeout(resolve, remaining)
@@ -103,6 +107,10 @@ export default function MLBGames() {
 
         setGames(sortedGames);
         setError("");
+
+        if (showLoading) {
+          sessionStorage.setItem("gameCenterLoaded", "true");
+        }
       } catch (error) {
         if (!cancelled) {
           setError(error.message);
@@ -110,6 +118,7 @@ export default function MLBGames() {
       } finally {
         if (!cancelled && showLoading) {
           setLoading(false);
+          setInitialLoad(false);
         }
       }
     }
@@ -142,7 +151,15 @@ export default function MLBGames() {
   }
 
   if (loading) {
-    return <LoadingSpinner message="Loading MLB games..." />;
+    return (
+      <LoadingSpinner
+        message={
+          initialLoad
+            ? "Loading Ty's Corner..."
+            : "Loading MLB games..."
+        }
+      />
+    );
   }
 
   if (error) {
