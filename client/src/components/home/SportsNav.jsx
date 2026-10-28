@@ -1,3 +1,4 @@
+
 import { Link, NavLink } from "react-router-dom";
 
 export default function SportsNav({
@@ -55,6 +56,14 @@ export default function SportsNav({
           </NavLink>
         );
       })}
+
+      <a
+        href="https://sports-prediction-engine.onrender.com/picks"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Picks
+      </a>
 
       {showBack && (
         <Link
