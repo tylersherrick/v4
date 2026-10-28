@@ -1,8 +1,11 @@
+
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import SportsNav from "../home/SportsNav.jsx";
 import CFBGameCard from "./CFBGameCard.jsx";
 import CFBPlayerSearch from "./CFBPlayerSearch.jsx";
+import LoadingSpinner from "../common/LoadingSpinner.jsx";
+import "../../styles/loading.css";
 
 const API_URL =
   import.meta.env.VITE_API_URL ||
@@ -39,7 +42,11 @@ export default function CFBGames() {
     searchParams.get("conference") || "top25";
 
   useEffect(() => {
-    async function loadGames() {
+    let cancelled = false;
+
+    async function loadGames(showLoading = false) {
+      const startTime = Date.now();
+
       try {
         const params = new URLSearchParams();
 
@@ -68,6 +75,19 @@ export default function CFBGames() {
 
         const data = await response.json();
 
+        if (showLoading) {
+          const elapsed = Date.now() - startTime;
+          const remaining = Math.max(0, 1500 - elapsed);
+
+          await new Promise((resolve) =>
+            setTimeout(resolve, remaining)
+          );
+        }
+
+        if (cancelled) {
+          return;
+        }
+
         setGames(data.games || []);
         setSeason(data.season);
         setWeek(data.week);
@@ -79,20 +99,27 @@ export default function CFBGames() {
 
         setError("");
       } catch (error) {
-        setError(error.message);
+        if (!cancelled) {
+          setError(error.message);
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled && showLoading) {
+          setLoading(false);
+        }
       }
     }
 
     setLoading(true);
-    loadGames();
+    loadGames(true);
 
     const interval = setInterval(() => {
-      loadGames();
+      loadGames(false);
     }, 3000);
 
-    return () => clearInterval(interval);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
   }, [selectedWeek, selectedConference]);
 
   function updateWeek(newWeek) {
@@ -125,6 +152,14 @@ export default function CFBGames() {
     const params = new URLSearchParams(searchParams);
     params.delete("week");
     setSearchParams(params);
+  }
+
+  if (loading) {
+    return <LoadingSpinner message="Loading CFB games..." />;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
   }
 
   const currentWeekIndex = weeks.findIndex(
@@ -229,20 +264,14 @@ export default function CFBGames() {
             </button>
           </div>
 
-          {loading && <p>Loading CFB games...</p>}
-
-          {error && <p>{error}</p>}
-
-          {!loading && !error && (
-            <div className="cfb-games-grid">
-              {games.map((game) => (
-                <CFBGameCard
-                  key={game.id}
-                  game={game}
-                />
-              ))}
-            </div>
-          )}
+          <div className="cfb-games-grid">
+            {games.map((game) => (
+              <CFBGameCard
+                key={game.id}
+                game={game}
+              />
+            ))}
+          </div>
         </section>
       )}
 

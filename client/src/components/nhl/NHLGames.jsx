@@ -1,8 +1,11 @@
+
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import SportsNav from "../home/SportsNav.jsx";
 import NHLGameCard from "./NHLGameCard.jsx";
 import NHLPlayerSearch from "./NHLPlayerSearch.jsx";
+import LoadingSpinner from "../common/LoadingSpinner.jsx";
+import "../../styles/loading.css";
 
 const API_URL =
   import.meta.env.VITE_API_URL ||
@@ -57,7 +60,11 @@ export default function NHLGames() {
   }, [searchParams]);
 
   useEffect(() => {
-    async function loadGames() {
+    let cancelled = false;
+
+    async function loadGames(showLoading = false) {
+      const startTime = Date.now();
+
       try {
         const response = await fetch(
           `${API_URL}/api/nhl/games?date=${formatApiDate(date)}`
@@ -81,27 +88,49 @@ export default function NHLGames() {
             (statusOrder[b.status?.state] ?? 1)
         );
 
+        if (showLoading) {
+          const elapsed = Date.now() - startTime;
+          const remaining = Math.max(0, 1500 - elapsed);
+
+          await new Promise((resolve) =>
+            setTimeout(resolve, remaining)
+          );
+        }
+
+        if (cancelled) {
+          return;
+        }
+
         setGames(sortedGames);
         setError("");
       } catch (error) {
-        setError(error.message);
+        if (!cancelled) {
+          setError(error.message);
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled && showLoading) {
+          setLoading(false);
+        }
       }
     }
 
     setLoading(true);
-    loadGames();
+    loadGames(true);
 
     if (date !== getToday()) {
-      return;
+      return () => {
+        cancelled = true;
+      };
     }
 
     const interval = setInterval(() => {
-      loadGames();
+      loadGames(false);
     }, 3000);
 
-    return () => clearInterval(interval);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
   }, [date]);
 
   function updateDate(newDate) {
@@ -113,7 +142,7 @@ export default function NHLGames() {
   }
 
   if (loading) {
-    return <p>Loading NHL games...</p>;
+    return <LoadingSpinner message="Loading NHL games..." />;
   }
 
   if (error) {

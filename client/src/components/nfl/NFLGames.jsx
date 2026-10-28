@@ -3,6 +3,8 @@ import { useSearchParams } from "react-router-dom";
 import SportsNav from "../home/SportsNav.jsx";
 import NFLGameCard from "./NFLGameCard.jsx";
 import NFLPlayerSearch from "./NFLPlayerSearch.jsx";
+import LoadingSpinner from "../common/LoadingSpinner.jsx";
+import "../../styles/loading.css";
 
 const API_URL =
   import.meta.env.VITE_API_URL ||
@@ -23,7 +25,11 @@ export default function NFLGames() {
   const selectedSeasonType = searchParams.get("seasonType");
 
   useEffect(() => {
-    async function loadGames() {
+    let cancelled = false;
+
+    async function loadGames(showLoading = false) {
+      const startTime = Date.now();
+
       try {
         const params = new URLSearchParams();
 
@@ -50,6 +56,19 @@ export default function NFLGames() {
 
         const data = await response.json();
 
+        if (showLoading) {
+          const elapsed = Date.now() - startTime;
+          const remaining = Math.max(0, 1500 - elapsed);
+
+          await new Promise((resolve) =>
+            setTimeout(resolve, remaining)
+          );
+        }
+
+        if (cancelled) {
+          return;
+        }
+
         setGames(data.games || []);
         setSeason(data.season);
         setWeek(data.week);
@@ -64,20 +83,27 @@ export default function NFLGames() {
 
         setError("");
       } catch (error) {
-        setError(error.message);
+        if (!cancelled) {
+          setError(error.message);
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled && showLoading) {
+          setLoading(false);
+        }
       }
     }
 
     setLoading(true);
-    loadGames();
+    loadGames(true);
 
     const interval = setInterval(() => {
-      loadGames();
+      loadGames(false);
     }, 3000);
 
-    return () => clearInterval(interval);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
   }, [selectedWeek, selectedSeasonType]);
 
   function updateWeek(selected) {
@@ -103,7 +129,7 @@ export default function NFLGames() {
   }
 
   if (loading) {
-    return <p>Loading NFL games...</p>;
+    return <LoadingSpinner message="Loading NFL games..." />;
   }
 
   if (error) {
