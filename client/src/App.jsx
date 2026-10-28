@@ -1,3 +1,4 @@
+
 import { Routes, Route } from "react-router-dom";
 import HomePage from "./components/home/HomePage.jsx";
 import MLBGames from "./components/mlb/MLBGames.jsx";
@@ -13,12 +14,10 @@ import NFLGames from "./components/nfl/NFLGames.jsx";
 import NFLGamePage from "./components/nfl/NFLGamePage.jsx";
 import NFLPlayerPage from "./components/nfl/NFLPlayerPage.jsx";
 import NFLTeamPage from "./components/nfl/NFLTeamPage.jsx";
-import NFLPredictionPage from "./components/nfl/NFLPredictionPage.jsx";
 import NHLGames from "./components/nhl/NHLGames.jsx";
 import NHLGamePage from "./components/nhl/NHLGamePage.jsx";
 import NHLTeamPage from "./components/nhl/NHLTeamPage.jsx";
 import NHLPlayerPage from "./components/nhl/NHLPlayerPage.jsx";
-import NHLPredictionPage from "./components/nhl/NHLPredictionPage.jsx";
 
 export default function App() {
   return (
@@ -40,13 +39,11 @@ export default function App() {
       <Route path="/nfl/game/:gameId" element={<NFLGamePage />} />
       <Route path="/nfl/team/:teamId" element={<NFLTeamPage />} />
       <Route path="/nfl/player/:playerId" element={<NFLPlayerPage />} />
-      <Route path="/prediction/:gameId" element={<NFLPredictionPage />} />
 
       <Route path="/nhl" element={<NHLGames />} />
       <Route path="/nhl/game/:gameId" element={<NHLGamePage />} />
       <Route path="/nhl/team/:teamId" element={<NHLTeamPage />} />
       <Route path="/nhl/player/:playerId" element={<NHLPlayerPage />} />
-      <Route path="/nhl/prediction/:gameId" element={<NHLPredictionPage />} />
     </Routes>
   );
 }
