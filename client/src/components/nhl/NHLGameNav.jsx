@@ -23,9 +23,13 @@ export default function NHLGameNav({
       </a>
 
       {isPregame && (
-        <Link to={`/nhl/prediction/${gameId}`}>
+        <a
+          href={`https://sports-prediction-engine.onrender.com/nhl/${encodeURIComponent(gameId)}/report`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           Game Prediction
-        </Link>
+        </a>
       )}
 
       <Link to="/nhl">← Back to Games</Link>
