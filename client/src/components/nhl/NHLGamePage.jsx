@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
+import GameLoadingSpinner from "../common/GameLoadingSpinner.jsx";
 import NHLGamecast from "./NHLGamecast.jsx";
 import NHLGameHeader from "./NHLGameHeader.jsx";
 import NHLGameLeaders from "./NHLGameLeaders.jsx";
@@ -15,6 +16,7 @@ const API_URL =
 
 export default function NHLGamePage() {
   const { gameId } = useParams();
+  const location = useLocation();
 
   const [game, setGame] = useState(null);
   const [activeTab, setActiveTab] = useState("summary");
@@ -23,8 +25,15 @@ export default function NHLGamePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const awayTeam = location.state?.awayTeam;
+  const homeTeam = location.state?.homeTeam;
+
   useEffect(() => {
-    async function loadGame() {
+    let cancelled = false;
+
+    async function loadGame(showLoading = false) {
+      const startTime = Date.now();
+
       try {
         const response = await fetch(
           `${API_URL}/api/nhl/game/${gameId}`
@@ -36,26 +45,52 @@ export default function NHLGamePage() {
 
         const data = await response.json();
 
+        if (showLoading) {
+          const elapsed = Date.now() - startTime;
+          const remaining = Math.max(0, 500 - elapsed);
+
+          await new Promise((resolve) =>
+            setTimeout(resolve, remaining)
+          );
+        }
+
+        if (cancelled) {
+          return;
+        }
+
         setGame(data);
         setError("");
       } catch (error) {
-        setError(error.message);
+        if (!cancelled) {
+          setError(error.message);
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled && showLoading) {
+          setLoading(false);
+        }
       }
     }
 
-    loadGame();
+    setLoading(true);
+    loadGame(true);
 
     const interval = setInterval(() => {
-      loadGame();
+      loadGame(false);
     }, 3000);
 
-    return () => clearInterval(interval);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
   }, [gameId]);
 
   if (loading) {
-    return <p>Loading NHL game...</p>;
+    return (
+      <GameLoadingSpinner
+        awayTeam={awayTeam}
+        homeTeam={homeTeam}
+      />
+    );
   }
 
   if (error) {

@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 
 export default function MLBGameCard({ game, date, fromHome = false }) {
@@ -26,6 +27,14 @@ export default function MLBGameCard({ game, date, fromHome = false }) {
       state={{
         returnDate: date,
         fromHome,
+        awayTeam: {
+          logo: game.awayTeam.logo,
+          abbreviation: game.awayTeam.abbreviation,
+        },
+        homeTeam: {
+          logo: game.homeTeam.logo,
+          abbreviation: game.homeTeam.abbreviation,
+        },
       }}
       className="mlb-game-card"
     >

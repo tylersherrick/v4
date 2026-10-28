@@ -77,7 +77,7 @@ export default function CFBGames() {
 
         if (showLoading) {
           const elapsed = Date.now() - startTime;
-          const remaining = Math.max(0, 1500 - elapsed);
+          const remaining = Math.max(0, 500 - elapsed);
 
           await new Promise((resolve) =>
             setTimeout(resolve, remaining)

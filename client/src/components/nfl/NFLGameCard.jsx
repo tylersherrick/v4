@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from "react-router-dom";
 
 export default function NFLGameCard({ game }) {
@@ -46,6 +47,16 @@ export default function NFLGameCard({ game }) {
   return (
     <Link
       to={`/nfl/game/${game.id}${location.search}`}
+      state={{
+        awayTeam: {
+          logo: game.awayTeam.logo,
+          abbreviation: game.awayTeam.abbreviation,
+        },
+        homeTeam: {
+          logo: game.homeTeam.logo,
+          abbreviation: game.homeTeam.abbreviation,
+        },
+      }}
       className="mlb-game-card-link"
     >
       <div className="mlb-game-card">

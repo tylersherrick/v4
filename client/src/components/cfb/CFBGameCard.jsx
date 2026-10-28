@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from "react-router-dom";
 
 export default function CFBGameCard({ game }) {
@@ -46,6 +47,14 @@ export default function CFBGameCard({ game }) {
       to={`/cfb/game/${game.id}${location.search}`}
       state={{
         gamesLocation: `/cfb${location.search}`,
+        awayTeam: {
+          logo: game.awayTeam.logo,
+          abbreviation: game.awayTeam.abbreviation,
+        },
+        homeTeam: {
+          logo: game.homeTeam.logo,
+          abbreviation: game.homeTeam.abbreviation,
+        },
       }}
       className="cfb-game-card-link"
     >
