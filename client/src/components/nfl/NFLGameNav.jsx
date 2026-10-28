@@ -1,3 +1,4 @@
+
 import {
   Link,
   useNavigate,
@@ -22,9 +23,13 @@ export default function NFLGameNav({
       </a>
 
       {isPregame && (
-        <Link to={`/prediction/${gameId}`}>
+        <a
+          href={`https://sports-prediction-engine.onrender.com/nfl/${encodeURIComponent(gameId)}/report`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           Game Prediction
-        </Link>
+        </a>
       )}
 
       <Link to="/nfl">← Back to Games</Link>
