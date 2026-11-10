@@ -80,6 +80,7 @@ export default function BetSlip({
         type="button"
         className="sweatzone-slip-toggle"
         onClick={() => setExpanded(!expanded)}
+        aria-expanded={expanded}
       >
         <span>
           {betType === "parlay" ? "Parlay" : "Straight Bet"} ·{" "}
@@ -144,6 +145,7 @@ export default function BetSlip({
               Risk ({unitType === "units" ? "units" : "$"})
               <input
                 type="number"
+                inputMode="decimal"
                 min="0"
                 step="any"
                 placeholder="0.00"
@@ -156,6 +158,7 @@ export default function BetSlip({
               Total Return ({unitType === "units" ? "units" : "$"})
               <input
                 type="number"
+                inputMode="decimal"
                 min="0"
                 step="any"
                 placeholder="0.00"
