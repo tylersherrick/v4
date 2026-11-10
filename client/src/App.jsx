@@ -22,7 +22,7 @@ import SweatZone from "./components/sweatzone/SweatZone.jsx";
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/mlb" replace />} />
+      <Route path="/" element={<Navigate to="/nhl" replace />} />
 
       <Route path="/mlb" element={<MLBGames />} />
       <Route path="/mlb/game/:gameId" element={<MLBGamePage />} />

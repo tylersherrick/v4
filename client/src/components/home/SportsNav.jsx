@@ -7,7 +7,7 @@ export default function SportsNav({
   onLeagueChange = null,
 }) {
   const leagues = [
-    { id: "mlb", label: "MLB", enabled: true },
+    { id: "mlb", label: "MLB", enabled: false },
     { id: "cfb", label: "CFB", enabled: true },
     { id: "nfl", label: "NFL", enabled: true },
     { id: "nhl", label: "NHL", enabled: true },

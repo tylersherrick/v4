@@ -6,7 +6,7 @@ const API_URL =
   import.meta.env.VITE_RENDER_API_URL;
 
 const leagues = [
-  { id: "mlb", label: "MLB" },
+  { id: "mlb", label: "MLB", disabled: true },
   { id: "nfl", label: "NFL" },
   { id: "cfb", label: "CFB" },
   { id: "nhl", label: "NHL" },
@@ -169,7 +169,13 @@ export default function GameSelector({ onGameSelect }) {
             key={item.id}
             type="button"
             className={league === item.id ? "active" : ""}
+            disabled={item.disabled}
             onClick={() => changeLeague(item.id)}
+            style={
+              item.disabled
+                ? { opacity: 0.35, cursor: "not-allowed" }
+                : undefined
+            }
           >
             {item.label}
           </button>

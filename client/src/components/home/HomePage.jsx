@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import MLB from "../homegames/mlb.jsx";
 import CFB from "../homegames/cfb.jsx";
@@ -6,7 +7,7 @@ import NHL from "../homegames/nhl.jsx";
 import SportsNav from "./SportsNav.jsx";
 
 export default function HomePage() {
-  const [activeLeague, setActiveLeague] = useState("mlb");
+  const [activeLeague, setActiveLeague] = useState("nhl");
 
   function renderLeague() {
     switch (activeLeague) {
