@@ -27,6 +27,45 @@ function getToday() {
   return `${year}-${month}-${day}`;
 }
 
+function getGameDate(gameDate) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date(gameDate));
+
+  const year = parts.find((part) => part.type === "year").value;
+  const month = parts.find((part) => part.type === "month").value;
+  const day = parts.find((part) => part.type === "day").value;
+
+  return `${year}-${month}-${day}`;
+}
+
+function getGameLabel(game) {
+  const gameDate = new Date(game.date);
+  const isToday = getGameDate(game.date) === getToday();
+
+  const dateLabel = isToday
+    ? ""
+    : gameDate.toLocaleDateString("en-US", {
+        timeZone: "America/Chicago",
+        month: "short",
+        day: "numeric",
+      });
+
+  const statusLabel =
+    game.status?.state === "pre"
+      ? gameDate.toLocaleTimeString("en-US", {
+          timeZone: "America/Chicago",
+          hour: "numeric",
+          minute: "2-digit",
+        })
+      : game.status?.detail || "Live";
+
+  return dateLabel ? `${dateLabel} · ${statusLabel}` : statusLabel;
+}
+
 export default function GameSelector({ onGameSelect }) {
   const [league, setLeague] = useState("nhl");
   const [date, setDate] = useState(getToday);
@@ -81,6 +120,40 @@ export default function GameSelector({ onGameSelect }) {
     };
   }, [league, date]);
 
+  function clearSelectedGame() {
+    setSelectedGame(null);
+    onGameSelect?.(null);
+  }
+
+  function changeLeague(nextLeague) {
+    if (nextLeague === league) {
+      return;
+    }
+
+    clearSelectedGame();
+    setLeague(nextLeague);
+  }
+
+  function changeDate(nextDate) {
+    if (!nextDate || nextDate === date) {
+      return;
+    }
+
+    clearSelectedGame();
+    setDate(nextDate);
+  }
+
+  function shiftDate(days) {
+    const next = new Date(`${date}T12:00:00`);
+    next.setDate(next.getDate() + days);
+
+    const year = next.getFullYear();
+    const month = String(next.getMonth() + 1).padStart(2, "0");
+    const day = String(next.getDate()).padStart(2, "0");
+
+    changeDate(`${year}-${month}-${day}`);
+  }
+
   function selectGame(game) {
     setSelectedGame(game.id);
     onGameSelect?.({ ...game, league });
@@ -96,7 +169,7 @@ export default function GameSelector({ onGameSelect }) {
             key={item.id}
             type="button"
             className={league === item.id ? "active" : ""}
-            onClick={() => setLeague(item.id)}
+            onClick={() => changeLeague(item.id)}
           >
             {item.label}
           </button>
@@ -106,11 +179,7 @@ export default function GameSelector({ onGameSelect }) {
       <div className="mlb-games-date-nav">
         <button
           type="button"
-          onClick={() => {
-            const previous = new Date(`${date}T12:00:00`);
-            previous.setDate(previous.getDate() - 1);
-            setDate(previous.toLocaleDateString("en-CA"));
-          }}
+          onClick={() => shiftDate(-1)}
         >
           ←
         </button>
@@ -118,23 +187,19 @@ export default function GameSelector({ onGameSelect }) {
         <input
           type="date"
           value={date}
-          onChange={(event) => setDate(event.target.value)}
+          onChange={(event) => changeDate(event.target.value)}
         />
 
         <button
           type="button"
-          onClick={() => setDate(getToday())}
+          onClick={() => changeDate(getToday())}
         >
           Today
         </button>
 
         <button
           type="button"
-          onClick={() => {
-            const next = new Date(`${date}T12:00:00`);
-            next.setDate(next.getDate() + 1);
-            setDate(next.toLocaleDateString("en-CA"));
-          }}
+          onClick={() => shiftDate(1)}
         >
           →
         </button>
@@ -181,14 +246,7 @@ export default function GameSelector({ onGameSelect }) {
               </div>
             </div>
 
-            <small>
-              {game.status?.state === "pre"
-                ? new Date(game.date).toLocaleTimeString([], {
-                    hour: "numeric",
-                    minute: "2-digit",
-                  })
-                : game.status?.detail}
-            </small>
+            <small>{getGameLabel(game)}</small>
           </button>
         ))}
       </div>
