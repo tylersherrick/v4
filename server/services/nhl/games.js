@@ -1,3 +1,4 @@
+
 const ESPN_URL =
   "https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard";
 
@@ -9,6 +10,13 @@ function getTodayDate() {
   const day = String(now.getDate()).padStart(2, "0");
 
   return `${year}${month}${day}`;
+}
+
+function getPeriodScores(team) {
+  return (team?.linescores || []).map((period, index) => ({
+    period: index + 1,
+    score: Number(period.value ?? period.displayValue ?? 0),
+  }));
 }
 
 export async function getTodayGames(selectedDate) {
@@ -42,6 +50,7 @@ export async function getTodayGames(selectedDate) {
         state: event.status?.type?.state,
         detail: event.status?.type?.detail,
         completed: event.status?.type?.completed,
+        period: event.status?.period,
       },
       venue: competition?.venue?.fullName,
       awayTeam: {
@@ -50,6 +59,7 @@ export async function getTodayGames(selectedDate) {
         abbreviation: awayTeam?.team?.abbreviation,
         logo: awayTeam?.team?.logo,
         score: awayTeam?.score,
+        periodScores: getPeriodScores(awayTeam),
       },
       homeTeam: {
         id: homeTeam?.team?.id,
@@ -57,6 +67,7 @@ export async function getTodayGames(selectedDate) {
         abbreviation: homeTeam?.team?.abbreviation,
         logo: homeTeam?.team?.logo,
         score: homeTeam?.score,
+        periodScores: getPeriodScores(homeTeam),
       },
     };
   });
