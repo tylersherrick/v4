@@ -1,4 +1,6 @@
 
+/* SweatZone Main Page */
+
 .sweatzone-header {
   display: flex;
   align-items: center;
@@ -33,12 +35,12 @@
 }
 
 .sweatzone-filters select {
+  flex: 1;
+  min-width: 0;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 8px;
   background: white;
-  flex: 1;
-  min-width: 0;
 }
 
 .sweatzone-empty {
@@ -56,6 +58,8 @@
 .sweatzone-empty p {
   color: #777;
 }
+
+/* Add Bet Page */
 
 .sweatzone-add-header {
   display: flex;
@@ -105,35 +109,7 @@
   font-size: 14px;
 }
 
-.sweatzone-next-step {
-  margin-top: 24px;
-  padding: 24px;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-}
-
-@media (max-width: 600px) {
-  .sweatzone-header {
-    align-items: flex-start;
-  }
-
-  .sweatzone-add-button {
-    white-space: nowrap;
-  }
-
-  .sweatzone-filters {
-    gap: 8px;
-  }
-
-  .sweatzone-filters select {
-    font-size: 12px;
-  }
-
-  .sweatzone-bet-types {
-    flex-direction: column;
-  }
-}
-
+/* Game Selector */
 
 .sweatzone-game-selector {
   margin-top: 32px;
@@ -211,6 +187,7 @@
   color: #777;
 }
 
+/* Market Selector */
 
 .sweatzone-market-selector {
   margin-top: 24px;
@@ -270,20 +247,7 @@
   cursor: not-allowed;
 }
 
-@media (max-width: 600px) {
-  .sweatzone-market-selector {
-    padding: 16px;
-  }
-
-  .sweatzone-market-types {
-    flex-wrap: wrap;
-  }
-
-  .sweatzone-market-types button {
-    min-width: 90px;
-  }
-}
-
+/* Bet Slip */
 
 .sweatzone-slip {
   position: sticky;
@@ -391,6 +355,24 @@
   font-size: 16px;
 }
 
+.sweatzone-slip-return {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 14px 0;
+  border-top: 1px solid #ddd;
+}
+
+.sweatzone-slip-return span {
+  font-weight: 600;
+}
+
+.sweatzone-slip-return strong {
+  font-size: 20px;
+}
+
 .sweatzone-slip-submit {
   width: 100%;
   margin-top: 16px;
@@ -401,27 +383,15 @@
   cursor: not-allowed;
 }
 
+/* Saved Bets */
+
 .sweatzone-saved-bets {
   display: grid;
   gap: 12px;
   margin-top: 20px;
 }
 
-.sweatzone-saved-bet {
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  background: white;
-}
-
-.sweatzone-saved-bet p {
-  margin: 10px 0;
-}
-
-.sweatzone-saved-bet small {
-  color: #777;
-}
-
+/* Bet Cards */
 
 .sweatzone-bet-card {
   background: white;
@@ -443,24 +413,53 @@
   text-align: left;
 }
 
-.sweatzone-bet-card-title,
-.sweatzone-bet-card-summary {
+.sweatzone-bet-card-title {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  min-width: 0;
+}
+
+.sweatzone-bet-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sweatzone-bet-card-heading strong {
+  font-size: 18px;
+}
+
+.sweatzone-bet-type-label {
+  color: #777;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .sweatzone-bet-card-title small {
   color: #777;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
 .sweatzone-bet-card-summary {
-  align-items: flex-end;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
   font-weight: 600;
 }
 
+.sweatzone-bet-card-summary strong {
+  font-size: 18px;
+}
+
 .sweatzone-bet-card-chevron {
-  font-size: 12px;
+  font-size: 14px;
   color: #777;
 }
 
@@ -514,86 +513,7 @@
   font-size: 16px;
 }
 
-@media (max-width: 600px) {
-  .sweatzone-bet-card-header {
-    padding: 16px;
-  }
-
-  .sweatzone-bet-card-body {
-    padding: 0 16px 16px;
-  }
-
-  .sweatzone-bet-card-footer {
-    flex-wrap: wrap;
-  }
-}
-
-
-.sweatzone-slip-return {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 16px;
-  padding: 14px 0;
-  border-top: 1px solid #ddd;
-}
-
-.sweatzone-slip-return span {
-  font-weight: 600;
-}
-
-.sweatzone-slip-return strong {
-  font-size: 20px;
-}
-
-
-.sweatzone-bet-card-heading {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.sweatzone-bet-card-heading strong {
-  font-size: 18px;
-}
-
-.sweatzone-bet-type-label {
-  color: #777;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.sweatzone-bet-card-title {
-  min-width: 0;
-}
-
-.sweatzone-bet-card-title small {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100%;
-}
-
-.sweatzone-bet-card-summary {
-  flex-shrink: 0;
-}
-
-.sweatzone-bet-card-summary strong {
-  font-size: 18px;
-}
-
-
-.sweatzone-bet-card-summary {
-  flex-direction: row;
-  align-items: center;
-  gap: 14px;
-}
-
-.sweatzone-bet-card-chevron {
-  font-size: 14px;
-}
+/* Delete Wager */
 
 .sweatzone-bet-card-actions {
   display: flex;
@@ -615,4 +535,52 @@
 
 .sweatzone-delete-button:hover {
   background: #fef2f2;
+}
+
+/* Responsive Layout */
+
+@media (max-width: 600px) {
+  .sweatzone-header {
+    align-items: flex-start;
+  }
+
+  .sweatzone-add-button {
+    white-space: nowrap;
+  }
+
+  .sweatzone-filters {
+    gap: 8px;
+  }
+
+  .sweatzone-filters select {
+    font-size: 12px;
+  }
+
+  .sweatzone-bet-types {
+    flex-direction: column;
+  }
+
+  .sweatzone-market-selector {
+    padding: 16px;
+  }
+
+  .sweatzone-market-types {
+    flex-wrap: wrap;
+  }
+
+  .sweatzone-market-types button {
+    min-width: 90px;
+  }
+
+  .sweatzone-bet-card-header {
+    padding: 16px;
+  }
+
+  .sweatzone-bet-card-body {
+    padding: 0 16px 16px;
+  }
+
+  .sweatzone-bet-card-footer {
+    flex-wrap: wrap;
+  }
 }
