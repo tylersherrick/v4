@@ -4,6 +4,15 @@ import SportsNav from "../home/SportsNav.jsx";
 import LoadingSpinner from "../common/LoadingSpinner.jsx";
 import AddBet from "./AddBet.jsx";
 import BetCard from "./BetCard.jsx";
+import { gradeSelection, getBetResult } from "./utils/betGrading.js";
+import {
+  createFinalGame,
+  getGameDate,
+  getGameKey,
+  getGameState,
+  getScore,
+  isGameFinal,
+} from "./utils/gameHelpers.js";
 import "../../styles/sweatzone.css";
 
 const STORAGE_KEY = "sweatzone-bets";
@@ -20,178 +29,23 @@ function loadBets() {
   }
 }
 
-function getGameDate(gameDate) {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/Chicago",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).formatToParts(new Date(gameDate));
-
-  const year = parts.find((part) => part.type === "year").value;
-  const month = parts.find((part) => part.type === "month").value;
-  const day = parts.find((part) => part.type === "day").value;
-
-  return `${year}${month}${day}`;
+function isSettledResult(result) {
+  return ["won", "lost", "push"].includes(result);
 }
 
-function getGameKey(selection) {
-  return `${selection.league}-${selection.gameId}`;
-}
-
-function getGameState(game) {
-  return game?.status?.state || "pre";
-}
-
-function isGameFinal(game) {
-  return (
-    game?.status?.state === "post" &&
-    game.status?.completed === true
-  );
-}
-
-function getScore(team) {
-  const score = team?.score;
-
-  if (score === undefined || score === null || score === "") {
-    return null;
-  }
-
-  const value =
-    typeof score === "object"
-      ? score.value ?? score.displayValue
-      : score;
-
-  if (value === undefined || value === null || value === "") {
-    return null;
-  }
-
-  const number = Number(value);
-  return Number.isFinite(number) ? number : null;
-}
-
-function gradeSelection(selection, game) {
-  if (!game) {
-    return "pending";
-  }
-
-  const state = getGameState(game);
-
-  if (state === "pre") {
-    return "pending";
-  }
-
-  const awayScore = getScore(game.awayTeam);
-  const homeScore = getScore(game.homeTeam);
-
-  if (awayScore === null || homeScore === null) {
-    return "pending";
-  }
-
-  let difference;
-
-  if (selection.market === "moneyline") {
-    difference =
-      selection.team === "away"
-        ? awayScore - homeScore
-        : homeScore - awayScore;
-  } else if (selection.market === "spread") {
-    const teamScore =
-      selection.team === "away" ? awayScore : homeScore;
-    const opponentScore =
-      selection.team === "away" ? homeScore : awayScore;
-
-    difference =
-      teamScore + Number(selection.line) - opponentScore;
-  } else if (selection.market === "total") {
-    const total = awayScore + homeScore;
-    const line = Number(selection.line);
-
-    difference =
-      selection.direction === "over"
-        ? total - line
-        : line - total;
-  } else {
-    return "pending";
-  }
-
-  const completed = isGameFinal(game);
-
-  if (difference > 0) {
-    return completed ? "won" : "winning";
-  }
-
-  if (difference < 0) {
-    return completed ? "lost" : "losing";
-  }
-
-  return completed ? "push" : "tied";
-}
-
-function createFinalGame(game) {
+function createSettledGame(game) {
   return {
-    id: game.id,
-    date: game.date,
-    status: {
-      state: "post",
-      detail: game.status?.detail || "Final",
-      completed: true,
-    },
+    ...createFinalGame(game),
+    status: { ...game.status },
     awayTeam: {
-      abbreviation: game.awayTeam?.abbreviation,
-      score: getScore(game.awayTeam),
+      ...createFinalGame(game).awayTeam,
+      periodScores: game.awayTeam?.periodScores || [],
     },
     homeTeam: {
-      abbreviation: game.homeTeam?.abbreviation,
-      score: getScore(game.homeTeam),
+      ...createFinalGame(game).homeTeam,
+      periodScores: game.homeTeam?.periodScores || [],
     },
   };
-}
-
-function getBetResult(bet, liveGames) {
-  const selections = bet.selections || [];
-
-  if (selections.length === 0) {
-    return null;
-  }
-
-  const results = selections.map((selection) => {
-    if (selection.finalResult) {
-      return selection.finalResult;
-    }
-
-    const game =
-      selection.finalGame ||
-      liveGames[getGameKey(selection)];
-
-    return gradeSelection(selection, game);
-  });
-
-  if (bet.type === "straight") {
-    return ["won", "lost", "push"].includes(results[0])
-      ? results[0]
-      : null;
-  }
-
-  if (results.includes("lost")) {
-    return "lost";
-  }
-
-  if (!results.every((result) =>
-    ["won", "push"].includes(result)
-  )) {
-    return null;
-  }
-
-  if (results.every((result) => result === "push")) {
-    return "push";
-  }
-
-  if (results.includes("push")) {
-    return "review";
-  }
-
-  return "won";
 }
 
 export default function SweatZone() {
@@ -238,10 +92,7 @@ export default function SweatZone() {
         const key = `${selection.league}-${date}`;
 
         if (!requests.has(key)) {
-          requests.set(key, {
-            league: selection.league,
-            date,
-          });
+          requests.set(key, { league: selection.league, date });
         }
       }
     }
@@ -325,23 +176,37 @@ export default function SweatZone() {
 
           const game = liveGames[getGameKey(selection)];
 
-          if (!isGameFinal(game)) {
+          if (!game) {
             return selection;
           }
 
-          const awayScore = getScore(game.awayTeam);
-          const homeScore = getScore(game.homeTeam);
+          const result = gradeSelection(selection, game);
+          const firstPeriodBet =
+            selection.market === "first_period_total";
 
-          if (awayScore === null || homeScore === null) {
+          const settled = firstPeriodBet
+            ? isSettledResult(result)
+            : isGameFinal(game) && isSettledResult(result);
+
+          if (!settled) {
             return selection;
+          }
+
+          if (!firstPeriodBet) {
+            const awayScore = getScore(game.awayTeam);
+            const homeScore = getScore(game.homeTeam);
+
+            if (awayScore === null || homeScore === null) {
+              return selection;
+            }
           }
 
           selectionsChanged = true;
 
           return {
             ...selection,
-            finalGame: createFinalGame(game),
-            finalResult: gradeSelection(selection, game),
+            finalGame: createSettledGame(game),
+            finalResult: result,
           };
         });
 

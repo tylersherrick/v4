@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 
 export default function MarketSelector({ game, onMarketSelect }) {
@@ -10,6 +9,8 @@ export default function MarketSelector({ game, onMarketSelect }) {
 
   const awayTeam = game.awayTeam;
   const homeTeam = game.homeTeam;
+
+  const isTotalMarket = market === "total" || market === "first_period_total";
 
   function selectCategory(value) {
     setCategory(value);
@@ -28,8 +29,8 @@ export default function MarketSelector({ game, onMarketSelect }) {
       league: game.league,
       category,
       market,
-      team: market === "total" ? null : team,
-      direction: market === "total" ? direction : null,
+      team: isTotalMarket ? null : team,
+      direction: isTotalMarket ? direction : null,
       line: market === "moneyline" ? null : Number(line),
       awayTeam: awayTeam.abbreviation,
       homeTeam: homeTeam.abbreviation,
@@ -90,9 +91,19 @@ export default function MarketSelector({ game, onMarketSelect }) {
             >
               Over/Under
             </button>
+
+            {game.league?.toLowerCase() === "nhl" && (
+              <button
+                type="button"
+                className={market === "first_period_total" ? "active" : ""}
+                onClick={() => selectMarket("first_period_total")}
+              >
+                1st Period Total
+              </button>
+            )}
           </div>
 
-          {market !== "total" ? (
+          {!isTotalMarket ? (
             <div className="sweatzone-market-teams">
               <button
                 type="button"
@@ -136,7 +147,13 @@ export default function MarketSelector({ game, onMarketSelect }) {
               <input
                 type="number"
                 step="0.5"
-                placeholder={market === "spread" ? "-1.5" : "5.5"}
+                placeholder={
+                  market === "spread"
+                    ? "-1.5"
+                    : market === "first_period_total"
+                      ? "1.5"
+                      : "5.5"
+                }
                 value={line}
                 onChange={(event) => setLine(event.target.value)}
               />
