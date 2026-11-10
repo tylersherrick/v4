@@ -17,6 +17,7 @@ import NHLGames from "./components/nhl/NHLGames.jsx";
 import NHLGamePage from "./components/nhl/NHLGamePage.jsx";
 import NHLTeamPage from "./components/nhl/NHLTeamPage.jsx";
 import NHLPlayerPage from "./components/nhl/NHLPlayerPage.jsx";
+import SweatZone from "./components/sweatzone/SweatZone.jsx";
 
 export default function App() {
   return (
@@ -43,6 +44,8 @@ export default function App() {
       <Route path="/nhl/game/:gameId" element={<NHLGamePage />} />
       <Route path="/nhl/team/:teamId" element={<NHLTeamPage />} />
       <Route path="/nhl/player/:playerId" element={<NHLPlayerPage />} />
+
+      <Route path="/sweatzone" element={<SweatZone />} />
     </Routes>
   );
 }

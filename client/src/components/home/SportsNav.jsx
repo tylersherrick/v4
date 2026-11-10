@@ -65,6 +65,15 @@ export default function SportsNav({
         Picks
       </a>
 
+      <NavLink
+        to="/sweatzone"
+        className={({ isActive }) =>
+          isActive ? "active" : ""
+        }
+      >
+        SweatZone
+      </NavLink>
+
       {showBack && (
         <Link
           className="sports-nav-back"

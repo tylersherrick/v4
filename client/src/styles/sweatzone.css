@@ -1,0 +1,618 @@
+
+.sweatzone-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.sweatzone-header p {
+  margin: 0;
+  color: #777;
+}
+
+.sweatzone-add-button {
+  background: #111;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sweatzone-add-button:hover {
+  background: #333;
+}
+
+.sweatzone-filters {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.sweatzone-filters select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  flex: 1;
+  min-width: 0;
+}
+
+.sweatzone-empty {
+  text-align: center;
+  padding: 60px 20px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+.sweatzone-empty h2 {
+  margin-bottom: 8px;
+}
+
+.sweatzone-empty p {
+  color: #777;
+}
+
+.sweatzone-add-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.sweatzone-add-header h1 {
+  margin: 0;
+}
+
+.sweatzone-back-button {
+  background: transparent;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+
+.sweatzone-bet-types {
+  display: flex;
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.sweatzone-bet-types button {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px;
+  background: white;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.sweatzone-bet-types button.selected {
+  border-color: #111;
+  background: #f3f3f3;
+}
+
+.sweatzone-bet-types span {
+  color: #777;
+  font-size: 14px;
+}
+
+.sweatzone-next-step {
+  margin-top: 24px;
+  padding: 24px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+}
+
+@media (max-width: 600px) {
+  .sweatzone-header {
+    align-items: flex-start;
+  }
+
+  .sweatzone-add-button {
+    white-space: nowrap;
+  }
+
+  .sweatzone-filters {
+    gap: 8px;
+  }
+
+  .sweatzone-filters select {
+    font-size: 12px;
+  }
+
+  .sweatzone-bet-types {
+    flex-direction: column;
+  }
+}
+
+
+.sweatzone-game-selector {
+  margin-top: 32px;
+}
+
+.sweatzone-leagues {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.sweatzone-leagues button {
+  padding: 10px 18px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+}
+
+.sweatzone-leagues button.active {
+  background: #111;
+  color: white;
+  border-color: #111;
+}
+
+.sweatzone-games {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 16px 0;
+}
+
+.sweatzone-game-card {
+  flex: 0 0 160px;
+  padding: 16px;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  background: white;
+  cursor: pointer;
+}
+
+.sweatzone-game-card.selected {
+  border-color: #111;
+  background: #f3f3f3;
+}
+
+.sweatzone-game-teams {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.sweatzone-game-teams > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.sweatzone-game-teams img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.sweatzone-game-teams span {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sweatzone-game-card small {
+  color: #777;
+}
+
+
+.sweatzone-market-selector {
+  margin-top: 24px;
+  padding: 24px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+}
+
+.sweatzone-market-tabs,
+.sweatzone-market-types,
+.sweatzone-market-teams {
+  display: flex;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.sweatzone-market-tabs button,
+.sweatzone-market-types button,
+.sweatzone-market-teams button {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+}
+
+.sweatzone-market-tabs button.active,
+.sweatzone-market-types button.active,
+.sweatzone-market-teams button.selected {
+  background: #111;
+  color: white;
+  border-color: #111;
+}
+
+.sweatzone-market-line {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0;
+  font-weight: 600;
+}
+
+.sweatzone-market-line input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.sweatzone-market-selector > .sweatzone-add-button {
+  margin-top: 12px;
+}
+
+.sweatzone-market-selector > .sweatzone-add-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .sweatzone-market-selector {
+    padding: 16px;
+  }
+
+  .sweatzone-market-types {
+    flex-wrap: wrap;
+  }
+
+  .sweatzone-market-types button {
+    min-width: 90px;
+  }
+}
+
+
+.sweatzone-slip {
+  position: sticky;
+  bottom: 12px;
+  z-index: 20;
+  margin-top: 24px;
+  background: white;
+  border: 2px solid #111;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+.sweatzone-slip-toggle {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border: none;
+  background: #111;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sweatzone-slip form {
+  padding: 16px;
+}
+
+.sweatzone-slip-empty {
+  color: #777;
+}
+
+.sweatzone-slip-selections {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.sweatzone-slip-selection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.sweatzone-slip-selection > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sweatzone-slip-selection small {
+  color: #777;
+}
+
+.sweatzone-slip-selection button {
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.sweatzone-slip-unit-toggle {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.sweatzone-slip-unit-toggle button {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+}
+
+.sweatzone-slip-unit-toggle button.active {
+  background: #111;
+  color: white;
+}
+
+.sweatzone-slip-amounts {
+  display: flex;
+  gap: 12px;
+}
+
+.sweatzone-slip-amounts label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.sweatzone-slip-amounts input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.sweatzone-slip-submit {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.sweatzone-slip-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sweatzone-saved-bets {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.sweatzone-saved-bet {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: white;
+}
+
+.sweatzone-saved-bet p {
+  margin: 10px 0;
+}
+
+.sweatzone-saved-bet small {
+  color: #777;
+}
+
+
+.sweatzone-bet-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.sweatzone-bet-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 18px 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.sweatzone-bet-card-title,
+.sweatzone-bet-card-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sweatzone-bet-card-title small {
+  color: #777;
+}
+
+.sweatzone-bet-card-summary {
+  align-items: flex-end;
+  font-weight: 600;
+}
+
+.sweatzone-bet-card-chevron {
+  font-size: 12px;
+  color: #777;
+}
+
+.sweatzone-bet-card-body {
+  border-top: 1px solid #eee;
+  padding: 0 20px 20px;
+}
+
+.sweatzone-bet-card-selection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.sweatzone-bet-card-selection-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sweatzone-bet-card-selection-info small {
+  color: #777;
+}
+
+.sweatzone-bet-card-status {
+  color: #777;
+  font-size: 12px;
+}
+
+.sweatzone-bet-card-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 20px;
+}
+
+.sweatzone-bet-card-footer > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sweatzone-bet-card-footer small {
+  color: #777;
+}
+
+.sweatzone-bet-card-footer strong {
+  font-size: 16px;
+}
+
+@media (max-width: 600px) {
+  .sweatzone-bet-card-header {
+    padding: 16px;
+  }
+
+  .sweatzone-bet-card-body {
+    padding: 0 16px 16px;
+  }
+
+  .sweatzone-bet-card-footer {
+    flex-wrap: wrap;
+  }
+}
+
+
+.sweatzone-slip-return {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 14px 0;
+  border-top: 1px solid #ddd;
+}
+
+.sweatzone-slip-return span {
+  font-weight: 600;
+}
+
+.sweatzone-slip-return strong {
+  font-size: 20px;
+}
+
+
+.sweatzone-bet-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sweatzone-bet-card-heading strong {
+  font-size: 18px;
+}
+
+.sweatzone-bet-type-label {
+  color: #777;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.sweatzone-bet-card-title {
+  min-width: 0;
+}
+
+.sweatzone-bet-card-title small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.sweatzone-bet-card-summary {
+  flex-shrink: 0;
+}
+
+.sweatzone-bet-card-summary strong {
+  font-size: 18px;
+}
+
+
+.sweatzone-bet-card-summary {
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+}
+
+.sweatzone-bet-card-chevron {
+  font-size: 14px;
+}
+
+.sweatzone-bet-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #eee;
+}
+
+.sweatzone-delete-button {
+  padding: 8px 12px;
+  background: transparent;
+  border: 1px solid #dc2626;
+  border-radius: 8px;
+  color: #dc2626;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.sweatzone-delete-button:hover {
+  background: #fef2f2;
+}
