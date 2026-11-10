@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import SportsNav from "../home/SportsNav.jsx";
+import LoadingSpinner from "../common/LoadingSpinner.jsx";
 import AddBet from "./AddBet.jsx";
 import BetCard from "./BetCard.jsx";
 import "../../styles/sweatzone.css";
@@ -17,11 +18,17 @@ function loadBets() {
 }
 
 export default function SweatZone() {
+  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("active");
   const [sortBy, setSortBy] = useState("recent");
   const [betFilter, setBetFilter] = useState("all");
   const [showAddBet, setShowAddBet] = useState(false);
   const [bets, setBets] = useState(loadBets);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 600);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(bets));
@@ -67,7 +74,9 @@ export default function SweatZone() {
     <main className="cfb-games-page">
       <SportsNav />
 
-      {showAddBet ? (
+      {loading ? (
+        <LoadingSpinner message="Loading SweatZone..." />
+      ) : showAddBet ? (
         <AddBet
           onBack={() => setShowAddBet(false)}
           onSaveBet={saveBet}
