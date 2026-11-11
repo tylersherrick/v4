@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import BetProgress from "./BetProgress.jsx";
 import { gradeSelection } from "./utils/betGrading.js";
 import { getGameKey, getScore } from "./utils/gameHelpers.js";
 
@@ -285,6 +286,8 @@ export default function BetCard({
                   >
                     {getStatusLabel(status)}
                   </span>
+
+                  <BetProgress selection={selection} game={game} />
                 </div>
               );
             })}
