@@ -5,6 +5,7 @@ import LoadingSpinner from "../common/LoadingSpinner.jsx";
 import AddBet from "./AddBet.jsx";
 import BetCard from "./BetCard.jsx";
 import { gradeSelection, getBetResult } from "./utils/betGrading.js";
+import { fetchNhlPlayerStats, getPlayerStat } from "./utils/nhlPlayerStats.js";
 import {
   createFinalGame,
   getGameDate,
@@ -33,16 +34,53 @@ function isSettledResult(result) {
   return ["won", "lost", "push"].includes(result);
 }
 
+function isPlayerProp(selection) {
+  return selection.category === "player";
+}
+
+function gradePlayerProp(selection, game, playerStats) {
+  const value = getPlayerStat(selection, playerStats);
+
+  if (value === null) {
+    return "pending";
+  }
+
+  const line = Number(selection.line);
+
+  if (!Number.isFinite(line)) {
+    return "pending";
+  }
+
+  const difference =
+    selection.direction === "over"
+      ? value - line
+      : line - value;
+
+  const completed = isGameFinal(game);
+
+  if (difference > 0) {
+    return completed ? "won" : "winning";
+  }
+
+  if (difference < 0) {
+    return completed ? "lost" : "losing";
+  }
+
+  return completed ? "push" : "tied";
+}
+
 function createSettledGame(game) {
+  const finalGame = createFinalGame(game);
+
   return {
-    ...createFinalGame(game),
+    ...finalGame,
     status: { ...game.status },
     awayTeam: {
-      ...createFinalGame(game).awayTeam,
+      ...finalGame.awayTeam,
       periodScores: game.awayTeam?.periodScores || [],
     },
     homeTeam: {
-      ...createFinalGame(game).homeTeam,
+      ...finalGame.homeTeam,
       periodScores: game.homeTeam?.periodScores || [],
     },
   };
@@ -56,6 +94,7 @@ export default function SweatZone() {
   const [showAddBet, setShowAddBet] = useState(false);
   const [bets, setBets] = useState(loadBets);
   const [liveGames, setLiveGames] = useState({});
+  const [livePlayerStats, setLivePlayerStats] = useState({});
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 600);
@@ -155,6 +194,71 @@ export default function SweatZone() {
   }, [bets]);
 
   useEffect(() => {
+    const gameIds = new Set();
+
+    for (const bet of bets) {
+      if (bet.status !== "active") {
+        continue;
+      }
+
+      for (const selection of bet.selections || []) {
+        if (
+          isPlayerProp(selection) &&
+          selection.league?.toLowerCase() === "nhl" &&
+          !selection.finalGame &&
+          selection.gameId
+        ) {
+          gameIds.add(String(selection.gameId));
+        }
+      }
+    }
+
+    if (gameIds.size === 0) {
+      return;
+    }
+
+    let cancelled = false;
+
+    async function refreshPlayerStats() {
+      const results = await Promise.allSettled(
+        [...gameIds].map(async (gameId) => ({
+          gameId,
+          stats: await fetchNhlPlayerStats(gameId),
+        }))
+      );
+
+      if (cancelled) {
+        return;
+      }
+
+      setLivePlayerStats((current) => {
+        const updated = { ...current };
+        let changed = false;
+
+        for (const result of results) {
+          if (result.status !== "fulfilled") {
+            continue;
+          }
+
+          updated[`nhl-${result.value.gameId}`] = result.value.stats;
+          changed = true;
+        }
+
+        return changed ? updated : current;
+      });
+    }
+
+    refreshPlayerStats();
+
+    const interval = setInterval(refreshPlayerStats, 30000);
+
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [bets]);
+
+  useEffect(() => {
     if (Object.keys(liveGames).length === 0) {
       return;
     }
@@ -174,17 +278,27 @@ export default function SweatZone() {
             return selection;
           }
 
-          const game = liveGames[getGameKey(selection)];
+          const gameKey = getGameKey(selection);
+          const game = liveGames[gameKey];
 
           if (!game) {
             return selection;
           }
 
-          const result = gradeSelection(selection, game);
+          const playerProp = isPlayerProp(selection);
+
+          const result = playerProp
+            ? gradePlayerProp(
+                selection,
+                game,
+                livePlayerStats[gameKey]
+              )
+            : gradeSelection(selection, game);
+
           const firstPeriodBet =
             selection.market === "first_period_total";
 
-          const settled = firstPeriodBet
+          const settled = firstPeriodBet && !playerProp
             ? isSettledResult(result)
             : isGameFinal(game) && isSettledResult(result);
 
@@ -192,7 +306,7 @@ export default function SweatZone() {
             return selection;
           }
 
-          if (!firstPeriodBet) {
+          if (!firstPeriodBet && !playerProp) {
             const awayScore = getScore(game.awayTeam);
             const homeScore = getScore(game.homeTeam);
 
@@ -207,6 +321,14 @@ export default function SweatZone() {
             ...selection,
             finalGame: createSettledGame(game),
             finalResult: result,
+            ...(playerProp
+              ? {
+                  finalPlayerStat: getPlayerStat(
+                    selection,
+                    livePlayerStats[gameKey]
+                  ),
+                }
+              : {}),
           };
         });
 
@@ -214,7 +336,46 @@ export default function SweatZone() {
           ? { ...bet, selections }
           : bet;
 
-        const result = getBetResult(updatedBet, liveGames);
+        let result;
+
+        if (selections.some(isPlayerProp)) {
+          const results = selections.map((selection) => {
+            if (selection.finalResult) {
+              return selection.finalResult;
+            }
+
+            const gameKey = getGameKey(selection);
+            const game = liveGames[gameKey];
+
+            return isPlayerProp(selection)
+              ? gradePlayerProp(
+                  selection,
+                  game,
+                  livePlayerStats[gameKey]
+                )
+              : gradeSelection(selection, game);
+          });
+
+          if (bet.type === "straight") {
+            result = isSettledResult(results[0])
+              ? results[0]
+              : null;
+          } else if (results.includes("lost")) {
+            result = "lost";
+          } else if (
+            results.every((item) => isSettledResult(item))
+          ) {
+            result = results.every((item) => item === "push")
+              ? "push"
+              : results.includes("push")
+                ? "review"
+                : "won";
+          } else {
+            result = null;
+          }
+        } else {
+          result = getBetResult(updatedBet, liveGames);
+        }
 
         if (result && result !== "review") {
           changed = true;
@@ -237,7 +398,7 @@ export default function SweatZone() {
 
       return changed ? updated : current;
     });
-  }, [liveGames]);
+  }, [liveGames, livePlayerStats]);
 
   function saveBet(bet) {
     setBets((current) => [bet, ...current]);
@@ -384,6 +545,7 @@ export default function SweatZone() {
                   key={bet.id}
                   bet={bet}
                   liveGames={liveGames}
+                  livePlayerStats={livePlayerStats}
                   defaultExpanded={index === 0}
                   onDelete={deleteBet}
                 />

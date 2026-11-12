@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PlayerPropSelector from "./PlayerPropSelector.jsx";
 
 export default function MarketSelector({ game, onMarketSelect }) {
   const [category, setCategory] = useState("game");
@@ -10,7 +11,8 @@ export default function MarketSelector({ game, onMarketSelect }) {
   const awayTeam = game.awayTeam;
   const homeTeam = game.homeTeam;
 
-  const isTotalMarket = market === "total" || market === "first_period_total";
+  const isTotalMarket =
+    market === "total" || market === "first_period_total";
 
   function selectCategory(value) {
     setCategory(value);
@@ -27,7 +29,7 @@ export default function MarketSelector({ game, onMarketSelect }) {
     const selection = {
       gameId: game.id,
       league: game.league,
-      category,
+      category: "game",
       market,
       team: isTotalMarket ? null : team,
       direction: isTotalMarket ? direction : null,
@@ -41,7 +43,9 @@ export default function MarketSelector({ game, onMarketSelect }) {
   }
 
   const requiresLine = market !== "moneyline";
-  const validLine = !requiresLine || (line.trim() !== "" && Number.isFinite(Number(line)));
+  const validLine =
+    !requiresLine ||
+    (line.trim() !== "" && Number.isFinite(Number(line)));
 
   return (
     <section className="sweatzone-market-selector">
@@ -95,7 +99,9 @@ export default function MarketSelector({ game, onMarketSelect }) {
             {game.league?.toLowerCase() === "nhl" && (
               <button
                 type="button"
-                className={market === "first_period_total" ? "active" : ""}
+                className={
+                  market === "first_period_total" ? "active" : ""
+                }
                 onClick={() => selectMarket("first_period_total")}
               >
                 1st Period Total
@@ -108,7 +114,10 @@ export default function MarketSelector({ game, onMarketSelect }) {
               <button
                 type="button"
                 className={team === "away" ? "selected" : ""}
-                onClick={() => setTeam("away")}
+                onClick={() => {
+                  setTeam("away");
+                  onMarketSelect(null);
+                }}
               >
                 {awayTeam.abbreviation}
               </button>
@@ -116,7 +125,10 @@ export default function MarketSelector({ game, onMarketSelect }) {
               <button
                 type="button"
                 className={team === "home" ? "selected" : ""}
-                onClick={() => setTeam("home")}
+                onClick={() => {
+                  setTeam("home");
+                  onMarketSelect(null);
+                }}
               >
                 {homeTeam.abbreviation}
               </button>
@@ -125,16 +137,26 @@ export default function MarketSelector({ game, onMarketSelect }) {
             <div className="sweatzone-market-teams">
               <button
                 type="button"
-                className={direction === "over" ? "selected" : ""}
-                onClick={() => setDirection("over")}
+                className={
+                  direction === "over" ? "selected" : ""
+                }
+                onClick={() => {
+                  setDirection("over");
+                  onMarketSelect(null);
+                }}
               >
                 Over
               </button>
 
               <button
                 type="button"
-                className={direction === "under" ? "selected" : ""}
-                onClick={() => setDirection("under")}
+                className={
+                  direction === "under" ? "selected" : ""
+                }
+                onClick={() => {
+                  setDirection("under");
+                  onMarketSelect(null);
+                }}
               >
                 Under
               </button>
@@ -146,6 +168,7 @@ export default function MarketSelector({ game, onMarketSelect }) {
               Betting Line
               <input
                 type="number"
+                inputMode="decimal"
                 step="0.5"
                 placeholder={
                   market === "spread"
@@ -155,7 +178,10 @@ export default function MarketSelector({ game, onMarketSelect }) {
                       : "5.5"
                 }
                 value={line}
-                onChange={(event) => setLine(event.target.value)}
+                onChange={(event) => {
+                  setLine(event.target.value);
+                  onMarketSelect(null);
+                }}
               />
             </label>
           )}
@@ -170,7 +196,10 @@ export default function MarketSelector({ game, onMarketSelect }) {
           </button>
         </>
       ) : (
-        <p>Player selection is coming next.</p>
+        <PlayerPropSelector
+          game={game}
+          onMarketSelect={onMarketSelect}
+        />
       )}
     </section>
   );

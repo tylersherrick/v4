@@ -1,32 +1,6 @@
 
-import { useState } from "react";
-
-function formatSelection(selection) {
-  if (selection.market === "moneyline") {
-    const team =
-      selection.team === "away"
-        ? selection.awayTeam
-        : selection.homeTeam;
-
-    return `${team} Moneyline`;
-  }
-
-  if (selection.market === "spread") {
-    const team =
-      selection.team === "away"
-        ? selection.awayTeam
-        : selection.homeTeam;
-
-    const line =
-      selection.line > 0
-        ? `+${selection.line}`
-        : selection.line;
-
-    return `${team} ${line}`;
-  }
-
-  return `${selection.direction === "over" ? "Over" : "Under"} ${selection.line}`;
-}
+import { useEffect, useState } from "react";
+import { formatSelection } from "./utils/selectionFormatting.js";
 
 function formatAmount(amount, unitType) {
   if (unitType === "dollars") {
@@ -46,6 +20,12 @@ export default function BetSlip({
   const [unitType, setUnitType] = useState("units");
   const [risk, setRisk] = useState("");
   const [totalReturn, setTotalReturn] = useState("");
+
+  useEffect(() => {
+    if (selections.length > 0) {
+      setExpanded(true);
+    }
+  }, [selections.length]);
 
   const profit = Number(totalReturn) - Number(risk);
 

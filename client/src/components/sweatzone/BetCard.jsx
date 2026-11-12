@@ -2,32 +2,12 @@
 import { useState } from "react";
 import BetProgress from "./BetProgress.jsx";
 import { gradeSelection } from "./utils/betGrading.js";
-import { getGameKey, getScore } from "./utils/gameHelpers.js";
-
-function formatSelection(selection) {
-  const team =
-    selection.team === "away"
-      ? selection.awayTeam
-      : selection.homeTeam;
-
-  if (selection.market === "moneyline") {
-    return `${team} Moneyline`;
-  }
-
-  if (selection.market === "spread") {
-    return `${team} ${selection.line > 0 ? "+" : ""}${selection.line}`;
-  }
-
-  if (selection.market === "total") {
-    return `${selection.direction === "over" ? "Over" : "Under"} ${selection.line}`;
-  }
-
-  if (selection.market === "first_period_total") {
-    return `1st Period ${selection.direction === "over" ? "Over" : "Under"} ${selection.line}`;
-  }
-
-  return "Unknown Selection";
-}
+import { getGameKey, getScore, isGameFinal } from "./utils/gameHelpers.js";
+import { getPlayerStat } from "./utils/nhlPlayerStats.js";
+import {
+  formatSelection,
+  isPlayerProp,
+} from "./utils/selectionFormatting.js";
 
 function formatAmount(amount, unitType) {
   if (unitType === "dollars") {
@@ -96,7 +76,7 @@ function getFinancials(bet) {
 
 function getGameStatus(game) {
   if (!game) {
-    return "Score unavailable";
+    return "Game data unavailable";
   }
 
   if (game.status?.state === "post") {
@@ -144,7 +124,7 @@ function getFirstPeriodScore(team) {
 }
 
 function getSelectionScore(selection, game) {
-  if (!game) {
+  if (!game || isPlayerProp(selection)) {
     return null;
   }
 
@@ -162,9 +142,45 @@ function getSelectionScore(selection, game) {
   return `${selection.awayTeam} ${getScore(game.awayTeam) ?? "-"} - ${getScore(game.homeTeam) ?? "-"} ${selection.homeTeam}`;
 }
 
+function getPlayerStatus(selection, game, playerStats) {
+  if (selection.finalResult) {
+    return selection.finalResult;
+  }
+
+  const value = getPlayerStat(selection, playerStats);
+
+  if (value === null || !game || game.status?.state === "pre") {
+    return "pending";
+  }
+
+  const line = Number(selection.line);
+
+  if (!Number.isFinite(line)) {
+    return "pending";
+  }
+
+  const difference =
+    selection.direction === "over"
+      ? value - line
+      : line - value;
+
+  const completed = isGameFinal(game);
+
+  if (difference > 0) {
+    return completed ? "won" : "winning";
+  }
+
+  if (difference < 0) {
+    return completed ? "lost" : "losing";
+  }
+
+  return completed ? "push" : "tied";
+}
+
 export default function BetCard({
   bet,
   liveGames = {},
+  livePlayerStats = {},
   defaultExpanded = false,
   onDelete,
 }) {
@@ -252,14 +268,23 @@ export default function BetCard({
         <div className="sweatzone-bet-card-body">
           <div className="sweatzone-bet-card-selections">
             {selections.map((selection, index) => {
+              const gameKey = getGameKey(selection);
+
               const game =
                 selection.finalGame ||
-                liveGames[getGameKey(selection)];
+                liveGames[gameKey];
 
-              const status =
-                selection.finalResult || gradeSelection(selection, game);
+              const playerStats = livePlayerStats[gameKey];
 
-              const selectionScore = getSelectionScore(selection, game);
+              const status = isPlayerProp(selection)
+                ? getPlayerStatus(selection, game, playerStats)
+                : selection.finalResult ||
+                  gradeSelection(selection, game);
+
+              const selectionScore = getSelectionScore(
+                selection,
+                game
+              );
 
               return (
                 <div
@@ -274,6 +299,12 @@ export default function BetCard({
 
                     <strong>{formatSelection(selection)}</strong>
 
+                    {isPlayerProp(selection) && (
+                      <small>
+                        {selection.playerTeam} · Player Prop
+                      </small>
+                    )}
+
                     {selectionScore && (
                       <small>{selectionScore}</small>
                     )}
@@ -287,7 +318,11 @@ export default function BetCard({
                     {getStatusLabel(status)}
                   </span>
 
-                  <BetProgress selection={selection} game={game} />
+                  <BetProgress
+                    selection={selection}
+                    game={game}
+                    playerStats={playerStats}
+                  />
                 </div>
               );
             })}
